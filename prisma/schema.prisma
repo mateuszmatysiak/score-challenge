@@ -1,0 +1,42 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id           String   @id @default(uuid())
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+  username     String   @unique
+  passwordHash String
+}
+
+model Group {
+  id      String  @id
+  name    String
+  matches Match[]
+}
+
+model Match {
+  id         Int     @id @default(autoincrement())
+  teamHome   Team    @relation(name: "teamHome", fields: [teamHomeId], references: [id], onDelete: Cascade)
+  teamAway   Team    @relation(name: "teamAway", fields: [teamAwayId], references: [id], onDelete: Cascade)
+  teamHomeId String
+  teamAwayId String
+  Group      Group?  @relation(fields: [groupId], references: [id])
+  groupId    String?
+}
+
+model Team {
+  id       String  @id
+  name     String
+  teamHome Match[] @relation(name: "teamHome")
+  teamAway Match[] @relation(name: "teamAway")
+}

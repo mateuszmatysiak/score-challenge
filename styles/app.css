@@ -1,0 +1,10 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --maroon: #54081d;
+  --bright-blue: #00beff;
+  --orange: #f9a601;
+  --grey: #e9e9e9;
+}
