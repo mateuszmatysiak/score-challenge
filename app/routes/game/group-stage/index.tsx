@@ -1,4 +1,3 @@
-import type { Group, Team } from "@prisma/client";
 import type { LoaderFunction } from "@remix-run/node";
 import { json } from "@remix-run/node";
 import { Link, useLoaderData } from "@remix-run/react";
@@ -6,14 +5,8 @@ import { Link, useLoaderData } from "@remix-run/react";
 import { db } from "~/utils/db.server";
 import { getUserId } from "~/utils/session.server";
 
-// type GroupWithMatches = Prisma.GroupGetPayload<{
-//   include: { matches: true };
-// }>;
-
-type GroupWithTeams = { teams: Team[] } & Group;
-
 type LoaderData = {
-  groups: GroupWithTeams[];
+  groups: { groupName: string; teams: string[] }[];
 };
 
 export const loader: LoaderFunction = async ({ request }) => {
@@ -23,47 +16,41 @@ export const loader: LoaderFunction = async ({ request }) => {
     throw new Response("Unauthorized", { status: 401 });
   }
 
-  const groups = await db.group.findMany({
-    where: {
-      id: userId,
-    },
+  const userMatches = await db.userMatch.findMany({
+    where: { userId },
     select: {
-      id: true,
-      name: true,
-      matches: {
+      match: {
         select: {
+          groupName: true,
           teamHome: true,
           teamAway: true,
         },
       },
+      teamAway_score: true,
+      teamHome_score: true,
     },
   });
 
-  const groupsWithTeams = groups
-    .map(({ matches, ...group }) => {
-      const uniqueIds: string[] = [];
-      return {
-        ...group,
-        teams: matches
-          .map((match) => match.teamAway)
-          .filter((team) => {
-            const isDuplicate = uniqueIds.includes(team.id);
+  const groupsFromUserMatches = userMatches.map((userMatch) => ({
+    groupName: userMatch.match.groupName,
+    teams: [userMatch.match.teamHome, userMatch.match.teamAway],
+  }));
 
-            if (!isDuplicate) {
-              uniqueIds.push(team.id);
+  const mergedGroups: { groupName: string; teams: string[] }[] = Object.values(
+    groupsFromUserMatches.reduce((initial: any, group) => {
+      initial[group.groupName]
+        ? initial[group.groupName].teams.push(...group.teams)
+        : (initial[group.groupName] = { ...group });
+      return initial;
+    }, {})
+  );
 
-              return true;
-            }
+  const nonDuplicatesGroupes = mergedGroups.map(({ teams, groupName }) => ({
+    groupName,
+    teams: [...new Set(teams)],
+  }));
 
-            return false;
-          }),
-      };
-    })
-    .sort(function (a, b) {
-      return a.name.localeCompare(b.name);
-    });
-
-  return json({ groups: groupsWithTeams });
+  return json({ groups: nonDuplicatesGroupes });
 };
 
 export default function GroupStageRoute() {
@@ -77,23 +64,23 @@ export default function GroupStageRoute() {
 
       <ul className="grid grid-cols-4 gap-4">
         {groups.map((group) => (
-          <li key={group.id}>
+          <li key={group.groupName}>
             <Link
-              to={`/game/group-stage/${group.id}`}
+              to={`/game/group-stage/${group.groupName}`}
               className="flex flex-col flex-1 gap-4 p-4 bg-white rounded-md"
             >
               <span className="font-medium text-maroon text-center">
-                Group {group.name}
+                Group {group.groupName}
               </span>
 
               <ul className="flex flex-col gap-4">
-                {group.teams.map((team) => (
+                {group.teams.map((team, index) => (
                   <li
-                    key={team.id}
+                    key={index}
                     className="flex gap-4 bg-orange px-4 py-3 rounded-md"
                   >
                     <span>-</span>
-                    <span>{team.name}</span>
+                    <span>{team}</span>
                   </li>
                 ))}
               </ul>

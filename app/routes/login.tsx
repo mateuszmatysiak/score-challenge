@@ -102,6 +102,14 @@ export const action: ActionFunction = async ({ request }) => {
         });
       }
 
+      const matches = await db.match.findMany();
+
+      for (const match of matches) {
+        await db.userMatch.createMany({
+          data: { userId: user.id, matchId: match.id },
+        });
+      }
+
       return createUserSession({ userId: user.id, redirectTo });
     }
     default: {

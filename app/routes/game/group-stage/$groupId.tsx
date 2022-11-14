@@ -5,80 +5,100 @@ import { Form, useLoaderData } from "@remix-run/react";
 import qs from "qs";
 
 import { db } from "~/utils/db.server";
+import { getUserId } from "~/utils/session.server";
 
-type GroupWithMatches = Prisma.GroupGetPayload<{
-  include: {
-    matches: {
-      select: {
-        id: true;
-        teamHome: true;
-        teamAway: true;
-      };
-    };
+type UserMatchWithTeam = Prisma.UserMatchGetPayload<{
+  select: {
+    id: true;
+    match: true;
+    teamAway_score: true;
+    teamHome_score: true;
   };
 }>;
 
 type LoaderData = {
-  group: GroupWithMatches;
+  matches: UserMatchWithTeam[];
 };
 
-export const loader: LoaderFunction = async ({ params }) => {
-  const group = await db.group.findUnique({
-    where: {
-      id: params.groupId,
-    },
+export const loader: LoaderFunction = async ({ request, params }) => {
+  const userId = await getUserId(request);
+
+  if (!userId) {
+    throw new Response("Unauthorized", { status: 401 });
+  }
+
+  const userMatches = await db.userMatch.findMany({
+    where: { userId, match: { groupName: params.groupId } },
     select: {
       id: true,
-      name: true,
-      matches: {
-        select: {
-          id: true,
-          teamHome: true,
-          teamAway: true,
-        },
-      },
+      match: true,
+      teamAway_score: true,
+      teamHome_score: true,
     },
   });
 
-  return json({ group });
+  return json({ matches: userMatches });
 };
 
 export const action: ActionFunction = async ({ request, params }) => {
+  const userId = await getUserId(request);
+
+  if (!userId) {
+    throw new Response("Unauthorized", { status: 401 });
+  }
+
   const text = await request.text();
   const { score } = qs.parse(text);
 
-  console.log(score);
+  for (const s of [...(score as any)]) {
+    if (s.teamHome_score && s.teamAway_score) {
+      await db.userMatch.update({
+        where: { id: Number(s.id) },
+        data: {
+          teamHome_score: Number(s.teamHome_score),
+          teamAway_score: Number(s.teamAway_score),
+        },
+      });
+    }
+  }
 
   return redirect("/game/group-stage");
 };
 
 export default function GroupMatchesRoute() {
-  const { group } = useLoaderData<LoaderData>();
+  const { matches } = useLoaderData<LoaderData>();
 
   return (
     <div className="flex flex-col gap-4">
       <div className="bg-bright-blue p-4 rounded-md">
-        <h1 className="text-white font-medium">Group {group.name} Matches</h1>
+        <h1 className="text-white font-medium">Group A Matches</h1>
       </div>
 
       <ul>
         <Form method="post" className="flex flex-col gap-4">
-          {group.matches.map((match, index) => (
+          {matches.map((match, index) => (
             <li key={match.id} className="p-4 bg-white rounded-md">
+              <input
+                hidden
+                name={`score[${index}][id]`}
+                defaultValue={match.id ?? ""}
+              />
               <label>
-                {match.teamHome.name}
+                {match.match.teamHome}
                 <input
                   type="number"
-                  name={`score[${index}][${match.teamHome.id}]`}
+                  name={`score[${index}][teamHome_score]`}
+                  defaultValue={match.teamHome_score ?? ""}
                   className="border border-maroon"
                 />
               </label>
               -
               <label>
-                {match.teamAway.name}
+                {match.match.teamAway}
                 <input
                   type="number"
-                  name={`score[${index}][${match.teamAway.id}]`}
+                  name={`score[${index}][teamAway_score]`}
+                  defaultValue={match.teamAway_score ?? ""}
                   className="border border-maroon"
                 />
               </label>
