@@ -1,3 +1,3 @@
 export default function KnockoutStageRoute() {
-  return <div>Knockout Stage Route</div>;
+  return <div>Not implemented yet</div>;
 }

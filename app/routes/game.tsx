@@ -1,26 +1,42 @@
+import type { UserRanking } from "@prisma/client";
 import type { LoaderFunction } from "@remix-run/node";
 import { json } from "@remix-run/node";
 import { Form, Link, Outlet, useCatch, useLoaderData } from "@remix-run/react";
-import { getUser } from "~/utils/session.server";
+import { db } from "~/utils/db.server";
+import { getUserId } from "~/utils/session.server";
+
+type UserWithRanking = {
+  rank: number;
+  ranking: UserRanking | null;
+  id: string;
+  username: string;
+};
 
 type LoaderData = {
-  user: Awaited<ReturnType<typeof getUser>>;
+  user: UserWithRanking | undefined;
 };
 
 export const loader: LoaderFunction = async ({ request }) => {
-  const user = await getUser(request);
+  const userId = await getUserId(request);
 
-  if (!user) {
+  if (!userId) {
     throw new Response("Unauthorized", { status: 401 });
   }
 
-  const data: LoaderData = { user };
+  const users = await db.user.findMany({
+    orderBy: { ranking: { totalPoints: "asc" } },
+    select: { id: true, username: true, ranking: true },
+  });
 
-  return json(data);
+  const loggedInUser = users
+    .map((user, index) => ({ ...user, rank: index + 1 }))
+    .find((user) => user.id === userId);
+
+  return json({ user: loggedInUser });
 };
 
 export default function GameRoute() {
-  const data = useLoaderData<LoaderData>();
+  const { user } = useLoaderData<LoaderData>();
 
   return (
     <div className="flex flex-col gap-10 min-h-screen bg-maroon px-32 py-8">
@@ -28,9 +44,9 @@ export default function GameRoute() {
         <div className="flex justify-between items-center gap-4 bg-orange text-white p-4 rounded-t-md">
           <h1 className="font-medium uppercase">Fifa World Cup Qatar 2022</h1>
 
-          {data.user ? (
+          {user ? (
             <div className="flex items-center gap-4">
-              <span>Hi {data.user.username}</span>
+              <span>Hi {user.username}</span>
               <Form action="/logout" method="post">
                 <button
                   type="submit"
@@ -50,22 +66,22 @@ export default function GameRoute() {
 
           <div className="flex gap-8">
             <div className="flex flex-col items-center text-sm">
-              <span>-</span>
+              <span>{user?.rank}</span>
               <span>Rank</span>
             </div>
 
             <div className="flex flex-col items-center text-sm">
-              <span>-</span>
+              <span>{user?.ranking?.groupPoints}</span>
               <span>Group Pts</span>
             </div>
 
             <div className="flex flex-col items-center text-sm">
-              <span>-</span>
+              <span>{user?.ranking?.knockoutPoints}</span>
               <span>Knockout Pts</span>
             </div>
 
             <div className="flex flex-col items-center text-sm">
-              <span>-</span>
+              <span>{user?.ranking?.totalPoints}</span>
               <span>Total Pts</span>
             </div>
           </div>

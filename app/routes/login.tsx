@@ -102,13 +102,48 @@ export const action: ActionFunction = async ({ request }) => {
         });
       }
 
+      /* Pobranie meczów i drużyn */
+
       const matches = await db.match.findMany();
+      const teams = await db.team.findMany();
+
+      /* Tworzenie meczów dla nowego użytkownika */
+
+      /* TODO: Zamienić pętle for na seedFunctions */
 
       for (const match of matches) {
         await db.userMatch.createMany({
           data: { userId: user.id, matchId: match.id },
         });
       }
+
+      /* Tworzenie drużyn dla nowego użytkownika */
+
+      /* TODO: Zamienić pętle for na seedFunctions */
+
+      for (const team of teams) {
+        await db.userTeam.createMany({
+          data: {
+            userId: user.id,
+            teamId: team.id,
+            points: 0,
+            goalDifference: 0,
+          },
+        });
+      }
+
+      /* Tworzenie rankingu dla nowego użytkownika */
+
+      /* TODO: Zamienić pętle for na seedFunctions */
+
+      await db.userRanking.create({
+        data: {
+          userId: user.id,
+          groupPoints: 0,
+          knockoutPoints: 0,
+          totalPoints: 0,
+        },
+      });
 
       return createUserSession({ userId: user.id, redirectTo });
     }

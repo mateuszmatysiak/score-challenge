@@ -1,4 +1,4 @@
-import type { User } from "@prisma/client";
+import type { Prisma } from "@prisma/client";
 import type { LoaderFunction } from "@remix-run/node";
 import { json } from "@remix-run/node";
 import { useLoaderData } from "@remix-run/react";
@@ -6,7 +6,15 @@ import { useLoaderData } from "@remix-run/react";
 import { db } from "~/utils/db.server";
 import { getUser } from "~/utils/session.server";
 
-interface RankingUser extends Pick<User, "id" | "username"> {
+type UserWithRanking = Prisma.UserGetPayload<{
+  select: {
+    id: true;
+    username: true;
+    ranking: true;
+  };
+}>;
+
+interface RankingUser extends UserWithRanking {
   isLoggedInUser: boolean;
 }
 
@@ -15,15 +23,16 @@ interface LoaderData {
 }
 
 export const loader: LoaderFunction = async ({ request }) => {
-  const user = await getUser(request);
+  const loggedInUser = await getUser(request);
 
   const users = await db.user.findMany({
-    select: { id: true, username: true },
+    orderBy: { ranking: { groupPoints: "desc" } },
+    select: { id: true, username: true, ranking: true },
   });
 
   const rankingUsers = users.map((u) => ({
     ...u,
-    isLoggedInUser: u.id === user?.id,
+    isLoggedInUser: u.id === loggedInUser?.id,
   }));
 
   return json({ users: rankingUsers });
@@ -39,31 +48,35 @@ export default function RankingRoute() {
       </div>
 
       <ul className="flex flex-col gap-4">
-        {users.map((user) => (
+        {users.map((user, index) => (
           <li
             key={user.id}
             className="flex justify-between items-center p-4 bg-white rounded-md"
           >
-            <span>{user.username}</span>
+            <div>
+              <span className={`${user.isLoggedInUser ? "text-blue-600" : ""}`}>
+                {user.username}
+              </span>
+            </div>
 
             <div className="flex gap-8">
               <div className="flex flex-col items-center text-sm">
-                <span>-</span>
+                <span>{index + 1}</span>
                 <span>Rank</span>
               </div>
 
               <div className="flex flex-col items-center text-sm">
-                <span>-</span>
+                <span>{user.ranking?.groupPoints}</span>
                 <span>Group Pts</span>
               </div>
 
               <div className="flex flex-col items-center text-sm">
-                <span>-</span>
+                <span>{user.ranking?.knockoutPoints}</span>
                 <span>Knockout Pts</span>
               </div>
 
               <div className="flex flex-col items-center text-sm">
-                <span>-</span>
+                <span>{user.ranking?.totalPoints}</span>
                 <span>Total Pts</span>
               </div>
             </div>

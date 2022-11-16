@@ -5,8 +5,18 @@ import { Link, useLoaderData } from "@remix-run/react";
 import { db } from "~/utils/db.server";
 import { getUserId } from "~/utils/session.server";
 
+type GroupsWithTeams = {
+  id: string;
+  name: string;
+  teams: {
+    name: string;
+    points: number;
+    goalDifference: number;
+  }[];
+};
+
 type LoaderData = {
-  groups: { groupName: string; teams: string[] }[];
+  groups: GroupsWithTeams[];
 };
 
 export const loader: LoaderFunction = async ({ request }) => {
@@ -16,41 +26,45 @@ export const loader: LoaderFunction = async ({ request }) => {
     throw new Response("Unauthorized", { status: 401 });
   }
 
-  const userMatches = await db.userMatch.findMany({
-    where: { userId },
+  /* Pobieranie group */
+
+  const groups = await db.group.findMany({
+    orderBy: { name: "asc" },
     select: {
-      match: {
+      id: true,
+      name: true,
+      teams: {
         select: {
-          groupName: true,
-          teamHome: true,
-          teamAway: true,
+          name: true,
+          userTeams: {
+            where: { userId },
+          },
         },
       },
-      teamAway_score: true,
-      teamHome_score: true,
     },
   });
 
-  const groupsFromUserMatches = userMatches.map((userMatch) => ({
-    groupName: userMatch.match.groupName,
-    teams: [userMatch.match.teamHome, userMatch.match.teamAway],
+  /* Formatowanie grup */
+
+  const formattedGroups = groups.map(({ teams, ...group }) => ({
+    ...group,
+    teams: teams.map(({ userTeams, ...team }) => ({
+      ...team,
+      points: userTeams[0].points,
+      goalDifference: userTeams[0].goalDifference,
+    })),
   }));
 
-  const mergedGroups: { groupName: string; teams: string[] }[] = Object.values(
-    groupsFromUserMatches.reduce((initial: any, group) => {
-      initial[group.groupName]
-        ? initial[group.groupName].teams.push(...group.teams)
-        : (initial[group.groupName] = { ...group });
-      return initial;
-    }, {})
-  );
+  /* Sortowanie grup po zdobytych punktach i różnicy goli */
 
-  const nonDuplicatesGroupes = mergedGroups.map(({ teams, groupName }) => ({
-    groupName,
-    teams: [...new Set(teams)],
+  const sortedGroups = formattedGroups.map((group) => ({
+    ...group,
+    teams: group.teams.sort(
+      (a, b) => b.points - a.points || b.goalDifference - a.goalDifference
+    ),
   }));
 
-  return json({ groups: nonDuplicatesGroupes });
+  return json({ groups: sortedGroups });
 };
 
 export default function GroupStageRoute() {
@@ -64,23 +78,30 @@ export default function GroupStageRoute() {
 
       <ul className="grid grid-cols-4 gap-4">
         {groups.map((group) => (
-          <li key={group.groupName}>
+          <li key={group.id}>
             <Link
-              to={`/game/group-stage/${group.groupName}`}
+              to={`/game/group-stage/${group.id}`}
               className="flex flex-col flex-1 gap-4 p-4 bg-white rounded-md"
             >
               <span className="font-medium text-maroon text-center">
-                Group {group.groupName}
+                Group {group.name}
               </span>
 
               <ul className="flex flex-col gap-4">
                 {group.teams.map((team, index) => (
                   <li
                     key={index}
-                    className="flex gap-4 bg-orange px-4 py-3 rounded-md"
+                    className="flex gap-4 justify-between bg-orange px-4 py-3 rounded-md"
                   >
-                    <span>-</span>
-                    <span>{team}</span>
+                    <div className="flex gap-4">
+                      <span>{index + 1}</span>
+                      <span>{team.name}</span>
+                    </div>
+
+                    <div className="flex gap-4">
+                      <span>{team.points}</span>
+                      <span>{team.goalDifference}</span>
+                    </div>
                   </li>
                 ))}
               </ul>
