@@ -24,7 +24,7 @@ export const loader: LoaderFunction = async ({ request }) => {
   }
 
   const users = await db.user.findMany({
-    orderBy: { ranking: { totalPoints: "asc" } },
+    orderBy: { ranking: { totalPoints: "desc" } },
     select: { id: true, username: true, ranking: true },
   });
 
@@ -42,11 +42,13 @@ export default function GameRoute() {
     <div className="flex flex-col gap-10 min-h-screen bg-maroon px-32 py-8">
       <header>
         <div className="flex justify-between items-center gap-4 bg-orange text-white p-4 rounded-t-md">
-          <h1 className="font-medium uppercase">Fifa World Cup Qatar 2022</h1>
+          <h1 className="uppercase text-maroon font-bold">
+            Fifa World Cup Qatar 2022
+          </h1>
 
           {user ? (
             <div className="flex items-center gap-4">
-              <span>Hi {user.username}</span>
+              <span className="text-maroon">Hi {user.username}</span>
               <Form action="/logout" method="post">
                 <button
                   type="submit"
@@ -76,8 +78,8 @@ export default function GameRoute() {
             </div>
 
             <div className="flex flex-col items-center text-sm">
-              <span>{user?.ranking?.knockoutPoints}</span>
-              <span>Knockout Pts</span>
+              <span>{user?.ranking?.playoffPoints}</span>
+              <span>Playoff Pts</span>
             </div>
 
             <div className="flex flex-col items-center text-sm">
@@ -88,7 +90,40 @@ export default function GameRoute() {
         </div>
       </header>
 
-      <main>
+      <main className="flex flex-col flex-1 gap-4">
+        <div className="flex gap-4">
+          <Link
+            to="/game/group-stage"
+            className="flex-1 bg-orange p-4 rounded-md border-b-4 border-solid border-bright-blue font-bold text-maroon"
+          >
+            Group Stage
+          </Link>
+          <Link
+            to="/game/playoff-stage"
+            className="flex-1 bg-orange p-4 rounded-md border-b-4 border-solid border-bright-blue font-bold text-maroon"
+          >
+            Playoff Stage
+          </Link>
+          <Link
+            to="/game/ranking"
+            className="flex-1 bg-orange p-4 rounded-md border-b-4 border-solid border-bright-blue font-bold text-maroon"
+          >
+            Ranking
+          </Link>
+          <Link
+            to="/game/admin/matches"
+            className="flex-1 bg-orange p-4 rounded-md border-b-4 border-solid border-bright-blue font-bold text-maroon"
+          >
+            Admin Matches
+          </Link>
+          <Link
+            to="/game/admin/playoff-pairs"
+            className="flex-1 bg-orange p-4 rounded-md border-b-4 border-solid border-bright-blue font-bold text-maroon"
+          >
+            Admin Playoff Pairs
+          </Link>
+        </div>
+
         <Outlet />
       </main>
     </div>

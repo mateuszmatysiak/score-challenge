@@ -1,4 +1,3 @@
-import { Group } from "@prisma/client";
 import { createCookieSessionStorage, redirect } from "@remix-run/node";
 import bcrypt from "bcryptjs";
 

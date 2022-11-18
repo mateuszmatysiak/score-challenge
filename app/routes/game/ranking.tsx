@@ -14,19 +14,15 @@ type UserWithRanking = Prisma.UserGetPayload<{
   };
 }>;
 
-interface RankingUser extends UserWithRanking {
-  isLoggedInUser: boolean;
-}
-
 interface LoaderData {
-  users: RankingUser[];
+  users: (UserWithRanking & { isLoggedInUser: boolean })[];
 }
 
 export const loader: LoaderFunction = async ({ request }) => {
   const loggedInUser = await getUser(request);
 
   const users = await db.user.findMany({
-    orderBy: { ranking: { groupPoints: "desc" } },
+    orderBy: { ranking: { totalPoints: "desc" } },
     select: { id: true, username: true, ranking: true },
   });
 
@@ -71,8 +67,8 @@ export default function RankingRoute() {
               </div>
 
               <div className="flex flex-col items-center text-sm">
-                <span>{user.ranking?.knockoutPoints}</span>
-                <span>Knockout Pts</span>
+                <span>{user.ranking?.playoffPoints}</span>
+                <span>Playoff Pts</span>
               </div>
 
               <div className="flex flex-col items-center text-sm">

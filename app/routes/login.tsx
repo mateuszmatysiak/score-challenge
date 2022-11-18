@@ -140,7 +140,7 @@ export const action: ActionFunction = async ({ request }) => {
         data: {
           userId: user.id,
           groupPoints: 0,
-          knockoutPoints: 0,
+          playoffPoints: 0,
           totalPoints: 0,
         },
       });
@@ -258,13 +258,13 @@ export default function LoginRoute() {
             ) : null}
           </div>
 
-          <div id="form-error-message">
-            {actionData?.formError ? (
+          {actionData?.formError ? (
+            <div id="form-error-message">
               <p role="alert" className="text-xs text-red-700">
                 {actionData.formError}
               </p>
-            ) : null}
-          </div>
+            </div>
+          ) : null}
 
           <button
             type="submit"

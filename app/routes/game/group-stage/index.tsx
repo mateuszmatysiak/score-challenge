@@ -50,12 +50,12 @@ export const loader: LoaderFunction = async ({ request }) => {
     ...group,
     teams: teams.map(({ userTeams, ...team }) => ({
       ...team,
-      points: userTeams[0].points,
-      goalDifference: userTeams[0].goalDifference,
+      points: userTeams[0]?.points,
+      goalDifference: userTeams[0]?.goalDifference,
     })),
   }));
 
-  /* Sortowanie grup po zdobytych punktach i różnicy goli */
+  /* Sortowanie grup po zdobytych punktach i różnicy bramek */
 
   const sortedGroups = formattedGroups.map((group) => ({
     ...group,
@@ -78,20 +78,22 @@ export default function GroupStageRoute() {
 
       <ul className="grid grid-cols-4 gap-4">
         {groups.map((group) => (
-          <li key={group.id}>
-            <Link
-              to={`/game/group-stage/${group.id}`}
-              className="flex flex-col flex-1 gap-4 p-4 bg-white rounded-md"
-            >
-              <span className="font-medium text-maroon text-center">
-                Group {group.name}
-              </span>
+          <li
+            key={group.id}
+            className="flex flex-col flex-1 gap-4 p-4 bg-white rounded-md"
+          >
+            <span className="font-medium text-maroon text-center">
+              Group {group.name}
+            </span>
 
-              <ul className="flex flex-col gap-4">
-                {group.teams.map((team, index) => (
+            <ul className="flex flex-col gap-4">
+              {group.teams.map((team, index) => {
+                const backgroundColor =
+                  index <= 1 ? "bg-orange" : "bg-amber-200";
+                return (
                   <li
                     key={index}
-                    className="flex gap-4 justify-between bg-orange px-4 py-3 rounded-md"
+                    className={`flex gap-4 justify-between ${backgroundColor} px-4 py-3 rounded-md`}
                   >
                     <div className="flex gap-4">
                       <span>{index + 1}</span>
@@ -103,9 +105,18 @@ export default function GroupStageRoute() {
                       <span>{team.goalDifference}</span>
                     </div>
                   </li>
-                ))}
-              </ul>
-            </Link>
+                );
+              })}
+            </ul>
+
+            <div className="flex justify-center">
+              <Link
+                to={`/game/group-stage/${group.id}`}
+                className="bg-orange p-2 rounded-md border-b-4 border-solid border-maroon font-bold text-maroon"
+              >
+                Bet Group
+              </Link>
+            </div>
           </li>
         ))}
       </ul>

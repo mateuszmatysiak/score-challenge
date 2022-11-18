@@ -22,22 +22,24 @@ model User {
 }
 
 model UserRanking {
-  id             Int    @id @default(autoincrement())
-  groupPoints    Int
-  knockoutPoints Int
-  totalPoints    Int
-  user           User   @relation(fields: [userId], references: [id])
-  userId         String @unique
+  id            Int    @id @default(autoincrement())
+  groupPoints   Int
+  playoffPoints Int
+  totalPoints   Int
+  user          User   @relation(fields: [userId], references: [id])
+  userId        String @unique
 }
 
 model UserMatch {
-  id            Int    @id @default(autoincrement())
+  id            Int     @id @default(autoincrement())
   matchId       Int
-  match         Match  @relation(fields: [matchId], references: [id])
+  match         Match   @relation(fields: [matchId], references: [id])
   userId        String
-  user          User   @relation(fields: [userId], references: [id])
+  user          User    @relation(fields: [userId], references: [id])
   homeTeamScore Int?
   awayTeamScore Int?
+  goalScorer    Player? @relation(fields: [goalScorerId], references: [id])
+  goalScorerId  Int?
 }
 
 model UserTeam {
@@ -52,24 +54,21 @@ model UserTeam {
 
 model Group {
   id      String  @id
-  name    String
+  name    String  @unique
   teams   Team[]
   matches Match[]
 }
 
-model Match {
-  id                Int               @id @default(autoincrement())
-  homeTeam          Team              @relation(name: "homeTeam", fields: [homeTeamId], references: [id], onDelete: Cascade)
-  awayTeam          Team              @relation(name: "awayTeam", fields: [awayTeamId], references: [id], onDelete: Cascade)
-  homeTeamId        String
-  awayTeamId        String
-  group             Group             @relation(fields: [groupId], references: [id])
-  groupId           String
-  userMatches       UserMatch[]
-  TournamentMatches TournamentMatch[]
-  startDate         DateTime
-  stadium           Stadium           @relation(fields: [stadiumId], references: [id])
-  stadiumId         String
+model Playoff {
+  id      String  @id
+  name    String  @unique
+  matches Match[]
+}
+
+model Stage {
+  id      String  @id
+  name    String  @unique
+  matches Match[]
 }
 
 model Team {
@@ -80,18 +79,49 @@ model Team {
   group     Group      @relation(fields: [groupId], references: [id])
   groupId   String
   userTeams UserTeam[]
+  players   Player[]
+}
+
+model Player {
+  id                Int               @id @default(autoincrement())
+  name              String            @unique
+  team              Team              @relation(fields: [teamId], references: [id])
+  teamId            String
+  userMatches       UserMatch[]
+  tournamentMatches TournamentMatch[]
+}
+
+model Match {
+  id                Int               @id @default(autoincrement())
+  homeTeam          Team?             @relation(name: "homeTeam", fields: [homeTeamId], references: [id])
+  awayTeam          Team?             @relation(name: "awayTeam", fields: [awayTeamId], references: [id])
+  homeTeamId        String?
+  awayTeamId        String?
+  group             Group?            @relation(fields: [groupId], references: [id])
+  groupId           String?
+  playoff           Playoff?          @relation(fields: [playoffId], references: [id])
+  playoffId         String?
+  stage             Stage             @relation(fields: [stageId], references: [id])
+  stageId           String
+  userMatches       UserMatch[]
+  tournamentMatches TournamentMatch[]
+  startDate         DateTime
+  stadium           Stadium           @relation(fields: [stadiumId], references: [id])
+  stadiumId         String
+}
+
+model TournamentMatch {
+  id            Int     @id @default(autoincrement())
+  matchId       Int
+  match         Match   @relation(fields: [matchId], references: [id])
+  homeTeamScore Int?
+  awayTeamScore Int?
+  goalScorer    Player? @relation(fields: [goalScorerId], references: [id])
+  goalScorerId  Int?
 }
 
 model Stadium {
   id      String  @id
-  name    String
+  name    String  @unique
   matches Match[]
-}
-
-model TournamentMatch {
-  id            Int   @id @default(autoincrement())
-  matchId       Int
-  match         Match @relation(fields: [matchId], references: [id])
-  homeTeamScore Int?
-  awayTeamScore Int?
 }
