@@ -10,6 +10,7 @@ type UserWithRanking = {
   ranking: UserRanking | null;
   id: string;
   username: string;
+  role: { name: string };
 };
 
 type LoaderData = {
@@ -25,7 +26,12 @@ export const loader: LoaderFunction = async ({ request }) => {
 
   const users = await db.user.findMany({
     orderBy: { ranking: { totalPoints: "desc" } },
-    select: { id: true, username: true, ranking: true },
+    select: {
+      id: true,
+      username: true,
+      ranking: true,
+      role: { select: { name: true } },
+    },
   });
 
   const loggedInUser = users
@@ -38,7 +44,7 @@ export const loader: LoaderFunction = async ({ request }) => {
 export default function GameRoute() {
   const { user } = useLoaderData<LoaderData>();
 
-  const isAdmin = user?.role === "ADMIN";
+  const isAdmin = user?.role.name === "ADMIN";
   return (
     <div className="flex flex-col gap-10 min-h-screen bg-maroon px-32 py-8">
       <header>
@@ -75,17 +81,17 @@ export default function GameRoute() {
             </div>
 
             <div className="flex flex-col items-center text-sm">
-              <span>{user?.ranking?.groupPoints}</span>
+              <span>{user?.ranking?.groupPoints ?? "-"}</span>
               <span>Group Pts</span>
             </div>
 
             <div className="flex flex-col items-center text-sm">
-              <span>{user?.ranking?.playoffPoints}</span>
+              <span>{user?.ranking?.playoffPoints ?? "-"}</span>
               <span>Playoff Pts</span>
             </div>
 
             <div className="flex flex-col items-center text-sm">
-              <span>{user?.ranking?.totalPoints}</span>
+              <span>{user?.ranking?.totalPoints ?? "-"}</span>
               <span>Total Pts</span>
             </div>
           </div>

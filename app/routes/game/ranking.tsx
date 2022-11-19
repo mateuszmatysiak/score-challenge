@@ -62,17 +62,17 @@ export default function RankingRoute() {
               </div>
 
               <div className="flex flex-col items-center text-sm">
-                <span>{user.ranking?.groupPoints}</span>
+                <span>{user.ranking?.groupPoints ?? "-"}</span>
                 <span>Group Pts</span>
               </div>
 
               <div className="flex flex-col items-center text-sm">
-                <span>{user.ranking?.playoffPoints}</span>
+                <span>{user.ranking?.playoffPoints ?? "-"}</span>
                 <span>Playoff Pts</span>
               </div>
 
               <div className="flex flex-col items-center text-sm">
-                <span>{user.ranking?.totalPoints}</span>
+                <span>{user.ranking?.totalPoints ?? "-"}</span>
                 <span>Total Pts</span>
               </div>
             </div>

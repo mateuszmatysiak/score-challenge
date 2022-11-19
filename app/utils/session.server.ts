@@ -108,7 +108,7 @@ export async function requireUser(request: Request) {
 export async function requireAdminUser(request: Request) {
   const user = await requireUser(request);
 
-  if (user.role !== "ADMIN") {
+  if (user.role.name !== "ADMIN") {
     throw await logout(request);
   }
 
@@ -125,7 +125,7 @@ export async function getUser(request: Request) {
   try {
     const user = await db.user.findUnique({
       where: { id: userId },
-      select: { id: true, username: true },
+      select: { id: true, username: true, role: { select: { name: true } } },
     });
 
     return user;
