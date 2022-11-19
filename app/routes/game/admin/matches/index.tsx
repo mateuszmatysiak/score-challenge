@@ -164,6 +164,7 @@ export default function AdminMatchesRoute() {
 
             <Link
               to={`/game/admin/matches/match-${tournamentMatch.match.id}`}
+              prefetch="intent"
               className="bg-orange p-2 rounded-md border-b-4 border-solid border-maroon font-bold text-maroon"
             >
               Bet Match

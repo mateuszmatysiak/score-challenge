@@ -95,6 +95,7 @@ export default function PlayoffStageRoute() {
           <div key={playoff.id} className="flex flex-col gap-4">
             <Link
               to={`/game/playoff-stage/${playoff.id}`}
+              prefetch="intent"
               className="p-2 bg-orange text-white rounded-md border-b-4 border-solid border-bright-blue font-bold text-maroon"
             >
               {playoff.name}

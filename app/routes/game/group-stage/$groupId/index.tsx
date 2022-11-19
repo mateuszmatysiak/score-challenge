@@ -92,6 +92,7 @@ export default function GroupMatchesRoute() {
 
             <Link
               to={`/game/group-stage/${groupId}/match-${userMatch.match.id}`}
+              prefetch="intent"
               className="bg-orange p-2 rounded-md border-b-4 border-solid border-maroon font-bold text-maroon"
             >
               Bet Match

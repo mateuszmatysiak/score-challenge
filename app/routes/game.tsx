@@ -102,18 +102,21 @@ export default function GameRoute() {
         <div className="flex gap-4">
           <Link
             to="/game/group-stage"
+            prefetch="intent"
             className="flex-1 bg-orange p-4 rounded-md border-b-4 border-solid border-bright-blue font-bold text-maroon"
           >
             Group Stage
           </Link>
           <Link
             to="/game/playoff-stage"
+            prefetch="intent"
             className="flex-1 bg-orange p-4 rounded-md border-b-4 border-solid border-bright-blue font-bold text-maroon"
           >
             Playoff Stage
           </Link>
           <Link
             to="/game/ranking"
+            prefetch="intent"
             className="flex-1 bg-orange p-4 rounded-md border-b-4 border-solid border-bright-blue font-bold text-maroon"
           >
             Ranking
@@ -122,12 +125,14 @@ export default function GameRoute() {
             <>
               <Link
                 to="/game/admin/matches"
+                prefetch="intent"
                 className="flex-1 bg-orange p-4 rounded-md border-b-4 border-solid border-bright-blue font-bold text-maroon"
               >
                 Admin Matches
               </Link>
               <Link
                 to="/game/admin/playoff-pairs"
+                prefetch="intent"
                 className="flex-1 bg-orange p-4 rounded-md border-b-4 border-solid border-bright-blue font-bold text-maroon"
               >
                 Admin Playoff Pairs
