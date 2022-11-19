@@ -102,6 +102,8 @@ export const action: ActionFunction = async ({ request }) => {
         });
       }
 
+      console.log(user);
+
       /* Pobranie meczów i drużyn */
 
       const matches = await db.match.findMany();
@@ -112,7 +114,7 @@ export const action: ActionFunction = async ({ request }) => {
       /* TODO: Zamienić pętle for na seedFunctions */
 
       for (const match of matches) {
-        await db.userMatch.createMany({
+        await db.userMatch.create({
           data: { userId: user.id, matchId: match.id },
         });
       }
@@ -122,7 +124,7 @@ export const action: ActionFunction = async ({ request }) => {
       /* TODO: Zamienić pętle for na seedFunctions */
 
       for (const team of teams) {
-        await db.userTeam.createMany({
+        await db.userTeam.create({
           data: {
             userId: user.id,
             teamId: team.id,

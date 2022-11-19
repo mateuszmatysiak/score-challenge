@@ -112,7 +112,7 @@ export const action: ActionFunction = async ({ request, params }) => {
   /* Aktualizacja rankingów użytkowników */
 
   for (const userRanking of Object.values(usersRanking)) {
-    await db.userRanking.updateMany({
+    await db.userRanking.update({
       where: { userId: userRanking.userId },
       data: {
         groupPoints: userRanking.groupPoints,
