@@ -11,9 +11,9 @@ export interface LoginForm {
 export async function register({ username, password }: LoginForm) {
   const passwordHash = await bcrypt.hash(password, 10);
   const user = await db.user.create({
-    data: { username, passwordHash },
+    data: { username, passwordHash, userRoleId: 1 },
   });
-  return { id: user.id, username, role: "USER" };
+  return { id: user.id, username };
 }
 
 export async function login({ username, password }: LoginForm) {
