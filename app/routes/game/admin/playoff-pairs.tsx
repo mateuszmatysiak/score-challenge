@@ -95,7 +95,7 @@ export const action: ActionFunction = async ({ request }) => {
   /* Aktualizacja drużyn w playoff */
 
   for (const match of matches) {
-    await db.match.update({
+    await db.match.updateMany({
       where: { id: match.matchId },
       data: { homeTeamId: match.homeTeamId, awayTeamId: match.awayTeamId },
     });

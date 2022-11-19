@@ -136,7 +136,7 @@ export const action: ActionFunction = async ({ request }) => {
 
       /* TODO: Zamienić pętle for na seedFunctions */
 
-      await db.userRanking.create({
+      await db.userRanking.createMany({
         data: {
           userId: user.id,
           groupPoints: 0,
