@@ -11,7 +11,7 @@ export interface LoginForm {
 export async function register({ username, password }: LoginForm) {
   const passwordHash = await bcrypt.hash(password, 10);
   const user = await db.user.create({
-    data: { username, passwordHash, userRoleId: 1 },
+    data: { username, passwordHash, role: "USER" },
   });
   return { id: user.id, username };
 }
@@ -108,7 +108,7 @@ export async function requireUser(request: Request) {
 export async function requireAdminUser(request: Request) {
   const user = await requireUser(request);
 
-  if (user.role.name !== "ADMIN") {
+  if (user.role !== "ADMIN") {
     throw await logout(request);
   }
 
@@ -125,7 +125,7 @@ export async function getUser(request: Request) {
   try {
     const user = await db.user.findUnique({
       where: { id: userId },
-      select: { id: true, username: true, role: { select: { name: true } } },
+      select: { id: true, username: true, role: true },
     });
 
     return user;

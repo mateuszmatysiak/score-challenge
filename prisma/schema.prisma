@@ -16,17 +16,10 @@ model User {
   updatedAt    DateTime     @updatedAt
   username     String       @unique
   passwordHash String
-  role         UserRole     @relation(fields: [userRoleId], references: [id])
+  role         String
   userMatches  UserMatch[]
   userTeams    UserTeam[]
   ranking      UserRanking?
-  userRoleId   Int
-}
-
-model UserRole {
-  id   Int    @id @default(autoincrement())
-  name String
-  User User[]
 }
 
 model UserRanking {

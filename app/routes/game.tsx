@@ -10,7 +10,7 @@ type UserWithRanking = {
   ranking: UserRanking | null;
   id: string;
   username: string;
-  role: { name: string };
+  role: string;
 };
 
 type LoaderData = {
@@ -30,7 +30,7 @@ export const loader: LoaderFunction = async ({ request }) => {
       id: true,
       username: true,
       ranking: true,
-      role: { select: { name: true } },
+      role: true,
     },
   });
 
@@ -44,7 +44,7 @@ export const loader: LoaderFunction = async ({ request }) => {
 export default function GameRoute() {
   const { user } = useLoaderData<LoaderData>();
 
-  const isAdmin = user?.role.name === "ADMIN";
+  const isAdmin = user?.role === "ADMIN";
   return (
     <div className="flex flex-col gap-10 min-h-screen bg-maroon px-32 py-8">
       <header>
