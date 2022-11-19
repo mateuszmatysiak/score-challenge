@@ -4,7 +4,7 @@ import { json, redirect } from "@remix-run/node";
 import { Form, useActionData, useLoaderData } from "@remix-run/react";
 
 import { db } from "~/utils/db.server";
-import { getUserId } from "~/utils/session.server";
+import { getUser } from "~/utils/session.server";
 
 /* Funkcja walidująca request */
 
@@ -75,9 +75,9 @@ interface LoaderData {
 }
 
 export const loader: LoaderFunction = async ({ request, params }) => {
-  const userId = await getUserId(request);
+  const user = await getUser(request);
 
-  if (!userId) {
+  if (!user) {
     throw new Response("Unauthorized", { status: 401 });
   }
 
@@ -86,7 +86,7 @@ export const loader: LoaderFunction = async ({ request, params }) => {
   /* Pobieranie meczu użytkownika */
 
   const userMatch = await db.userMatch.findFirst({
-    where: { userId, match: { id: matchId } },
+    where: { userId: user.id, match: { id: matchId } },
     orderBy: [{ match: { startDate: "asc" } }],
     select: {
       id: true,
@@ -119,7 +119,7 @@ export const loader: LoaderFunction = async ({ request, params }) => {
       teamId: true,
       userMatches: {
         select: { goalScorerId: true },
-        where: { userId, matchId },
+        where: { userId: user.id, matchId },
       },
     },
   });
@@ -131,9 +131,9 @@ export const loader: LoaderFunction = async ({ request, params }) => {
 };
 
 export const action: ActionFunction = async ({ request, params }) => {
-  const userId = await getUserId(request);
+  const user = await getUser(request);
 
-  if (!userId) {
+  if (!user) {
     throw new Response("Unauthorized", { status: 401 });
   }
 
@@ -170,7 +170,7 @@ export const action: ActionFunction = async ({ request, params }) => {
   /* Aktualizacja meczu użytkownika */
 
   await db.userMatch.updateMany({
-    where: { id: userMatchId, userId },
+    where: { id: userMatchId, userId: user.id },
     data: {
       goalScorerId: Number(goalScorerId),
       homeTeamScore: Number(homeTeamScore),

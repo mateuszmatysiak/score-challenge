@@ -34,19 +34,19 @@ model UserRanking {
 model UserMatch {
   id            Int     @id @default(autoincrement())
   matchId       Int
-  match         Match   @relation(fields: [matchId], references: [id])
+  match         Match   @relation(fields: [matchId], references: [id], onDelete: Cascade)
   userId        String
   user          User    @relation(fields: [userId], references: [id], onDelete: Cascade)
   homeTeamScore Int?
   awayTeamScore Int?
-  goalScorer    Player? @relation(fields: [goalScorerId], references: [id])
+  goalScorer    Player? @relation(fields: [goalScorerId], references: [id], onDelete: Cascade)
   goalScorerId  Int?
 }
 
 model UserTeam {
   id             Int    @id @default(autoincrement())
   teamId         String
-  team           Team   @relation(fields: [teamId], references: [id])
+  team           Team   @relation(fields: [teamId], references: [id], onDelete: Cascade)
   userId         String
   user           User   @relation(fields: [userId], references: [id], onDelete: Cascade)
   points         Int
@@ -77,7 +77,7 @@ model Team {
   name      String
   homeTeams Match[]    @relation(name: "homeTeam")
   awayTeams Match[]    @relation(name: "awayTeam")
-  group     Group      @relation(fields: [groupId], references: [id])
+  group     Group      @relation(fields: [groupId], references: [id], onDelete: Cascade)
   groupId   String
   userTeams UserTeam[]
   players   Player[]
@@ -86,7 +86,7 @@ model Team {
 model Player {
   id                Int               @id @default(autoincrement())
   name              String            @unique
-  team              Team              @relation(fields: [teamId], references: [id])
+  team              Team              @relation(fields: [teamId], references: [id], onDelete: Cascade)
   teamId            String
   userMatches       UserMatch[]
   tournamentMatches TournamentMatch[]
@@ -94,30 +94,30 @@ model Player {
 
 model Match {
   id                Int               @id @default(autoincrement())
-  homeTeam          Team?             @relation(name: "homeTeam", fields: [homeTeamId], references: [id])
-  awayTeam          Team?             @relation(name: "awayTeam", fields: [awayTeamId], references: [id])
+  homeTeam          Team?             @relation(name: "homeTeam", fields: [homeTeamId], references: [id], onDelete: Cascade)
+  awayTeam          Team?             @relation(name: "awayTeam", fields: [awayTeamId], references: [id], onDelete: Cascade)
   homeTeamId        String?
   awayTeamId        String?
-  group             Group?            @relation(fields: [groupId], references: [id])
+  group             Group?            @relation(fields: [groupId], references: [id], onDelete: Cascade)
   groupId           String?
-  playoff           Playoff?          @relation(fields: [playoffId], references: [id])
+  playoff           Playoff?          @relation(fields: [playoffId], references: [id], onDelete: Cascade)
   playoffId         String?
-  stage             Stage             @relation(fields: [stageId], references: [id])
+  stage             Stage             @relation(fields: [stageId], references: [id], onDelete: Cascade)
   stageId           String
   userMatches       UserMatch[]
   tournamentMatches TournamentMatch[]
   startDate         DateTime
-  stadium           Stadium           @relation(fields: [stadiumId], references: [id])
+  stadium           Stadium           @relation(fields: [stadiumId], references: [id], onDelete: Cascade)
   stadiumId         String
 }
 
 model TournamentMatch {
   id            Int     @id @default(autoincrement())
   matchId       Int
-  match         Match   @relation(fields: [matchId], references: [id])
+  match         Match   @relation(fields: [matchId], references: [id], onDelete: Cascade)
   homeTeamScore Int?
   awayTeamScore Int?
-  goalScorer    Player? @relation(fields: [goalScorerId], references: [id])
+  goalScorer    Player? @relation(fields: [goalScorerId], references: [id], onDelete: Cascade)
   goalScorerId  Int?
 }
 

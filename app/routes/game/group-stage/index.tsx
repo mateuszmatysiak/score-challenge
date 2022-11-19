@@ -3,7 +3,7 @@ import { json } from "@remix-run/node";
 import { Link, useLoaderData } from "@remix-run/react";
 
 import { db } from "~/utils/db.server";
-import { getUserId } from "~/utils/session.server";
+import { getUser } from "~/utils/session.server";
 
 type GroupsWithTeams = {
   id: string;
@@ -20,9 +20,9 @@ type LoaderData = {
 };
 
 export const loader: LoaderFunction = async ({ request }) => {
-  const userId = await getUserId(request);
+  const user = await getUser(request);
 
-  if (!userId) {
+  if (!user) {
     throw new Response("Unauthorized", { status: 401 });
   }
 
@@ -37,7 +37,7 @@ export const loader: LoaderFunction = async ({ request }) => {
         select: {
           name: true,
           userTeams: {
-            where: { userId },
+            where: { userId: user.id },
           },
         },
       },
@@ -101,8 +101,8 @@ export default function GroupStageRoute() {
                     </div>
 
                     <div className="flex gap-4">
-                      <span>{team.points}</span>
-                      <span>{team.goalDifference}</span>
+                      <span>{team.points ?? "-"}</span>
+                      <span>{team.goalDifference ?? "-"}</span>
                     </div>
                   </li>
                 );

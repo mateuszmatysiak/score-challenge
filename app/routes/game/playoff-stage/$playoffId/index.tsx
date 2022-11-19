@@ -4,7 +4,7 @@ import { json } from "@remix-run/node";
 import { Link, useLoaderData, useParams } from "@remix-run/react";
 
 import { db } from "~/utils/db.server";
-import { getUserId } from "~/utils/session.server";
+import { getUser } from "~/utils/session.server";
 
 type UserMatch = Prisma.UserMatchGetPayload<{
   select: {
@@ -29,16 +29,16 @@ interface LoaderData {
 }
 
 export const loader: LoaderFunction = async ({ request, params }) => {
-  const userId = await getUserId(request);
+  const user = await getUser(request);
 
-  if (!userId) {
+  if (!user) {
     throw new Response("Unauthorized", { status: 401 });
   }
 
   /* Pobieranie meczów użytkownika */
 
   const userMatches = await db.userMatch.findMany({
-    where: { userId, match: { playoffId: params.playoffId } },
+    where: { userId: user.id, match: { playoffId: params.playoffId } },
     orderBy: [{ match: { startDate: "asc" } }],
     select: {
       id: true,

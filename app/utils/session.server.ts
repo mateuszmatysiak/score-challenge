@@ -73,7 +73,10 @@ export function getUserSession(request: Request) {
 export async function getUserId(request: Request) {
   const session = await getUserSession(request);
   const userId = session.get("userId");
-  if (!userId || typeof userId !== "string") return null;
+
+  const userExists = await db.user.findFirst({ where: { id: userId } });
+
+  if (!userId || typeof userId !== "string" || userExists) return null;
   return userId;
 }
 

@@ -5,3 +5,4 @@ node_modules
 /public/build
 /prisma/dev.db
 .env
+/prisma/migrations

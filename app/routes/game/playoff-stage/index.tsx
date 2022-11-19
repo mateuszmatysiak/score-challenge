@@ -3,7 +3,7 @@ import { json } from "@remix-run/node";
 import { Link, useLoaderData } from "@remix-run/react";
 
 import { db } from "~/utils/db.server";
-import { getUserId } from "~/utils/session.server";
+import { getUser } from "~/utils/session.server";
 
 type PlayoffWithMatches = {
   id: string;
@@ -26,9 +26,9 @@ type LoaderData = {
 };
 
 export const loader: LoaderFunction = async ({ request }) => {
-  const userId = await getUserId(request);
+  const user = await getUser(request);
 
-  if (!userId) {
+  if (!user) {
     throw new Response("Unauthorized", { status: 401 });
   }
 
@@ -43,7 +43,7 @@ export const loader: LoaderFunction = async ({ request }) => {
         select: {
           id: true,
           userMatches: {
-            where: { userId },
+            where: { userId: user.id },
             select: {
               id: true,
               match: {
