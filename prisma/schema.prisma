@@ -117,7 +117,7 @@ model TournamentMatch {
   match         Match   @relation(fields: [matchId], references: [id], onDelete: Cascade)
   homeTeamScore Int?
   awayTeamScore Int?
-  goalScorer    Player? @relation(fields: [goalScorerId], references: [id], onDelete: Cascade)
+  goalScorer    Player? @relation(fields: [goalScorerId], references: [id], onDelete: Cascade, onUpdate: Cascade)
   goalScorerId  Int?
 }
 
