@@ -145,44 +145,17 @@ export const action: ActionFunction = async ({ request }) => {
       const matches = await db.match.findMany();
       const teams = await db.team.findMany();
 
-      console.log("XXXXXXX BEFORE USER MATCH XXXXXXX");
-
       /* Tworzenie meczów dla nowego użytkownika */
-
-      /* TODO: Zamienić pętle for na seedFunctions */
-
-      // for (const match of matches) {
-      //   await db.userMatch.create({
-      //     data: { userId: user.id, matchId: match.id },
-      //   });
-      // }
 
       const userMatches = seedUserMatches({ userId: user.id, matches });
       await db.userMatch.createMany({ data: userMatches });
 
       /* Tworzenie drużyn dla nowego użytkownika */
 
-      /* TODO: Zamienić pętle for na seedFunctions */
-
-      console.log("XXXXXXX BEFORE USER TEAM XXXXXXX");
-
       const userTeams = seedUserTeams({ userId: user.id, teams });
       await db.userTeam.createMany({ data: userTeams });
 
-      // for (const team of teams) {
-      //   await db.userTeam.create({
-      //     data: {
-      //       userId: user.id,
-      //       teamId: team.id,
-      //       points: 0,
-      //       goalDifference: 0,
-      //     },
-      //   });
-      // }
-
       /* Tworzenie rankingu dla nowego użytkownika */
-
-      /* TODO: Zamienić pętle for na seedFunctions */
 
       await db.userRanking.create({
         data: {

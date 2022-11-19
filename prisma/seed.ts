@@ -1361,39 +1361,39 @@ const seedTournamentMatches = ({ matches }: { matches: Match[] }) => {
 };
 
 async function seed() {
-  // /* Utworzenie stadionów */
-  // await db.stadium.createMany({ data: seedStadiums });
-  // /* Utworzenie etapów */
-  // await db.stage.createMany({ data: seedStages });
-  // /* Utworzenie grup */
-  // await db.group.createMany({ data: seedGroups });
-  // /* Utworzenie playoffów */
-  // await db.playoff.createMany({ data: seedPlayoffs });
-  // /* Utworzenie drużyn */
-  // await db.team.createMany({ data: seedTeams });
-  // /* Utworzenie piłkarzy */
-  // await db.player.createMany({ data: seedPlayers });
-  // /* Utworzenie meczów grupowych i playoff */
-  // await db.match.createMany({
-  //   data: [...seedGroupMatches, ...seedPlayoffMatches],
-  // });
+  /* Utworzenie stadionów */
+  await db.stadium.createMany({ data: seedStadiums });
+  /* Utworzenie etapów */
+  await db.stage.createMany({ data: seedStages });
+  /* Utworzenie grup */
+  await db.group.createMany({ data: seedGroups });
+  /* Utworzenie playoffów */
+  await db.playoff.createMany({ data: seedPlayoffs });
+  /* Utworzenie drużyn */
+  await db.team.createMany({ data: seedTeams });
+  /* Utworzenie piłkarzy */
+  await db.player.createMany({ data: seedPlayers });
+  /* Utworzenie meczów grupowych i playoff */
+  await db.match.createMany({
+    data: [...seedGroupMatches, ...seedPlayoffMatches],
+  });
 
   /* Pobranie użytkowników, meczów, drużyn */
-  // const users = await db.user.findMany();
+  const users = await db.user.findMany();
   const matches = await db.match.findMany();
-  // const teams = await db.team.findMany();
+  const teams = await db.team.findMany();
 
-  // /* Utworzenie rankingów dla użytkowników */
-  // const userRanking = await Promise.all(seedUserRanking({ users }));
-  // await db.userRanking.createMany({ data: userRanking });
+  /* Utworzenie rankingów dla użytkowników */
+  const userRanking = await Promise.all(seedUserRanking({ users }));
+  await db.userRanking.createMany({ data: userRanking });
 
-  // /* Utworzenie meczów dla użytkowników */
-  // const userMatches = await Promise.all(seedUserMatches({ users, matches }));
-  // await db.userMatch.createMany({ data: userMatches });
+  /* Utworzenie meczów dla użytkowników */
+  const userMatches = await Promise.all(seedUserMatches({ users, matches }));
+  await db.userMatch.createMany({ data: userMatches });
 
-  // /* Utworzenie drużyn dla użytkowników */
-  // const userTeams = await Promise.all(seedUserTeams({ users, teams }));
-  // await db.userTeam.createMany({ data: userTeams });
+  /* Utworzenie drużyn dla użytkowników */
+  const userTeams = await Promise.all(seedUserTeams({ users, teams }));
+  await db.userTeam.createMany({ data: userTeams });
 
   /* Utworzenie wyników spotkań dla turnieju */
   const tournamentMatches = await Promise.all(

@@ -228,8 +228,8 @@ export const action: ActionFunction = async ({ request, params }) => {
 
   /* Aktualizacja meczu "realnego" */
 
-  await db.tournamentMatch.update({
-    where: { id: matchId },
+  await db.tournamentMatch.updateMany({
+    where: { matchId },
     data: {
       goalScorerId: Number(goalScorerId),
       homeTeamScore: Number(homeTeamScore),
