@@ -4,7 +4,7 @@ import { json, redirect } from "@remix-run/node";
 import { Form, useActionData, useLoaderData } from "@remix-run/react";
 
 import { db } from "~/utils/db.server";
-import { getUserId } from "~/utils/session.server";
+import { requireAdminUser } from "~/utils/session.server";
 
 /* Funkcje pomocnicze */
 
@@ -149,9 +149,9 @@ interface LoaderData {
 }
 
 export const loader: LoaderFunction = async ({ request, params }) => {
-  const userId = await getUserId(request);
+  const adminUser = await requireAdminUser(request);
 
-  if (!userId) {
+  if (!adminUser) {
     throw new Response("Unauthorized", { status: 401 });
   }
 
@@ -204,11 +204,7 @@ export const loader: LoaderFunction = async ({ request, params }) => {
 };
 
 export const action: ActionFunction = async ({ request, params }) => {
-  const userId = await getUserId(request);
-
-  if (!userId) {
-    throw new Response("Unauthorized", { status: 401 });
-  }
+  await requireAdminUser(request);
 
   const matchId = Number(params.matchId?.split("-")[1]);
 
@@ -236,7 +232,7 @@ export const action: ActionFunction = async ({ request, params }) => {
 
   /* Aktualizacja meczu "realnego" */
 
-  await db.tournamentMatch.updateMany({
+  await db.tournamentMatch.update({
     where: { id: matchId },
     data: {
       goalScorerId: Number(goalScorerId),
@@ -293,7 +289,7 @@ export const action: ActionFunction = async ({ request, params }) => {
   /* Aktualizacja rankingów użytkowników */
 
   for (const userRanking of Object.values(usersRanking)) {
-    await db.userRanking.updateMany({
+    await db.userRanking.update({
       where: { userId: userRanking.userId },
       data: {
         groupPoints: userRanking.groupPoints,

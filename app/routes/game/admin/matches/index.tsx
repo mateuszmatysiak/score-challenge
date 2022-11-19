@@ -1,11 +1,10 @@
 import type { Prisma } from "@prisma/client";
 import type { ActionFunction, LoaderFunction } from "@remix-run/node";
-import { redirect } from "@remix-run/node";
-import { json } from "@remix-run/node";
+import { json, redirect } from "@remix-run/node";
 import { Form, Link, useLoaderData } from "@remix-run/react";
 
 import { db } from "~/utils/db.server";
-import { getUserId } from "~/utils/session.server";
+import { requireAdminUser } from "~/utils/session.server";
 import type { UsersRanking } from "./$matchId";
 import { compareMatch, getRankingPoints } from "./$matchId";
 
@@ -34,6 +33,12 @@ interface LoaderData {
 }
 
 export const loader: LoaderFunction = async ({ request }) => {
+  const adminUser = await requireAdminUser(request);
+
+  if (!adminUser) {
+    throw new Response("Unauthorized", { status: 401 });
+  }
+
   /* Pobieranie meczów odbywających się na turnieju */
 
   const tournamentMatches = await db.tournamentMatch.findMany({
@@ -61,11 +66,7 @@ export const loader: LoaderFunction = async ({ request }) => {
 };
 
 export const action: ActionFunction = async ({ request, params }) => {
-  const userId = await getUserId(request);
-
-  if (!userId) {
-    throw new Response("Unauthorized", { status: 401 });
-  }
+  await requireAdminUser(request);
 
   /* Pobieranie meczów użytkownika i meczów "realnych" */
 
@@ -115,7 +116,7 @@ export const action: ActionFunction = async ({ request, params }) => {
   /* Aktualizacja rankingów użytkowników */
 
   for (const userRanking of Object.values(usersRanking)) {
-    await db.userRanking.updateMany({
+    await db.userRanking.update({
       where: { userId: userRanking.userId },
       data: {
         groupPoints: userRanking.groupPoints,

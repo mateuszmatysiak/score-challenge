@@ -4,7 +4,7 @@ import { json, redirect } from "@remix-run/node";
 import { Form, useLoaderData } from "@remix-run/react";
 
 import { db } from "~/utils/db.server";
-import { getUserId } from "~/utils/session.server";
+import { requireAdminUser } from "~/utils/session.server";
 
 type HiddenActionField = {
   playoffId: string;
@@ -33,6 +33,12 @@ interface LoaderData {
 }
 
 export const loader: LoaderFunction = async ({ request }) => {
+  const adminUser = await requireAdminUser(request);
+
+  if (!adminUser) {
+    throw new Response("Unauthorized", { status: 401 });
+  }
+
   /* Pobieranie par playoff */
 
   const playoffs = await db.playoff.findMany({
@@ -61,11 +67,7 @@ export const loader: LoaderFunction = async ({ request }) => {
 };
 
 export const action: ActionFunction = async ({ request }) => {
-  const userId = await getUserId(request);
-
-  if (!userId) {
-    throw new Response("Unauthorized", { status: 401 });
-  }
+  await requireAdminUser(request);
 
   const form = await request.formData();
 
@@ -97,7 +99,7 @@ export const action: ActionFunction = async ({ request }) => {
   /* Aktualizacja drużyn w playoff */
 
   for (const match of matches) {
-    await db.match.updateMany({
+    await db.match.update({
       where: { id: match.matchId },
       data: { homeTeamId: match.homeTeamId, awayTeamId: match.awayTeamId },
     });

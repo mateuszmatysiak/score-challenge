@@ -38,12 +38,14 @@ export const loader: LoaderFunction = async ({ request }) => {
 export default function GameRoute() {
   const { user } = useLoaderData<LoaderData>();
 
+  const isAdmin = user?.username === ENV.ADMIN_USERNAME;
   return (
     <div className="flex flex-col gap-10 min-h-screen bg-maroon px-32 py-8">
       <header>
         <div className="flex justify-between items-center gap-4 bg-orange text-white p-4 rounded-t-md">
           <h1 className="uppercase text-maroon font-bold">
-            Fifa World Cup Qatar 2022
+            <div>Fifa World Cup Qatar 2022</div>
+            <div className="text-sm">Score Challange</div>
           </h1>
 
           {user ? (
@@ -110,18 +112,22 @@ export default function GameRoute() {
           >
             Ranking
           </Link>
-          <Link
-            to="/game/admin/matches"
-            className="flex-1 bg-orange p-4 rounded-md border-b-4 border-solid border-bright-blue font-bold text-maroon"
-          >
-            Admin Matches
-          </Link>
-          <Link
-            to="/game/admin/playoff-pairs"
-            className="flex-1 bg-orange p-4 rounded-md border-b-4 border-solid border-bright-blue font-bold text-maroon"
-          >
-            Admin Playoff Pairs
-          </Link>
+          {isAdmin ? (
+            <>
+              <Link
+                to="/game/admin/matches"
+                className="flex-1 bg-orange p-4 rounded-md border-b-4 border-solid border-bright-blue font-bold text-maroon"
+              >
+                Admin Matches
+              </Link>
+              <Link
+                to="/game/admin/playoff-pairs"
+                className="flex-1 bg-orange p-4 rounded-md border-b-4 border-solid border-bright-blue font-bold text-maroon"
+              >
+                Admin Playoff Pairs
+              </Link>
+            </>
+          ) : null}
         </div>
 
         <Outlet />

@@ -79,7 +79,7 @@ export async function getUserId(request: Request) {
 
 interface RequireUserId {
   request: Request;
-  redirectTo: string;
+  redirectTo?: string;
 }
 
 export async function requireUserId({
@@ -97,6 +97,24 @@ export async function requireUserId({
   return userId;
 }
 
+export async function requireUser(request: Request) {
+  const user = await getUser(request);
+
+  if (user) return user;
+
+  throw await logout(request);
+}
+
+export async function requireAdminUser(request: Request) {
+  const user = await requireUser(request);
+  console.log(ENV);
+  if (user.username !== ENV.ADMIN_USERNAME) {
+    throw await logout(request);
+  }
+
+  return user;
+}
+
 export async function getUser(request: Request) {
   const userId = await getUserId(request);
 
@@ -112,7 +130,7 @@ export async function getUser(request: Request) {
 
     return user;
   } catch {
-    throw logout(request);
+    throw await logout(request);
   }
 }
 

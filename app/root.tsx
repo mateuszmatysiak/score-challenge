@@ -1,4 +1,5 @@
-import type { MetaFunction } from "@remix-run/node";
+import type { LoaderFunction, MetaFunction } from "@remix-run/node";
+import { json } from "@remix-run/node";
 import {
   Links,
   LiveReload,
@@ -6,7 +7,9 @@ import {
   Outlet,
   Scripts,
   useCatch,
+  useLoaderData,
 } from "@remix-run/react";
+import { getEnv } from "./env.server";
 import styles from "./styles/app.css";
 
 export function links() {
@@ -18,16 +21,28 @@ export const meta: MetaFunction = () => {
   return {
     charset: "utf-8",
     description,
-    keywords: "Remix,World Cup, Qatar 2022",
+    keywords: "Remix,World Cup, Qatar 2022,Score challange, Game",
   };
+};
+
+type LoaderData = {
+  ENV: ReturnType<typeof getEnv>;
+};
+
+export const loader: LoaderFunction = async ({ request }) => {
+  return json<LoaderData>({
+    ENV: getEnv(),
+  });
 };
 
 function Document({
   children,
-  title = `Fifa World Cup Qatar 2022`,
+  title = `FIFA World Cup Score Challange`,
+  data,
 }: {
   children: React.ReactNode;
   title?: string;
+  data?: LoaderData;
 }) {
   return (
     <html lang="en">
@@ -39,6 +54,13 @@ function Document({
       <body>
         {children}
         <Scripts />
+        {data ? (
+          <script
+            dangerouslySetInnerHTML={{
+              __html: `window.ENV = ${JSON.stringify(data.ENV)}`,
+            }}
+          />
+        ) : null}
         <LiveReload />
       </body>
     </html>
@@ -46,8 +68,10 @@ function Document({
 }
 
 export default function App() {
+  const data = useLoaderData<LoaderData>();
+
   return (
-    <Document>
+    <Document data={data}>
       <Outlet />
     </Document>
   );
