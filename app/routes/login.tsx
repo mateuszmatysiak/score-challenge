@@ -102,12 +102,12 @@ export const action: ActionFunction = async ({ request }) => {
         });
       }
 
-      console.log(user);
-
       /* Pobranie meczów i drużyn */
 
       const matches = await db.match.findMany();
       const teams = await db.team.findMany();
+
+      console.log("before db.userMatch.create", matches, teams);
 
       /* Tworzenie meczów dla nowego użytkownika */
 
@@ -118,6 +118,8 @@ export const action: ActionFunction = async ({ request }) => {
           data: { userId: user.id, matchId: match.id },
         });
       }
+
+      console.log("before db.userTeam.create", user, teams);
 
       /* Tworzenie drużyn dla nowego użytkownika */
 
@@ -137,6 +139,8 @@ export const action: ActionFunction = async ({ request }) => {
       /* Tworzenie rankingu dla nowego użytkownika */
 
       /* TODO: Zamienić pętle for na seedFunctions */
+
+      console.log("before db.userRanking.create", user, teams);
 
       await db.userRanking.createMany({
         data: {
