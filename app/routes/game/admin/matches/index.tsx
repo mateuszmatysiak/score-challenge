@@ -33,11 +33,7 @@ interface LoaderData {
 }
 
 export const loader: LoaderFunction = async ({ request }) => {
-  const adminUser = await requireAdminUser(request);
-
-  if (!adminUser) {
-    throw new Response("Unauthorized", { status: 401 });
-  }
+  await requireAdminUser(request);
 
   /* Pobieranie meczów odbywających się na turnieju */
 

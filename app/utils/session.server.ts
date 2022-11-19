@@ -13,7 +13,7 @@ export async function register({ username, password }: LoginForm) {
   const user = await db.user.create({
     data: { username, passwordHash },
   });
-  return { id: user.id, username };
+  return { id: user.id, username, role: "USER" };
 }
 
 export async function login({ username, password }: LoginForm) {
@@ -107,8 +107,8 @@ export async function requireUser(request: Request) {
 
 export async function requireAdminUser(request: Request) {
   const user = await requireUser(request);
-  console.log(ENV);
-  if (user.username !== ENV.ADMIN_USERNAME) {
+
+  if (user.role !== "ADMIN") {
     throw await logout(request);
   }
 

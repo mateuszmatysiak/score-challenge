@@ -38,14 +38,14 @@ export const loader: LoaderFunction = async ({ request }) => {
 export default function GameRoute() {
   const { user } = useLoaderData<LoaderData>();
 
-  const isAdmin = user?.username === ENV.ADMIN_USERNAME;
+  const isAdmin = user?.role === "ADMIN";
   return (
     <div className="flex flex-col gap-10 min-h-screen bg-maroon px-32 py-8">
       <header>
         <div className="flex justify-between items-center gap-4 bg-orange text-white p-4 rounded-t-md">
           <h1 className="uppercase text-maroon font-bold">
             <div>Fifa World Cup Qatar 2022</div>
-            <div className="text-sm">Score Challange</div>
+            <div className="text-sm">Score Challenge</div>
           </h1>
 
           {user ? (

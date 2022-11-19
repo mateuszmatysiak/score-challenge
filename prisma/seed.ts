@@ -3,6 +3,8 @@ import { PrismaClient } from "@prisma/client";
 
 const db = new PrismaClient();
 
+const seedUserRoles = [{ name: "USER" }, { name: "ADMIN" }];
+
 const seedRanking = {
   groupPoints: 0,
   playoffPoints: 0,
@@ -1361,6 +1363,8 @@ const seedTournamentMatches = ({ matches }: { matches: Match[] }) => {
 };
 
 async function seed() {
+  /* Utworzenie ról użytownika */
+  await db.userRole.createMany({ data: seedUserRoles });
   /* Utworzenie stadionów */
   await db.stadium.createMany({ data: seedStadiums });
   /* Utworzenie etapów */

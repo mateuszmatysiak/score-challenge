@@ -8,6 +8,6 @@ module.exports = {
   ignoredRouteFiles: ["**/.*"],
   appDirectory: "app",
   assetsBuildDirectory: "public/build",
-  serverBuildPath: "build/index.js",
+  serverBuildPath: ".netlify/functions-internal/server.js",
   publicPath: "/build/",
 };
