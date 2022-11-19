@@ -3,7 +3,7 @@ import type { LoaderFunction } from "@remix-run/node";
 import { json } from "@remix-run/node";
 import { Form, Link, Outlet, useCatch, useLoaderData } from "@remix-run/react";
 import { db } from "~/utils/db.server";
-import { getUser } from "~/utils/session.server";
+import { getUserId } from "~/utils/session.server";
 
 type UserWithRanking = {
   rank: number;
@@ -18,9 +18,9 @@ type LoaderData = {
 };
 
 export const loader: LoaderFunction = async ({ request }) => {
-  const user = await getUser(request);
+  const userId = await getUserId(request);
 
-  if (!user) {
+  if (!userId) {
     throw new Response("Unauthorized", { status: 401 });
   }
 
@@ -36,7 +36,7 @@ export const loader: LoaderFunction = async ({ request }) => {
 
   const loggedInUser = users
     .map((user, index) => ({ ...user, rank: index + 1 }))
-    .find((value) => value.id === user.id);
+    .find((user) => user.id === userId);
 
   return json({ user: loggedInUser });
 };

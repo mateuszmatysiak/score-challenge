@@ -4,7 +4,7 @@ import { json, redirect } from "@remix-run/node";
 import { Form, useActionData, useLoaderData } from "@remix-run/react";
 
 import { db } from "~/utils/db.server";
-import { getUser } from "~/utils/session.server";
+import { getUserId } from "~/utils/session.server";
 
 /* Funkcja pomocnicze */
 
@@ -103,9 +103,9 @@ interface LoaderData {
 }
 
 export const loader: LoaderFunction = async ({ request, params }) => {
-  const user = await getUser(request);
+  const userId = await getUserId(request);
 
-  if (!user) {
+  if (!userId) {
     throw new Response("Unauthorized", { status: 401 });
   }
 
@@ -114,7 +114,7 @@ export const loader: LoaderFunction = async ({ request, params }) => {
   /* Pobieranie meczu użytkownika */
 
   const userMatch = await db.userMatch.findFirst({
-    where: { userId: user.id, match: { id: matchId } },
+    where: { userId, match: { id: matchId } },
     orderBy: { match: { startDate: "asc" } },
     select: {
       id: true,
@@ -147,7 +147,7 @@ export const loader: LoaderFunction = async ({ request, params }) => {
       teamId: true,
       userMatches: {
         select: { goalScorerId: true },
-        where: { userId: user.id, matchId },
+        where: { userId, matchId },
       },
     },
   });
@@ -159,9 +159,9 @@ export const loader: LoaderFunction = async ({ request, params }) => {
 };
 
 export const action: ActionFunction = async ({ request, params }) => {
-  const user = await getUser(request);
+  const userId = await getUserId(request);
 
-  if (!user) {
+  if (!userId) {
     throw new Response("Unauthorized", { status: 401 });
   }
 
@@ -195,7 +195,7 @@ export const action: ActionFunction = async ({ request, params }) => {
   /* Aktualizacja meczu użytkownika */
 
   await db.userMatch.updateMany({
-    where: { id: userMatchId, userId: user.id },
+    where: { id: userMatchId, userId },
     data: {
       goalScorerId: Number(goalScorerId),
       homeTeamScore: Number(homeTeamScore),
@@ -262,7 +262,7 @@ export const action: ActionFunction = async ({ request, params }) => {
 
   for (const team of Object.values(groupedTeams)) {
     await db.userTeam.updateMany({
-      where: { teamId: team.teamId, userId: user.id },
+      where: { teamId: team.teamId, userId },
       data: { points: team.points, goalDifference: team.goalDifference },
     });
   }

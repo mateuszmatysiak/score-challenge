@@ -3,7 +3,7 @@ import { json } from "@remix-run/node";
 import { Link, useLoaderData } from "@remix-run/react";
 
 import { db } from "~/utils/db.server";
-import { getUser } from "~/utils/session.server";
+import { getUserId } from "~/utils/session.server";
 
 type GroupsWithTeams = {
   id: string;
@@ -20,9 +20,9 @@ type LoaderData = {
 };
 
 export const loader: LoaderFunction = async ({ request }) => {
-  const user = await getUser(request);
+  const userId = await getUserId(request);
 
-  if (!user) {
+  if (!userId) {
     throw new Response("Unauthorized", { status: 401 });
   }
 
@@ -37,7 +37,7 @@ export const loader: LoaderFunction = async ({ request }) => {
         select: {
           name: true,
           userTeams: {
-            where: { userId: user.id },
+            where: { userId },
           },
         },
       },
