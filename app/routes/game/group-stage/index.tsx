@@ -101,8 +101,8 @@ export default function GroupStageRoute() {
                     </div>
 
                     <div className="flex gap-4">
-                      <span>{team.points}</span>
-                      <span>{team.goalDifference}</span>
+                      <span>{team.points ?? "-"}</span>
+                      <span>{team.goalDifference ?? "-"}</span>
                     </div>
                   </li>
                 );
@@ -112,6 +112,7 @@ export default function GroupStageRoute() {
             <div className="flex justify-center">
               <Link
                 to={`/game/group-stage/${group.id}`}
+                prefetch="intent"
                 className="bg-orange p-2 rounded-md border-b-4 border-solid border-maroon font-bold text-maroon"
               >
                 Bet Group

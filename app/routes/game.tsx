@@ -10,6 +10,7 @@ type UserWithRanking = {
   ranking: UserRanking | null;
   id: string;
   username: string;
+  role: string;
 };
 
 type LoaderData = {
@@ -25,7 +26,12 @@ export const loader: LoaderFunction = async ({ request }) => {
 
   const users = await db.user.findMany({
     orderBy: { ranking: { totalPoints: "desc" } },
-    select: { id: true, username: true, ranking: true },
+    select: {
+      id: true,
+      username: true,
+      ranking: true,
+      role: true,
+    },
   });
 
   const loggedInUser = users
@@ -38,14 +44,14 @@ export const loader: LoaderFunction = async ({ request }) => {
 export default function GameRoute() {
   const { user } = useLoaderData<LoaderData>();
 
-  const isAdmin = user?.username === ENV.ADMIN_USERNAME;
+  const isAdmin = user?.role === "ADMIN";
   return (
     <div className="flex flex-col gap-10 min-h-screen bg-maroon px-32 py-8">
       <header>
         <div className="flex justify-between items-center gap-4 bg-orange text-white p-4 rounded-t-md">
           <h1 className="uppercase text-maroon font-bold">
             <div>Fifa World Cup Qatar 2022</div>
-            <div className="text-sm">Score Challange</div>
+            <div className="text-sm">Score Challenge</div>
           </h1>
 
           {user ? (
@@ -75,17 +81,17 @@ export default function GameRoute() {
             </div>
 
             <div className="flex flex-col items-center text-sm">
-              <span>{user?.ranking?.groupPoints}</span>
+              <span>{user?.ranking?.groupPoints ?? "-"}</span>
               <span>Group Pts</span>
             </div>
 
             <div className="flex flex-col items-center text-sm">
-              <span>{user?.ranking?.playoffPoints}</span>
+              <span>{user?.ranking?.playoffPoints ?? "-"}</span>
               <span>Playoff Pts</span>
             </div>
 
             <div className="flex flex-col items-center text-sm">
-              <span>{user?.ranking?.totalPoints}</span>
+              <span>{user?.ranking?.totalPoints ?? "-"}</span>
               <span>Total Pts</span>
             </div>
           </div>
@@ -95,19 +101,29 @@ export default function GameRoute() {
       <main className="flex flex-col flex-1 gap-4">
         <div className="flex gap-4">
           <Link
+            to="/game"
+            prefetch="intent"
+            className="flex-1 bg-orange p-4 rounded-md border-b-4 border-solid border-bright-blue font-bold text-maroon"
+          >
+            Today's Matches
+          </Link>
+          <Link
             to="/game/group-stage"
+            prefetch="intent"
             className="flex-1 bg-orange p-4 rounded-md border-b-4 border-solid border-bright-blue font-bold text-maroon"
           >
             Group Stage
           </Link>
           <Link
             to="/game/playoff-stage"
+            prefetch="intent"
             className="flex-1 bg-orange p-4 rounded-md border-b-4 border-solid border-bright-blue font-bold text-maroon"
           >
             Playoff Stage
           </Link>
           <Link
             to="/game/ranking"
+            prefetch="intent"
             className="flex-1 bg-orange p-4 rounded-md border-b-4 border-solid border-bright-blue font-bold text-maroon"
           >
             Ranking
@@ -116,12 +132,14 @@ export default function GameRoute() {
             <>
               <Link
                 to="/game/admin/matches"
+                prefetch="intent"
                 className="flex-1 bg-orange p-4 rounded-md border-b-4 border-solid border-bright-blue font-bold text-maroon"
               >
                 Admin Matches
               </Link>
               <Link
                 to="/game/admin/playoff-pairs"
+                prefetch="intent"
                 className="flex-1 bg-orange p-4 rounded-md border-b-4 border-solid border-bright-blue font-bold text-maroon"
               >
                 Admin Playoff Pairs

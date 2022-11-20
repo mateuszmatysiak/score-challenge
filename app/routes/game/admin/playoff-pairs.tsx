@@ -33,11 +33,7 @@ interface LoaderData {
 }
 
 export const loader: LoaderFunction = async ({ request }) => {
-  const adminUser = await requireAdminUser(request);
-
-  if (!adminUser) {
-    throw new Response("Unauthorized", { status: 401 });
-  }
+  await requireAdminUser(request);
 
   /* Pobieranie par playoff */
 
@@ -124,11 +120,8 @@ export default function AdminPlayoffPairsRoute() {
               {playoff.matches.map((match, index) => (
                 <div key={match.id} className="p-4 bg-white rounded-md">
                   <span>
-                    {index + 1}. {playoff.name},{" "}
-                    {playoff.matches[index]?.stadium.name},{" "}
-                    {new Date(
-                      playoff.matches[index]?.startDate
-                    ).toLocaleString()}
+                    {index + 1}. {playoff.name}, {match.stadium.name},{" "}
+                    {new Date(match.startDate).toLocaleString()}
                   </span>
 
                   {/* Hidden field */}

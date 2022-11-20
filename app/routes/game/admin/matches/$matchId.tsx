@@ -149,11 +149,7 @@ interface LoaderData {
 }
 
 export const loader: LoaderFunction = async ({ request, params }) => {
-  const adminUser = await requireAdminUser(request);
-
-  if (!adminUser) {
-    throw new Response("Unauthorized", { status: 401 });
-  }
+  await requireAdminUser(request);
 
   const matchId = Number(params.matchId?.split("-")[1]);
 
@@ -232,8 +228,8 @@ export const action: ActionFunction = async ({ request, params }) => {
 
   /* Aktualizacja meczu "realnego" */
 
-  await db.tournamentMatch.update({
-    where: { id: matchId },
+  await db.tournamentMatch.updateMany({
+    where: { matchId },
     data: {
       goalScorerId: Number(goalScorerId),
       homeTeamScore: Number(homeTeamScore),

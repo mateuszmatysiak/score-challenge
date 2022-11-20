@@ -88,10 +88,12 @@ export default function PlayoffMatchesRoute() {
                 {userMatch.match.awayTeam?.name ?? "Team B"}{" "}
                 {`(${userMatch.awayTeamScore ?? "-"})`}
               </span>
+              <div>{new Date(userMatch.match.startDate).toLocaleString()}</div>
             </div>
 
             <Link
               to={`/game/playoff-stage/${playoffId}/match-${userMatch.match.id}`}
+              prefetch="intent"
               className="bg-orange p-2 rounded-md border-b-4 border-solid border-maroon font-bold text-maroon"
             >
               Bet Match

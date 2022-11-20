@@ -194,8 +194,8 @@ export const action: ActionFunction = async ({ request, params }) => {
 
   /* Aktualizacja meczu użytkownika */
 
-  await db.userMatch.updateMany({
-    where: { id: userMatchId, userId },
+  await db.userMatch.update({
+    where: { id: userMatchId },
     data: {
       goalScorerId: Number(goalScorerId),
       homeTeamScore: Number(homeTeamScore),
@@ -207,6 +207,7 @@ export const action: ActionFunction = async ({ request, params }) => {
 
   const userMatches = await db.userMatch.findMany({
     where: {
+      userId,
       match: { groupId },
       homeTeamScore: { not: null },
       awayTeamScore: { not: null },

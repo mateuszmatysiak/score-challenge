@@ -1,9 +1,47 @@
+import type { Match, Team } from "@prisma/client";
 import type { ActionFunction } from "@remix-run/node";
 import { json } from "@remix-run/node";
 import { Form, useActionData, useSearchParams } from "@remix-run/react";
 
 import { db } from "~/utils/db.server";
 import { createUserSession, login, register } from "~/utils/session.server";
+
+const seedUserTeams = ({
+  userId,
+  teams,
+}: {
+  userId: string;
+  teams: Team[];
+}) => {
+  const userTeams: {
+    userId: string;
+    teamId: string;
+    points: number;
+    goalDifference: number;
+  }[] = [];
+
+  for (const team of teams) {
+    userTeams.push({ userId, teamId: team.id, points: 0, goalDifference: 0 });
+  }
+
+  return userTeams;
+};
+
+const seedUserMatches = ({
+  userId,
+  matches,
+}: {
+  userId: string;
+  matches: Match[];
+}) => {
+  const userMatches: { userId: string; matchId: number }[] = [];
+
+  for (const match of matches) {
+    userMatches.push({ userId, matchId: match.id });
+  }
+
+  return userMatches;
+};
 
 function validateUsername(username: unknown) {
   if (typeof username !== "string" || username.length < 3) {
@@ -109,32 +147,15 @@ export const action: ActionFunction = async ({ request }) => {
 
       /* Tworzenie meczów dla nowego użytkownika */
 
-      /* TODO: Zamienić pętle for na seedFunctions */
-
-      for (const match of matches) {
-        await db.userMatch.createMany({
-          data: { userId: user.id, matchId: match.id },
-        });
-      }
+      const userMatches = seedUserMatches({ userId: user.id, matches });
+      await db.userMatch.createMany({ data: userMatches });
 
       /* Tworzenie drużyn dla nowego użytkownika */
 
-      /* TODO: Zamienić pętle for na seedFunctions */
-
-      for (const team of teams) {
-        await db.userTeam.createMany({
-          data: {
-            userId: user.id,
-            teamId: team.id,
-            points: 0,
-            goalDifference: 0,
-          },
-        });
-      }
+      const userTeams = seedUserTeams({ userId: user.id, teams });
+      await db.userTeam.createMany({ data: userTeams });
 
       /* Tworzenie rankingu dla nowego użytkownika */
-
-      /* TODO: Zamienić pętle for na seedFunctions */
 
       await db.userRanking.create({
         data: {
