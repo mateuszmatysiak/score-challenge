@@ -207,6 +207,7 @@ export const action: ActionFunction = async ({ request, params }) => {
 
   const userMatches = await db.userMatch.findMany({
     where: {
+      userId,
       match: { groupId },
       homeTeamScore: { not: null },
       awayTeamScore: { not: null },
