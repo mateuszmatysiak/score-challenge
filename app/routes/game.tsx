@@ -101,6 +101,13 @@ export default function GameRoute() {
       <main className="flex flex-col flex-1 gap-4">
         <div className="flex gap-4">
           <Link
+            to="/game"
+            prefetch="intent"
+            className="flex-1 bg-orange p-4 rounded-md border-b-4 border-solid border-bright-blue font-bold text-maroon"
+          >
+            Today's Matches
+          </Link>
+          <Link
             to="/game/group-stage"
             prefetch="intent"
             className="flex-1 bg-orange p-4 rounded-md border-b-4 border-solid border-bright-blue font-bold text-maroon"
