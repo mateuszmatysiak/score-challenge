@@ -88,6 +88,7 @@ export default function GroupMatchesRoute() {
                 {userMatch.match.awayTeam?.name}{" "}
                 {`(${userMatch.awayTeamScore ?? "-"})`}
               </span>
+              <div>{new Date(userMatch.match.startDate).toLocaleString()}</div>
             </div>
 
             <Link

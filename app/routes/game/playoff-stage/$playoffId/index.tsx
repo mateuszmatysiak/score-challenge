@@ -88,6 +88,7 @@ export default function PlayoffMatchesRoute() {
                 {userMatch.match.awayTeam?.name ?? "Team B"}{" "}
                 {`(${userMatch.awayTeamScore ?? "-"})`}
               </span>
+              <div>{new Date(userMatch.match.startDate).toLocaleString()}</div>
             </div>
 
             <Link
