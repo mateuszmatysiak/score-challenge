@@ -78,7 +78,7 @@ export default function GameRoute() {
         {matches.map((match) => {
           const stageTypeId = match.groupId ?? match.playoffId;
 
-          const to = `/game/${match.stage.id}-stage/${stageTypeId}/match-${match.userMatches[0]?.id}`;
+          const to = `/game/${match.stage.id}-stage/${stageTypeId}/match-${match.id}`;
           return (
             <li
               key={match.id}
