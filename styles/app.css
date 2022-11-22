@@ -2,9 +2,102 @@
 @tailwind components;
 @tailwind utilities;
 
+@font-face {
+  font-family: "Karla";
+  font-style: "light";
+  font-weight: 300;
+  src: url("public/assets/fonts/Karla-Light.ttf");
+}
+
+@font-face {
+  font-family: "Karla";
+  font-style: "normal";
+  font-weight: 400;
+  src: url("public/assets/fonts/Karla-Normal.ttf");
+}
+
+@font-face {
+  font-family: "Karla";
+  font-style: "medium";
+  font-weight: 500;
+  src: url("public/assets/fonts/Karla-Medium.ttf");
+}
+
+@font-face {
+  font-family: "Karla";
+  font-style: "bold";
+  font-weight: 700;
+  src: url("public/assets/fonts/Karla-Bold.ttf");
+}
+
 :root {
-  --maroon: #54081d;
-  --bright-blue: #00beff;
-  --orange: #f9a601;
-  --grey: #e9e9e9;
+  --maroon: rgb(87, 16, 48);
+  --brighter-purple: rgb(235, 25, 95);
+  --bright-purple: rgb(174, 41, 86);
+  --purple: rgb(77, 16, 97);
+  --dark-blue: rgb(55, 57, 81);
+  --grey: rgb(216, 223, 232);
+  --divider: rgb(203, 203, 203);
+  --white-85-opacity: rgba(255, 255, 255, 85%);
+}
+
+@layer base {
+  html {
+    @apply font-karla text-dark-blue;
+  }
+}
+
+@layer components {
+  .action-button {
+    @apply bg-maroon text-white rounded-md text-18-regular px-12 py-2;
+  }
+
+  .text-48-bold {
+    @apply text-5xl font-bold tracking-tighter;
+  }
+  .text-36-medium {
+    @apply text-4xl font-medium tracking-tight;
+  }
+  .text-30-bold {
+    @apply text-3xl font-bold tracking-tight;
+  }
+  .text-30-medium {
+    @apply text-3xl font-medium tracking-tight;
+  }
+  .text-24-medium {
+    @apply text-2xl font-medium tracking-tight;
+  }
+  .text-24-regular {
+    @apply text-2xl tracking-tight;
+  }
+  .text-20-bold {
+    @apply text-xl font-bold;
+  }
+  .text-20-medium {
+    @apply text-xl font-medium;
+  }
+  .text-20-regular {
+    @apply text-xl;
+  }
+  .text-18-regular {
+    @apply text-lg;
+  }
+  .text-16-bold {
+    @apply text-base font-bold;
+  }
+  .text-16-medium {
+    @apply text-base font-medium;
+  }
+  .text-16-regular {
+    @apply text-base;
+  }
+  .text-14-medium {
+    @apply text-sm font-medium;
+  }
+  .text-14-regular {
+    @apply text-sm;
+  }
+  .text-12-regular {
+    @apply text-xs;
+  }
 }

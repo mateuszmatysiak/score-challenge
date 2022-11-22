@@ -419,6 +419,11 @@ video {
   display: none;
 }
 
+html {
+  font-family: Karla, sans-serif;
+  color: var(--dark-blue);
+}
+
 *, ::before, ::after {
   --tw-border-spacing-x: 0;
   --tw-border-spacing-y: 0;
@@ -513,6 +518,60 @@ video {
   --tw-backdrop-sepia:  ;
 }
 
+.action-button {
+  font-size: 1.125rem;
+  line-height: 1.75rem;
+  border-radius: 0.375rem;
+  background-color: var(--maroon);
+  padding-left: 3rem;
+  padding-right: 3rem;
+  padding-top: 0.5rem;
+  padding-bottom: 0.5rem;
+  --tw-text-opacity: 1;
+  color: rgb(255 255 255 / var(--tw-text-opacity));
+}
+
+.text-24-medium {
+  font-size: 1.5rem;
+  line-height: 2rem;
+  font-weight: 500;
+  letter-spacing: -0.025em;
+}
+
+.text-16-regular {
+  font-size: 1rem;
+  line-height: 1.5rem;
+}
+
+.text-14-regular {
+  font-size: 0.875rem;
+  line-height: 1.25rem;
+}
+
+.absolute {
+  position: absolute;
+}
+
+.relative {
+  position: relative;
+}
+
+.top-10 {
+  top: 2.5rem;
+}
+
+.left-10 {
+  left: 2.5rem;
+}
+
+.mb-9 {
+  margin-bottom: 2.25rem;
+}
+
+.ml-auto {
+  margin-left: auto;
+}
+
 .flex {
   display: flex;
 }
@@ -529,16 +588,32 @@ video {
   height: 100vh;
 }
 
+.h-full {
+  height: 100%;
+}
+
+.h-16 {
+  height: 4rem;
+}
+
 .min-h-screen {
   min-height: 100vh;
+}
+
+.w-\[55\%\] {
+  width: 55%;
+}
+
+.w-16 {
+  width: 4rem;
 }
 
 .w-full {
   width: 100%;
 }
 
-.max-w-\[450px\] {
-  max-width: 450px;
+.max-w-\[425px\] {
+  max-width: 425px;
 }
 
 .flex-1 {
@@ -585,8 +660,8 @@ video {
   gap: 2rem;
 }
 
-.gap-2 {
-  gap: 0.5rem;
+.gap-5 {
+  gap: 1.25rem;
 }
 
 .gap-1 {
@@ -597,8 +672,8 @@ video {
   border-radius: 0.375rem;
 }
 
-.rounded-xl {
-  border-radius: 0.75rem;
+.rounded-lg {
+  border-radius: 0.5rem;
 }
 
 .rounded-t-md {
@@ -627,8 +702,8 @@ video {
   border-color: var(--maroon);
 }
 
-.border-bright-blue {
-  border-color: var(--bright-blue);
+.border-grey {
+  border-color: var(--grey);
 }
 
 .border-black {
@@ -640,21 +715,13 @@ video {
   background-color: var(--maroon);
 }
 
-.bg-orange {
-  background-color: var(--orange);
-}
-
-.bg-bright-blue {
-  background-color: var(--bright-blue);
-}
-
 .bg-white {
   --tw-bg-opacity: 1;
   background-color: rgb(255 255 255 / var(--tw-bg-opacity));
 }
 
-.bg-grey {
-  background-color: var(--grey);
+.bg-white-85-opacity {
+  background-color: var(--white-85-opacity);
 }
 
 .bg-amber-200 {
@@ -662,12 +729,28 @@ video {
   background-color: rgb(253 230 138 / var(--tw-bg-opacity));
 }
 
+.bg-\[url\(public\/assets\/images\/background\.jpg\)\] {
+  background-image: url(public/assets/images/background.jpg);
+}
+
+.bg-\[url\(public\/assets\/images\/logo\.svg\)\] {
+  background-image: url(public/assets/images/logo.svg);
+}
+
+.bg-cover {
+  background-size: cover;
+}
+
+.bg-bottom {
+  background-position: bottom;
+}
+
 .p-4 {
   padding: 1rem;
 }
 
-.p-6 {
-  padding: 1.5rem;
+.p-10 {
+  padding: 2.5rem;
 }
 
 .p-2 {
@@ -718,11 +801,6 @@ video {
   line-height: 1.75rem;
 }
 
-.text-3xl {
-  font-size: 1.875rem;
-  line-height: 2.25rem;
-}
-
 .text-xs {
   font-size: 0.75rem;
   line-height: 1rem;
@@ -763,9 +841,53 @@ video {
   filter: var(--tw-blur) var(--tw-brightness) var(--tw-contrast) var(--tw-grayscale) var(--tw-hue-rotate) var(--tw-invert) var(--tw-saturate) var(--tw-sepia) var(--tw-drop-shadow);
 }
 
+@font-face {
+  font-family: "Karla";
+
+  font-style: "light";
+
+  font-weight: 300;
+
+  src: url("public/assets/fonts/Karla-Light.ttf");
+}
+
+@font-face {
+  font-family: "Karla";
+
+  font-style: "normal";
+
+  font-weight: 400;
+
+  src: url("public/assets/fonts/Karla-Normal.ttf");
+}
+
+@font-face {
+  font-family: "Karla";
+
+  font-style: "medium";
+
+  font-weight: 500;
+
+  src: url("public/assets/fonts/Karla-Medium.ttf");
+}
+
+@font-face {
+  font-family: "Karla";
+
+  font-style: "bold";
+
+  font-weight: 700;
+
+  src: url("public/assets/fonts/Karla-Bold.ttf");
+}
+
 :root {
-  --maroon: #54081d;
-  --bright-blue: #00beff;
-  --orange: #f9a601;
-  --grey: #e9e9e9;
+  --maroon: rgb(87, 16, 48);
+  --brighter-purple: rgb(235, 25, 95);
+  --bright-purple: rgb(174, 41, 86);
+  --purple: rgb(77, 16, 97);
+  --dark-blue: rgb(55, 57, 81);
+  --grey: rgb(216, 223, 232);
+  --divider: rgb(203, 203, 203);
+  --white-85-opacity: rgba(255, 255, 255, 85%);
 }
