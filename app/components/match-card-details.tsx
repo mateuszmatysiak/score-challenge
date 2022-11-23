@@ -22,14 +22,12 @@ export function MatchCardDetails({ match }: MatchCardDetailsProps) {
 
   const stageName = getStageName({ groupName, playoffName });
 
-  const datePlusOneHour = new Date(startDate).setHours(
-    new Date(startDate).getHours() + 1
-  );
+  const matchStartDate = new Date(startDate);
   const startDateIntl = new Intl.DateTimeFormat("en-EN", {
     dateStyle: "full",
     timeStyle: "medium",
     timeZone: "Europe/Warsaw",
-  }).format(datePlusOneHour);
+  }).format(matchStartDate);
 
   return (
     <div className="text-center">
@@ -37,7 +35,7 @@ export function MatchCardDetails({ match }: MatchCardDetailsProps) {
       <div className="text-14-regular">{stadium.name}</div>
       <Link
         to={`/game/${stage.id}-stage/${group?.id ?? playoff?.id}`}
-        className="text-14-regular text-bright-purple"
+        className="text-14-medium text-bright-purple"
       >
         {stageName}
       </Link>

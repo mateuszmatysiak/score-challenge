@@ -4,8 +4,13 @@ export interface MatchCardTeamFlagProps {
   size: "small" | "large";
 }
 
+const sizeProperties = {
+  small: "40px",
+  large: "100px",
+} as const;
+
 export function MatchCardTeamFlag({ src, alt, size }: MatchCardTeamFlagProps) {
-  const imgSize = size === "large" ? "100px" : "40px";
+  const imgSize = sizeProperties[size];
 
   return src ? (
     <img
