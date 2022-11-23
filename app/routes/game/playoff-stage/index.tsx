@@ -1,28 +1,37 @@
+import type { Prisma } from "@prisma/client";
 import type { LoaderFunction } from "@remix-run/node";
 import { json } from "@remix-run/node";
-import { Link, useLoaderData } from "@remix-run/react";
+import { useLoaderData } from "@remix-run/react";
+import { groupBy } from "lodash";
+import { Fragment } from "react";
+import { MatchCard } from "~/components/match-card";
 
 import { db } from "~/utils/db.server";
 import { getUserId } from "~/utils/session.server";
 
-type PlayoffWithMatches = {
-  id: string;
-  name: string;
-  matches: {
-    id: number;
-    homeTeam: {
-      name: string;
-      score: number;
+type UserMatch = Prisma.UserMatchGetPayload<{
+  select: {
+    id: true;
+    homeTeamScore: true;
+    awayTeamScore: true;
+    goalScorer: true;
+    match: {
+      select: {
+        id: true;
+        playoff: true;
+        group: true;
+        homeTeam: true;
+        awayTeam: true;
+        stadium: true;
+        stage: true;
+        startDate: true;
+      };
     };
-    awayTeam: {
-      name: string;
-      score: number;
-    };
-  }[];
-};
+  };
+}>;
 
 type LoaderData = {
-  playoffs: PlayoffWithMatches[];
+  userMatches: UserMatch[];
 };
 
 export const loader: LoaderFunction = async ({ request }) => {
@@ -32,90 +41,77 @@ export const loader: LoaderFunction = async ({ request }) => {
     throw new Response("Unauthorized", { status: 401 });
   }
 
-  /* Pobieranie playoffów */
-
-  const playoffs = await db.playoff.findMany({
+  const userMatches = await db.userMatch.findMany({
+    where: { userId, match: { stageId: "playoff" } },
+    orderBy: [{ match: { startDate: "asc" } }],
     select: {
       id: true,
-      name: true,
-      matches: {
-        orderBy: { startDate: "asc" },
+      homeTeamScore: true,
+      awayTeamScore: true,
+      goalScorer: true,
+      match: {
         select: {
           id: true,
-          userMatches: {
-            where: { userId },
-            select: {
-              id: true,
-              match: {
-                select: {
-                  homeTeam: { select: { id: true, name: true } },
-                  awayTeam: { select: { id: true, name: true } },
-                },
-              },
-              homeTeamScore: true,
-              awayTeamScore: true,
-            },
-          },
+          playoff: true,
+          group: true,
+          homeTeam: true,
+          awayTeam: true,
+          stadium: true,
+          stage: true,
+          startDate: true,
         },
       },
     },
   });
 
-  /* Formatowanie playoffów */
-
-  const formattedPlayoffs = playoffs.map((playoff) => ({
-    ...playoff,
-    matches: playoff.matches.map(({ userMatches, ...match }) => ({
-      ...match,
-      homeTeam: {
-        name: userMatches[0]?.match.homeTeam?.name,
-        score: userMatches[0]?.homeTeamScore,
-      },
-      awayTeam: {
-        name: userMatches[0]?.match.awayTeam?.name,
-        score: userMatches[0]?.awayTeamScore,
-      },
-    })),
-  }));
-
-  return json({ playoffs: formattedPlayoffs });
+  return json({ userMatches });
 };
 
-export default function PlayoffStageRoute() {
-  const { playoffs } = useLoaderData<LoaderData>();
+export default function GroupStageRoute() {
+  const { userMatches } = useLoaderData<LoaderData>();
+
+  const groupedUserMatches = groupBy(userMatches, "match.playoff.name");
 
   return (
-    <div className="flex flex-col flex-1 gap-4">
-      <div className="bg-bright-blue p-4 rounded-md">
-        <h1 className="text-white font-medium">Playoff Stage</h1>
-      </div>
+    <div className="flex flex-col gap-6">
+      <h1 className="text-48-bold">Playoff Stage Matches</h1>
 
-      <div className="grid grid-cols-5 flex-1 gap-4">
-        {playoffs.map((playoff) => (
-          <div key={playoff.id} className="flex flex-col gap-4">
-            <Link
-              to={`/game/playoff-stage/${playoff.id}`}
-              prefetch="intent"
-              className="p-2 bg-orange text-white rounded-md border-b-4 border-solid border-bright-blue font-bold text-maroon"
-            >
-              {playoff.name}
-            </Link>
+      {Object.entries(groupedUserMatches).map(([key, userMatches]) => {
+        return (
+          <Fragment key={key}>
+            <h2 className="text-24-medium">{key} Matches</h2>
 
-            <div className="grid items-center flex-1 gap-4">
-              {playoff.matches.map((match) => {
-                return (
-                  <div key={match.id} className="bg-white p-4 rounded-md">
-                    {match.homeTeam.name ?? "Team A"} (
-                    {match.homeTeam.score ?? "-"}){" "}
-                    {match.awayTeam.name ?? "Team B"} (
-                    {match.awayTeam.score ?? "-"})
-                  </div>
-                );
-              })}
+            <div className="grid grid-cols-matches gap-4">
+              {userMatches.map(
+                ({ match, goalScorer, homeTeamScore, awayTeamScore }) => {
+                  const { id, playoff, homeTeam, awayTeam } = match;
+
+                  const toMatch = `/game/playoff-stage/${playoff?.id}/match-${id}`;
+
+                  return (
+                    <MatchCard
+                      key={id}
+                      toMatch={toMatch}
+                      match={match}
+                      homeTeam={{
+                        name: homeTeam?.name,
+                        score: homeTeamScore,
+                        flag: homeTeam?.flag,
+                      }}
+                      awayTeam={{
+                        name: awayTeam?.name,
+                        score: awayTeamScore,
+                        flag: awayTeam?.flag,
+                      }}
+                      goalScorerName={goalScorer?.name}
+                    />
+                  );
+                }
+              )}
             </div>
-          </div>
-        ))}
-      </div>
+          </Fragment>
+        );
+      })}
     </div>
   );
 }

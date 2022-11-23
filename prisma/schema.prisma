@@ -18,7 +18,6 @@ model User {
   passwordHash String
   role         String
   userMatches  UserMatch[]
-  userTeams    UserTeam[]
   ranking      UserRanking?
 }
 
@@ -43,16 +42,6 @@ model UserMatch {
   goalScorerId  Int?
 }
 
-model UserTeam {
-  id             Int    @id @default(autoincrement())
-  teamId         String
-  team           Team   @relation(fields: [teamId], references: [id], onDelete: Cascade)
-  userId         String
-  user           User   @relation(fields: [userId], references: [id], onDelete: Cascade)
-  points         Int
-  goalDifference Int
-}
-
 model Group {
   id      String  @id
   name    String  @unique
@@ -73,14 +62,14 @@ model Stage {
 }
 
 model Team {
-  id        String     @id
+  id        String   @id
   name      String
-  homeTeams Match[]    @relation(name: "homeTeam")
-  awayTeams Match[]    @relation(name: "awayTeam")
-  group     Group      @relation(fields: [groupId], references: [id], onDelete: Cascade)
+  homeTeams Match[]  @relation(name: "homeTeam")
+  awayTeams Match[]  @relation(name: "awayTeam")
+  group     Group    @relation(fields: [groupId], references: [id], onDelete: Cascade)
   groupId   String
-  userTeams UserTeam[]
   players   Player[]
+  flag      String?
 }
 
 model Player {

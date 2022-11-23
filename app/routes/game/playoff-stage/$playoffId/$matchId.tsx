@@ -2,6 +2,10 @@ import type { Prisma } from "@prisma/client";
 import type { ActionFunction, LoaderFunction } from "@remix-run/node";
 import { json, redirect } from "@remix-run/node";
 import { Form, useActionData, useLoaderData } from "@remix-run/react";
+import { Fragment } from "react";
+import { PersonIcon } from "~/components/icons/person-icon";
+import { MatchCardDetails } from "~/components/match-card-details";
+import { MatchCardTeamFlag } from "~/components/match-card-team-flag";
 
 import { db } from "~/utils/db.server";
 import { getUserId } from "~/utils/session.server";
@@ -44,10 +48,12 @@ type UserMatch = Prisma.UserMatchGetPayload<{
     match: {
       select: {
         id: true;
-        group: { select: { id: true; name: true } };
-        homeTeam: { select: { id: true; name: true } };
-        awayTeam: { select: { id: true; name: true } };
-        stadium: { select: { id: true; name: true } };
+        group: true;
+        playoff: true;
+        homeTeam: true;
+        awayTeam: true;
+        stadium: true;
+        stage: true;
         startDate: true;
       };
     };
@@ -95,10 +101,12 @@ export const loader: LoaderFunction = async ({ request, params }) => {
       match: {
         select: {
           id: true,
-          group: { select: { id: true, name: true } },
-          homeTeam: { select: { id: true, name: true } },
-          awayTeam: { select: { id: true, name: true } },
-          stadium: { select: { id: true, name: true } },
+          group: true,
+          playoff: true,
+          homeTeam: true,
+          awayTeam: true,
+          stadium: true,
+          stage: true,
           startDate: true,
         },
       },
@@ -186,132 +194,161 @@ export default function PlayoffMatchRoute() {
   const { userMatch, homeTeamPlayers, awayTeamPlayers } =
     useLoaderData<LoaderData>();
 
+  const { match } = userMatch;
+  const { homeTeam, awayTeam } = match;
+
   return (
-    <div className="flex flex-col gap-4">
-      <div className="bg-bright-blue p-4 rounded-md">
-        <h1 className="text-white font-medium">
-          Match Betting for {userMatch.match.homeTeam?.name ?? "Team A"} -{" "}
-          {userMatch.match.awayTeam?.name ?? "Team B"}
-        </h1>
+    <div className="flex flex-col gap-6">
+      <h1 className="text-48-bold">Match Betting</h1>
+
+      <div className="flex flex-col bg-white rounded-md p-6 gap-6">
+        <MatchCardDetails match={match} />
+
+        <Form method="post" className="flex flex-col gap-6">
+          <div className="grid grid-cols-match-form-card items-center gap-4">
+            {/* Hidden field */}
+            <input
+              hidden
+              name="hidden"
+              defaultValue={JSON.stringify({
+                userMatchId: userMatch.id,
+                homeTeamId: userMatch.match.homeTeam?.id,
+                awayTeamId: userMatch.match.awayTeam?.id,
+                matchStartDate: userMatch.match.startDate,
+              })}
+            />
+            {/* Hidden field */}
+
+            <div className="flex items-center justify-end gap-4">
+              <label htmlFor="homeTeamScore" className="text-48-bold">
+                {userMatch.match.homeTeam?.name ?? "Team A"}
+              </label>
+              <MatchCardTeamFlag
+                size="large"
+                src={homeTeam?.flag}
+                alt={homeTeam?.name}
+              />
+            </div>
+            <div className="m-auto">
+              <input
+                id="homeTeamScore"
+                type="number"
+                name="homeTeamScore"
+                defaultValue={userMatch.homeTeamScore ?? ""}
+                min="0"
+                className="w-[80px] border-b-2 border-dark-blue text-48-bold text-center"
+              />
+              <span> - </span>
+              <input
+                id="awayTeamScore"
+                type="number"
+                name="awayTeamScore"
+                defaultValue={userMatch.awayTeamScore ?? ""}
+                min="0"
+                className="w-[80px] border-b-2 border-dark-blue text-48-bold text-center"
+              />
+            </div>
+            <div className="flex items-center justify-start gap-4">
+              <MatchCardTeamFlag
+                size="large"
+                src={awayTeam?.flag}
+                alt={awayTeam?.name}
+              />
+              <label htmlFor="awayTeamScore" className="text-48-bold">
+                {userMatch.match.awayTeam?.name ?? "Team B"}
+              </label>
+            </div>
+          </div>
+
+          <hr />
+
+          <div className="flex gap-4">
+            <ul className="flex flex-col flex-1 gap-1">
+              <li className="text-24-bold mb-2">
+                {userMatch.match.homeTeam?.name} Team Players
+              </li>
+
+              {homeTeamPlayers?.map((player, index) => (
+                <Fragment key={player.id}>
+                  <label
+                    htmlFor={`goalScorerId[${player.id}]`}
+                    className="flex justify-between cursor-pointer"
+                  >
+                    <div className="flex items-center gap-2">
+                      <PersonIcon />
+                      <div>{player.name}</div>
+                    </div>
+
+                    <input
+                      id={`goalScorerId[${player.id}]`}
+                      type="radio"
+                      name="goalScorerId"
+                      defaultValue={player.id}
+                      defaultChecked={
+                        player.id === player.userMatches[0]?.goalScorerId
+                      }
+                      className="cursor-pointer"
+                    />
+                  </label>
+
+                  {index !== homeTeamPlayers.length - 1 ? <hr /> : null}
+                </Fragment>
+              ))}
+            </ul>
+
+            <ul className="flex flex-col flex-1 gap-1">
+              <li className="text-24-bold mb-2">
+                {userMatch.match.awayTeam?.name} Team Players
+              </li>
+
+              {awayTeamPlayers.map((player, index) => (
+                <Fragment key={player.id}>
+                  <label
+                    htmlFor={`goalScorerId[${player.id}]`}
+                    className="flex justify-between cursor-pointer"
+                  >
+                    <div className="flex items-center gap-2">
+                      <PersonIcon />
+                      <div>{player.name}</div>
+                    </div>
+
+                    <input
+                      id={`goalScorerId[${player.id}]`}
+                      type="radio"
+                      name="goalScorerId"
+                      defaultValue={player.id}
+                      defaultChecked={
+                        player.id === player.userMatches[0]?.goalScorerId
+                      }
+                      className="cursor-pointer"
+                    />
+                  </label>
+
+                  {index !== awayTeamPlayers.length - 1 ? <hr /> : null}
+                </Fragment>
+              ))}
+            </ul>
+          </div>
+
+          {actionData?.formError ? (
+            <div
+              id="form-error-message"
+              className="p-4 border border-red-600 rounded-md"
+            >
+              <p className="text-red-600 font-medium">Error</p>
+              <p role="alert" className="text-16-medium">
+                {actionData.formError}
+              </p>
+            </div>
+          ) : null}
+
+          <div className="flex justify-end">
+            <button type="submit" className="action-button">
+              Save
+            </button>
+          </div>
+        </Form>
       </div>
-      <Form method="post" className="flex flex-col gap-4">
-        <div className="bg-white p-4 rounded-md">
-          {/* Hidden field */}
-          <input
-            hidden
-            name="hidden"
-            defaultValue={JSON.stringify({
-              userMatchId: userMatch.id,
-              homeTeamId: userMatch.match.homeTeam?.id,
-              awayTeamId: userMatch.match.awayTeam?.id,
-              matchStartDate: userMatch.match.startDate,
-            })}
-          />
-          {/* Hidden field */}
-          <span>
-            <label htmlFor="homeTeamScore">
-              {userMatch.match.homeTeam?.name ?? "Team A"}
-            </label>
-
-            <input
-              id="homeTeamScore"
-              type="number"
-              name="homeTeamScore"
-              defaultValue={userMatch.homeTeamScore ?? ""}
-              min="0"
-              className="border border-maroon"
-            />
-          </span>
-          -
-          <span>
-            <label htmlFor="awayTeamScore">
-              {userMatch.match.awayTeam?.name ?? "Team B"}
-            </label>
-
-            <input
-              id="awayTeamScore"
-              type="number"
-              name="awayTeamScore"
-              defaultValue={userMatch.awayTeamScore ?? ""}
-              min="0"
-              className="border border-maroon"
-            />
-          </span>
-        </div>
-
-        <ul className="flex gap-4">
-          <div className="flex flex-col flex-1 gap-1">
-            <div className="text-white">
-              {userMatch.match.homeTeam?.name} Team Players
-            </div>
-
-            {homeTeamPlayers?.map((player) => (
-              <li
-                key={player.id}
-                className="flex justify-between px-4 py-1 bg-white rounded-md"
-              >
-                <label htmlFor={`goalScorerId[${player.id}]`}>
-                  {player.name}
-                </label>
-
-                <input
-                  id={`goalScorerId[${player.id}]`}
-                  type="radio"
-                  name="goalScorerId"
-                  defaultValue={player.id}
-                  defaultChecked={
-                    player.id === player.userMatches[0]?.goalScorerId
-                  }
-                />
-              </li>
-            ))}
-          </div>
-
-          <div className="flex flex-col flex-1 gap-1">
-            <div className="text-white">
-              {userMatch.match.awayTeam?.name} Team Players
-            </div>
-
-            {awayTeamPlayers.map((player) => (
-              <li
-                key={player.id}
-                className="flex justify-between px-4 py-1 bg-white rounded-md"
-              >
-                <label htmlFor={`goalScorerId[${player.id}]`}>
-                  {player.name}
-                </label>
-
-                <input
-                  id={`goalScorerId[${player.id}]`}
-                  type="radio"
-                  name="goalScorerId"
-                  defaultValue={player.id}
-                  defaultChecked={
-                    player.id === player.userMatches[0]?.goalScorerId
-                  }
-                />
-              </li>
-            ))}
-          </div>
-        </ul>
-
-        {actionData?.formError ? (
-          <div id="form-error-message">
-            <p role="alert" className="text-xs text-red-700">
-              {actionData.formError}
-            </p>
-          </div>
-        ) : null}
-
-        <div className="flex justify-end">
-          <button
-            type="submit"
-            className="bg-orange p-4 rounded-md border-b-4 border-solid border-bright-blue font-bold text-maroon"
-          >
-            Save
-          </button>
-        </div>
-      </Form>
     </div>
   );
 }

@@ -2,23 +2,25 @@ import type { Prisma } from "@prisma/client";
 import type { LoaderFunction } from "@remix-run/node";
 import { json } from "@remix-run/node";
 import { Link, useCatch, useLoaderData } from "@remix-run/react";
+import { groupBy } from "lodash";
+import { Fragment } from "react";
+
+import { MatchCard } from "~/components/match-card";
 import { db } from "~/utils/db.server";
 import { getUserId } from "~/utils/session.server";
 
 type MatchWithUserMatches = Prisma.MatchGetPayload<{
   select: {
     id: true;
-    homeTeam: { select: { name: true } };
-    awayTeam: { select: { name: true } };
-    stage: { select: { id: true } };
-    groupId: true;
-    playoffId: true;
+    homeTeam: true;
+    awayTeam: true;
+    stage: true;
+    group: true;
+    playoff: true;
+    stadium: true;
+    startDate: true;
     userMatches: {
-      select: {
-        id: true;
-        homeTeamScore: true;
-        awayTeamScore: true;
-      };
+      include: { goalScorer: true };
     };
   };
 }>;
@@ -27,8 +29,8 @@ type LoaderData = {
   matches: MatchWithUserMatches[];
 };
 
-const startCurrentDate = new Date(new Date().setHours(0, 0, 0, 0));
-const endCurrentDate = new Date(new Date().setHours(23, 59, 59, 999));
+const todayDate = new Date(new Date().setHours(0, 0, 0, 0)); // Today
+const twoDaysLater = new Date(new Date().setHours(48, 59, 59, 999)); // 2 days after
 
 export const loader: LoaderFunction = async ({ request }) => {
   const userId = await getUserId(request);
@@ -40,24 +42,23 @@ export const loader: LoaderFunction = async ({ request }) => {
   const matches = await db.match.findMany({
     where: {
       startDate: {
-        lt: endCurrentDate,
-        gt: startCurrentDate,
+        lt: twoDaysLater,
+        gt: todayDate,
       },
     },
+    orderBy: { startDate: "asc" },
     select: {
       id: true,
-      homeTeam: { select: { name: true } },
-      awayTeam: { select: { name: true } },
-      stage: { select: { id: true } },
-      groupId: true,
-      playoffId: true,
+      homeTeam: true,
+      awayTeam: true,
+      stage: true,
+      group: true,
+      playoff: true,
+      stadium: true,
+      startDate: true,
       userMatches: {
         where: { userId },
-        select: {
-          id: true,
-          homeTeamScore: true,
-          awayTeamScore: true,
-        },
+        include: { goalScorer: true },
       },
     },
   });
@@ -68,45 +69,54 @@ export const loader: LoaderFunction = async ({ request }) => {
 export default function GameRoute() {
   const { matches } = useLoaderData<LoaderData>();
 
+  const formattedMatches = matches.map((match) => ({
+    ...match,
+    groupByKey: new Date(match.startDate).toDateString(),
+  }));
+
+  const groupedMatches = groupBy(formattedMatches, "groupByKey");
+
   return (
-    <div className="flex flex-col gap-4">
-      <div className="bg-bright-blue p-4 rounded-md">
-        <h1 className="text-white font-medium">Today Matches</h1>
-      </div>
+    <div className="relative flex flex-col gap-6">
+      {Object.entries(groupedMatches).map(([key, userMatches], index) => {
+        return (
+          <Fragment key={key}>
+            <h1 className="text-48-bold">
+              {index === 0 ? "Today" : "Tomorrow"} Matches
+            </h1>
 
-      <ul className="flex flex-col gap-4">
-        {matches.map((match) => {
-          const stageTypeId = match.groupId ?? match.playoffId;
+            <div className="grid grid-cols-matches gap-4">
+              {userMatches.map((match) => {
+                const { id, homeTeam, awayTeam, userMatches } = match;
+                const stageTypeId = match.group?.id ?? match.playoff?.id;
 
-          const to = `/game/${match.stage.id}-stage/${stageTypeId}/match-${match.id}`;
-          return (
-            <li
-              key={match.id}
-              className="flex justify-between items-center p-4 bg-white rounded-md"
-            >
-              <div>
-                <span>
-                  {match.homeTeam?.name}{" "}
-                  {`(${match.userMatches[0]?.homeTeamScore ?? "-"})`}
-                </span>
-                -
-                <span>
-                  {match.awayTeam?.name}
-                  {`(${match.userMatches[0]?.awayTeamScore ?? "-"})`}
-                </span>{" "}
-              </div>
+                const userMatch = userMatches.find((um) => um.id === match.id);
 
-              <Link
-                to={to}
-                prefetch="intent"
-                className="bg-orange p-2 rounded-md border-b-4 border-solid border-maroon font-bold text-maroon"
-              >
-                Bet Match
-              </Link>
-            </li>
-          );
-        })}
-      </ul>
+                const toMatch = `/game/${match.stage.id}-stage/${stageTypeId}/match-${match.id}`;
+
+                return (
+                  <MatchCard
+                    key={id}
+                    toMatch={toMatch}
+                    match={match}
+                    homeTeam={{
+                      name: homeTeam?.name,
+                      score: userMatch?.homeTeamScore,
+                      flag: homeTeam?.flag,
+                    }}
+                    awayTeam={{
+                      name: awayTeam?.name,
+                      score: userMatch?.awayTeamScore,
+                      flag: awayTeam?.flag,
+                    }}
+                    goalScorerName={userMatch?.goalScorer?.name}
+                  />
+                );
+              })}
+            </div>
+          </Fragment>
+        );
+      })}
     </div>
   );
 }

@@ -1,7 +1,8 @@
 import type { Prisma } from "@prisma/client";
 import type { LoaderFunction } from "@remix-run/node";
 import { json } from "@remix-run/node";
-import { Link, useLoaderData, useParams } from "@remix-run/react";
+import { useLoaderData, useParams } from "@remix-run/react";
+import { MatchCard } from "~/components/match-card";
 
 import { db } from "~/utils/db.server";
 import { getUserId } from "~/utils/session.server";
@@ -11,13 +12,16 @@ type UserMatch = Prisma.UserMatchGetPayload<{
     id: true;
     homeTeamScore: true;
     awayTeamScore: true;
+    goalScorer: true;
     match: {
       select: {
         id: true;
-        playoff: { select: { id: true; name: true } };
-        homeTeam: { select: { id: true; name: true } };
-        awayTeam: { select: { id: true; name: true } };
-        stadium: { select: { id: true; name: true } };
+        group: true;
+        playoff: true;
+        homeTeam: true;
+        awayTeam: true;
+        stadium: true;
+        stage: true;
         startDate: true;
       };
     };
@@ -44,13 +48,16 @@ export const loader: LoaderFunction = async ({ request, params }) => {
       id: true,
       homeTeamScore: true,
       awayTeamScore: true,
+      goalScorer: true,
       match: {
         select: {
           id: true,
-          playoff: { select: { id: true, name: true } },
-          homeTeam: { select: { id: true, name: true } },
-          awayTeam: { select: { id: true, name: true } },
-          stadium: { select: { id: true, name: true } },
+          group: true,
+          playoff: true,
+          homeTeam: true,
+          awayTeam: true,
+          stadium: true,
+          stage: true,
           startDate: true,
         },
       },
@@ -64,43 +71,42 @@ export default function PlayoffMatchesRoute() {
   const { playoffId } = useParams();
   const { userMatches } = useLoaderData<LoaderData>();
 
-  const playoffName = userMatches[0]?.match.playoff?.name;
+  const playoffName = userMatches.find(
+    (um) => um.match.playoff?.id === playoffId
+  )?.match.playoff?.name;
 
   return (
-    <div className="flex flex-col gap-4">
-      <div className="bg-bright-blue p-4 rounded-md">
-        <h1 className="text-white font-medium">{playoffName} Matches</h1>
+    <div className="relative flex flex-col gap-6">
+      <h1 className="text-48-bold">{playoffName} Matches</h1>
+
+      <div className="grid grid-cols-matches gap-4">
+        {userMatches.map(
+          ({ match, goalScorer, homeTeamScore, awayTeamScore }) => {
+            const { id, homeTeam, awayTeam } = match;
+
+            const toMatch = `/game/playoff-stage/${playoffId}/match-${match.id}`;
+
+            return (
+              <MatchCard
+                key={id}
+                toMatch={toMatch}
+                match={match}
+                homeTeam={{
+                  name: homeTeam?.name,
+                  score: homeTeamScore,
+                  flag: homeTeam?.flag,
+                }}
+                awayTeam={{
+                  name: awayTeam?.name,
+                  score: awayTeamScore,
+                  flag: awayTeam?.flag,
+                }}
+                goalScorerName={goalScorer?.name}
+              />
+            );
+          }
+        )}
       </div>
-
-      <ul className="flex flex-col gap-4">
-        {userMatches.map((userMatch) => (
-          <li
-            key={userMatch.id}
-            className="flex justify-between items-center p-4 bg-white rounded-md"
-          >
-            <div>
-              <span>
-                {userMatch.match.homeTeam?.name ?? "Team A"}{" "}
-                {`(${userMatch.homeTeamScore ?? "-"})`}
-              </span>
-              -
-              <span>
-                {userMatch.match.awayTeam?.name ?? "Team B"}{" "}
-                {`(${userMatch.awayTeamScore ?? "-"})`}
-              </span>
-              <div>{new Date(userMatch.match.startDate).toLocaleString()}</div>
-            </div>
-
-            <Link
-              to={`/game/playoff-stage/${playoffId}/match-${userMatch.match.id}`}
-              prefetch="intent"
-              className="bg-orange p-2 rounded-md border-b-4 border-solid border-maroon font-bold text-maroon"
-            >
-              Bet Match
-            </Link>
-          </li>
-        ))}
-      </ul>
     </div>
   );
 }

@@ -39,11 +39,20 @@
   --grey: rgb(216, 223, 232);
   --divider: rgb(203, 203, 203);
   --white-85-opacity: rgba(255, 255, 255, 85%);
+
+  --grid-matches: repeat(auto-fit, minmax(500px, 1fr));
+  --grid-match-card: 1fr 60px 1fr;
+  --grid-match-form-card: 1fr 300px 1fr;
 }
 
 @layer base {
   html {
     @apply font-karla text-dark-blue;
+  }
+  input[type="number"]::-webkit-inner-spin-button,
+  input[type="number"]::-webkit-outer-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
   }
 }
 
@@ -63,6 +72,9 @@
   }
   .text-30-medium {
     @apply text-3xl font-medium tracking-tight;
+  }
+  .text-24-bold {
+    @apply text-2xl font-bold tracking-tight;
   }
   .text-24-medium {
     @apply text-2xl font-medium tracking-tight;
@@ -91,11 +103,17 @@
   .text-16-regular {
     @apply text-base;
   }
+  .text-14-bold {
+    @apply text-sm font-bold;
+  }
   .text-14-medium {
     @apply text-sm font-medium;
   }
   .text-14-regular {
     @apply text-sm;
+  }
+  .text-12-medium {
+    @apply text-xs font-medium;
   }
   .text-12-regular {
     @apply text-xs;

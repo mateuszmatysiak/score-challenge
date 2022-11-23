@@ -1,7 +1,9 @@
 /** @type {import('tailwindcss').Config} */
 module.exports = {
-  content: ["./app/**/*.{js,ts,jsx,tsx}"],
-
+  content: [
+    "./app/**/*.{js,ts,jsx,tsx}",
+    "./app/components/**/*.{js,ts,jsx,tsx}",
+  ],
   theme: {
     fontFamily: {
       karla: ["Karla", "sans-serif"],
@@ -16,6 +18,11 @@ module.exports = {
         grey: "var(--grey)",
         divider: "var(--divider)",
         "white-85-opacity": "var(--white-85-opacity)",
+      },
+      gridTemplateColumns: {
+        matches: "var(--grid-matches)",
+        "match-card": "var(--grid-match-card)",
+        "match-form-card": "var(--grid-match-form-card)",
       },
     },
   },

@@ -1,47 +1,46 @@
-import type { Match, Team } from "@prisma/client";
 import type { ActionFunction } from "@remix-run/node";
 import { json } from "@remix-run/node";
-import { Form, Link, useActionData, useSearchParams } from "@remix-run/react";
+import { Form, useActionData, useSearchParams } from "@remix-run/react";
 
-import { db } from "~/utils/db.server";
-import { createUserSession, login, register } from "~/utils/session.server";
+// import { db } from "~/utils/db.server";
+import { createUserSession, login } from "~/utils/session.server";
 
-const seedUserTeams = ({
-  userId,
-  teams,
-}: {
-  userId: string;
-  teams: Team[];
-}) => {
-  const userTeams: {
-    userId: string;
-    teamId: string;
-    points: number;
-    goalDifference: number;
-  }[] = [];
+// const seedUserTeams = ({
+//   userId,
+//   teams,
+// }: {
+//   userId: string;
+//   teams: Team[];
+// }) => {
+//   const userTeams: {
+//     userId: string;
+//     teamId: string;
+//     points: number;
+//     goalDifference: number;
+//   }[] = [];
 
-  for (const team of teams) {
-    userTeams.push({ userId, teamId: team.id, points: 0, goalDifference: 0 });
-  }
+//   for (const team of teams) {
+//     userTeams.push({ userId, teamId: team.id, points: 0, goalDifference: 0 });
+//   }
 
-  return userTeams;
-};
+//   return userTeams;
+// };
 
-const seedUserMatches = ({
-  userId,
-  matches,
-}: {
-  userId: string;
-  matches: Match[];
-}) => {
-  const userMatches: { userId: string; matchId: number }[] = [];
+// const seedUserMatches = ({
+//   userId,
+//   matches,
+// }: {
+//   userId: string;
+//   matches: Match[];
+// }) => {
+//   const userMatches: { userId: string; matchId: number }[] = [];
 
-  for (const match of matches) {
-    userMatches.push({ userId, matchId: match.id });
-  }
+//   for (const match of matches) {
+//     userMatches.push({ userId, matchId: match.id });
+//   }
 
-  return userMatches;
-};
+//   return userMatches;
+// };
 
 function validateUsername(username: unknown) {
   if (typeof username !== "string" || username.length < 3) {
@@ -259,12 +258,12 @@ export default function LoginRoute() {
               ) : null}
             </div>
 
-            <Link
+            {/* <Link
               to="/register"
               className="text-14-regular ml-auto text-maroon"
             >
               Need an account?
-            </Link>
+            </Link> */}
 
             {actionData?.formError ? (
               <em

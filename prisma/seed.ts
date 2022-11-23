@@ -1,4 +1,4 @@
-import type { Match, Team, User } from "@prisma/client";
+import type { Match, User } from "@prisma/client";
 import { PrismaClient } from "@prisma/client";
 
 const db = new PrismaClient();
@@ -7,11 +7,6 @@ const seedRanking = {
   groupPoints: 0,
   playoffPoints: 0,
   totalPoints: 0,
-};
-
-const seedUserTeam = {
-  points: 0,
-  goalDifference: 0,
 };
 
 const seedStadiums = [
@@ -53,45 +48,205 @@ const seedStages = [
 ];
 
 const seedTeams = [
-  { id: "qatar", name: "Qatar", groupId: "group-a" },
-  { id: "senegal", name: "Senegal", groupId: "group-a" },
-  { id: "ecuador", name: "Ecuador", groupId: "group-a" },
-  { id: "netherlands", name: "Netherlands", groupId: "group-a" },
+  {
+    id: "qatar",
+    name: "Qatar",
+    groupId: "group-a",
+    flag: "https://upload.wikimedia.org/wikipedia/commons/thumb/6/65/Flag_of_Qatar.svg/320px-Flag_of_Qatar.svg.png",
+  },
+  {
+    id: "senegal",
+    name: "Senegal",
+    groupId: "group-a",
+    flag: "https://upload.wikimedia.org/wikipedia/commons/thumb/f/fd/Flag_of_Senegal.svg/320px-Flag_of_Senegal.svg.png",
+  },
+  {
+    id: "ecuador",
+    name: "Ecuador",
+    groupId: "group-a",
+    flag: "https://upload.wikimedia.org/wikipedia/commons/thumb/e/e8/Flag_of_Ecuador.svg/320px-Flag_of_Ecuador.svg.png",
+  },
+  {
+    id: "netherlands",
+    name: "Netherlands",
+    groupId: "group-a",
+    flag: "https://upload.wikimedia.org/wikipedia/commons/thumb/2/20/Flag_of_the_Netherlands.svg/320px-Flag_of_the_Netherlands.svg.png",
+  },
 
-  { id: "england", name: "England", groupId: "group-b" },
-  { id: "iran", name: "Iran", groupId: "group-b" },
-  { id: "usa", name: "USA", groupId: "group-b" },
-  { id: "wales", name: "Wales", groupId: "group-b" },
+  {
+    id: "england",
+    name: "England",
+    groupId: "group-b",
+    flag: "https://upload.wikimedia.org/wikipedia/commons/thumb/b/be/Flag_of_England.svg/320px-Flag_of_England.svg.png",
+  },
+  {
+    id: "iran",
+    name: "Iran",
+    groupId: "group-b",
+    flag: "https://upload.wikimedia.org/wikipedia/commons/thumb/c/ca/Flag_of_Iran.svg/320px-Flag_of_Iran.svg.png",
+  },
+  {
+    id: "usa",
+    name: "USA",
+    groupId: "group-b",
+    flag: "https://upload.wikimedia.org/wikipedia/commons/thumb/a/a4/Flag_of_the_United_States.svg/320px-Flag_of_the_United_States.svg.png",
+  },
+  {
+    id: "wales",
+    name: "Wales",
+    groupId: "group-b",
+    flag: "https://upload.wikimedia.org/wikipedia/commons/thumb/d/dc/Flag_of_Wales.svg/320px-Flag_of_Wales.svg.png",
+  },
 
-  { id: "poland", name: "Poland", groupId: "group-c" },
-  { id: "mexico", name: "Mexico", groupId: "group-c" },
-  { id: "argentina", name: "Argentina", groupId: "group-c" },
-  { id: "saudi-arabia", name: "Saudi Arabia", groupId: "group-c" },
+  {
+    id: "poland",
+    name: "Poland",
+    groupId: "group-c",
+    flag: "https://upload.wikimedia.org/wikipedia/commons/thumb/4/40/Flag_of_Poland_2.svg/320px-Flag_of_Poland_2.svg.png",
+  },
+  {
+    id: "mexico",
+    name: "Mexico",
+    groupId: "group-c",
+    flag: "https://upload.wikimedia.org/wikipedia/commons/thumb/1/17/Flag_of_Mexico.png/320px-Flag_of_Mexico.png",
+  },
+  {
+    id: "argentina",
+    name: "Argentina",
+    groupId: "group-c",
+    flag: "https://upload.wikimedia.org/wikipedia/commons/thumb/1/1a/Flag_of_Argentina.svg/320px-Flag_of_Argentina.svg.png",
+  },
+  {
+    id: "saudi-arabia",
+    name: "Saudi Arabia",
+    groupId: "group-c",
+    flag: "https://upload.wikimedia.org/wikipedia/commons/thumb/0/0d/Flag_of_Saudi_Arabia.svg/320px-Flag_of_Saudi_Arabia.svg.png",
+  },
 
-  { id: "france", name: "France", groupId: "group-d" },
-  { id: "australia", name: "Australia", groupId: "group-d" },
-  { id: "denmark", name: "Denmark", groupId: "group-d" },
-  { id: "tunisia", name: "Tunisia", groupId: "group-d" },
+  {
+    id: "france",
+    name: "France",
+    groupId: "group-d",
+    flag: "https://upload.wikimedia.org/wikipedia/commons/thumb/c/c3/Flag_of_France.svg/320px-Flag_of_France.svg.png",
+  },
+  {
+    id: "australia",
+    name: "Australia",
+    groupId: "group-d",
+    flag: "https://upload.wikimedia.org/wikipedia/commons/thumb/b/b9/Flag_of_Australia.svg/320px-Flag_of_Australia.svg.png",
+  },
+  {
+    id: "denmark",
+    name: "Denmark",
+    groupId: "group-d",
+    flag: "https://upload.wikimedia.org/wikipedia/commons/thumb/9/9c/Flag_of_Denmark.svg/318px-Flag_of_Denmark.svg.png",
+  },
+  {
+    id: "tunisia",
+    name: "Tunisia",
+    groupId: "group-d",
+    flag: "https://upload.wikimedia.org/wikipedia/commons/thumb/c/ce/Flag_of_Tunisia.svg/320px-Flag_of_Tunisia.svg.png",
+  },
 
-  { id: "spain", name: "Spain", groupId: "group-e" },
-  { id: "costa-rica", name: "Costa Rica", groupId: "group-e" },
-  { id: "germany", name: "Germany", groupId: "group-e" },
-  { id: "japan", name: "Japan", groupId: "group-e" },
+  {
+    id: "spain",
+    name: "Spain",
+    groupId: "group-e",
+    flag: "https://upload.wikimedia.org/wikipedia/commons/thumb/9/9a/Flag_of_Spain.svg/320px-Flag_of_Spain.svg.png",
+  },
+  {
+    id: "costa-rica",
+    name: "Costa Rica",
+    groupId: "group-e",
+    flag: "https://upload.wikimedia.org/wikipedia/commons/thumb/f/f2/Flag_of_Costa_Rica.svg/320px-Flag_of_Costa_Rica.svg.png",
+  },
+  {
+    id: "germany",
+    name: "Germany",
+    groupId: "group-e",
+    flag: "https://upload.wikimedia.org/wikipedia/commons/thumb/b/ba/Flag_of_Germany.svg/320px-Flag_of_Germany.svg.png",
+  },
+  {
+    id: "japan",
+    name: "Japan",
+    groupId: "group-e",
+    flag: "https://upload.wikimedia.org/wikipedia/commons/thumb/9/9e/Flag_of_Japan.svg/320px-Flag_of_Japan.svg.png",
+  },
 
-  { id: "belgium", name: "Belgium", groupId: "group-f" },
-  { id: "canada", name: "Canada", groupId: "group-f" },
-  { id: "morocco", name: "Morocco", groupId: "group-f" },
-  { id: "croatia", name: "Croatia", groupId: "group-f" },
+  {
+    id: "belgium",
+    name: "Belgium",
+    groupId: "group-f",
+    flag: "https://upload.wikimedia.org/wikipedia/commons/thumb/6/65/Flag_of_Belgium.svg/277px-Flag_of_Belgium.svg.png",
+  },
+  {
+    id: "canada",
+    name: "Canada",
+    groupId: "group-f",
+    flag: "https://upload.wikimedia.org/wikipedia/commons/thumb/c/cf/Flag_of_Canada.svg/320px-Flag_of_Canada.svg.png",
+  },
+  {
+    id: "morocco",
+    name: "Morocco",
+    groupId: "group-f",
+    flag: "https://upload.wikimedia.org/wikipedia/commons/thumb/2/2c/Flag_of_Morocco.svg/320px-Flag_of_Morocco.svg.png",
+  },
+  {
+    id: "croatia",
+    name: "Croatia",
+    groupId: "group-f",
+    flag: "https://upload.wikimedia.org/wikipedia/commons/thumb/1/1b/Flag_of_Croatia.svg/320px-Flag_of_Croatia.svg.png",
+  },
 
-  { id: "brazil", name: "Brazil", groupId: "group-g" },
-  { id: "serbia", name: "Serbia", groupId: "group-g" },
-  { id: "switzerland", name: "Switzerland", groupId: "group-g" },
-  { id: "cameroon", name: "Cameroon", groupId: "group-g" },
+  {
+    id: "brazil",
+    name: "Brazil",
+    groupId: "group-g",
+    flag: "https://upload.wikimedia.org/wikipedia/commons/thumb/0/05/Flag_of_Brazil.svg/320px-Flag_of_Brazil.svg.png",
+  },
+  {
+    id: "serbia",
+    name: "Serbia",
+    groupId: "group-g",
+    flag: "https://upload.wikimedia.org/wikipedia/commons/thumb/f/ff/Flag_of_Serbia.svg/320px-Flag_of_Serbia.svg.png",
+  },
+  {
+    id: "switzerland",
+    name: "Switzerland",
+    groupId: "group-g",
+    flag: "https://upload.wikimedia.org/wikipedia/commons/thumb/f/f3/Flag_of_Switzerland.svg/240px-Flag_of_Switzerland.svg.png",
+  },
+  {
+    id: "cameroon",
+    name: "Cameroon",
+    groupId: "group-g",
+    flag: "https://upload.wikimedia.org/wikipedia/commons/thumb/4/4f/Flag_of_Cameroon.svg/320px-Flag_of_Cameroon.svg.png",
+  },
 
-  { id: "portugal", name: "Portugal", groupId: "group-h" },
-  { id: "ghana", name: "Ghana", groupId: "group-h" },
-  { id: "uruguay", name: "Uruguay", groupId: "group-h" },
-  { id: "south-korea", name: "South Korea", groupId: "group-h" },
+  {
+    id: "portugal",
+    name: "Portugal",
+    groupId: "group-h",
+    flag: "https://upload.wikimedia.org/wikipedia/commons/thumb/5/5c/Flag_of_Portugal.svg/320px-Flag_of_Portugal.svg.png",
+  },
+  {
+    id: "ghana",
+    name: "Ghana",
+    groupId: "group-h",
+    flag: "https://upload.wikimedia.org/wikipedia/commons/thumb/1/19/Flag_of_Ghana.svg/320px-Flag_of_Ghana.svg.png",
+  },
+  {
+    id: "uruguay",
+    name: "Uruguay",
+    groupId: "group-h",
+    flag: "https://upload.wikimedia.org/wikipedia/commons/thumb/f/fe/Flag_of_Uruguay.svg/320px-Flag_of_Uruguay.svg.png",
+  },
+  {
+    id: "south-korea",
+    name: "South Korea",
+    groupId: "group-h",
+    flag: "https://upload.wikimedia.org/wikipedia/commons/thumb/0/09/Flag_of_South_Korea.svg/320px-Flag_of_South_Korea.svg.png",
+  },
 ];
 
 const seedPlayers = [
@@ -1475,23 +1630,6 @@ const seedUserMatches = ({
   return userMatches;
 };
 
-const seedUserTeams = ({ users, teams }: { users: User[]; teams: Team[] }) => {
-  const userTeams: {
-    userId: string;
-    teamId: string;
-    points: number;
-    goalDifference: number;
-  }[] = [];
-
-  for (const user of users) {
-    for (const team of teams) {
-      userTeams.push({ userId: user.id, teamId: team.id, ...seedUserTeam });
-    }
-  }
-
-  return userTeams;
-};
-
 const seedUserRanking = ({ users }: { users: User[] }) => {
   const userRanking: {
     userId: string;
@@ -1538,7 +1676,6 @@ async function seed() {
   /* Pobranie użytkowników, meczów, drużyn */
   const users = await db.user.findMany();
   const matches = await db.match.findMany();
-  const teams = await db.team.findMany();
 
   /* Utworzenie rankingów dla użytkowników */
   const userRanking = await Promise.all(seedUserRanking({ users }));
@@ -1547,10 +1684,6 @@ async function seed() {
   /* Utworzenie meczów dla użytkowników */
   const userMatches = await Promise.all(seedUserMatches({ users, matches }));
   await db.userMatch.createMany({ data: userMatches });
-
-  /* Utworzenie drużyn dla użytkowników */
-  const userTeams = await Promise.all(seedUserTeams({ users, teams }));
-  await db.userTeam.createMany({ data: userTeams });
 
   /* Utworzenie wyników spotkań dla turnieju */
   const tournamentMatches = await Promise.all(

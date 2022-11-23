@@ -1,22 +1,37 @@
+import type { Prisma } from "@prisma/client";
 import type { LoaderFunction } from "@remix-run/node";
 import { json } from "@remix-run/node";
-import { Link, useLoaderData } from "@remix-run/react";
+import { useLoaderData } from "@remix-run/react";
+import { groupBy } from "lodash";
+import { Fragment } from "react";
+import { MatchCard } from "~/components/match-card";
 
 import { db } from "~/utils/db.server";
 import { getUserId } from "~/utils/session.server";
 
-type GroupsWithTeams = {
-  id: string;
-  name: string;
-  teams: {
-    name: string;
-    points: number;
-    goalDifference: number;
-  }[];
-};
+type UserMatch = Prisma.UserMatchGetPayload<{
+  select: {
+    id: true;
+    homeTeamScore: true;
+    awayTeamScore: true;
+    goalScorer: true;
+    match: {
+      select: {
+        id: true;
+        playoff: true;
+        group: true;
+        homeTeam: true;
+        awayTeam: true;
+        stadium: true;
+        stage: true;
+        startDate: true;
+      };
+    };
+  };
+}>;
 
 type LoaderData = {
-  groups: GroupsWithTeams[];
+  userMatches: UserMatch[];
 };
 
 export const loader: LoaderFunction = async ({ request }) => {
@@ -26,101 +41,77 @@ export const loader: LoaderFunction = async ({ request }) => {
     throw new Response("Unauthorized", { status: 401 });
   }
 
-  /* Pobieranie group */
-
-  const groups = await db.group.findMany({
-    orderBy: { name: "asc" },
+  const userMatches = await db.userMatch.findMany({
+    where: { userId, match: { stageId: "group" } },
+    orderBy: [{ match: { startDate: "asc" } }],
     select: {
       id: true,
-      name: true,
-      teams: {
+      homeTeamScore: true,
+      awayTeamScore: true,
+      goalScorer: true,
+      match: {
         select: {
-          name: true,
-          userTeams: {
-            where: { userId },
-          },
+          id: true,
+          playoff: true,
+          group: true,
+          homeTeam: true,
+          awayTeam: true,
+          stadium: true,
+          stage: true,
+          startDate: true,
         },
       },
     },
   });
 
-  /* Formatowanie grup */
-
-  const formattedGroups = groups.map(({ teams, ...group }) => ({
-    ...group,
-    teams: teams.map(({ userTeams, ...team }) => ({
-      ...team,
-      points: userTeams[0]?.points,
-      goalDifference: userTeams[0]?.goalDifference,
-    })),
-  }));
-
-  /* Sortowanie grup po zdobytych punktach i różnicy bramek */
-
-  const sortedGroups = formattedGroups.map((group) => ({
-    ...group,
-    teams: group.teams.sort(
-      (a, b) => b.points - a.points || b.goalDifference - a.goalDifference
-    ),
-  }));
-
-  return json({ groups: sortedGroups });
+  return json({ userMatches });
 };
 
 export default function GroupStageRoute() {
-  const { groups } = useLoaderData<LoaderData>();
+  const { userMatches } = useLoaderData<LoaderData>();
+
+  const groupedUserMatches = groupBy(userMatches, "match.group.name");
 
   return (
-    <div className="flex flex-col gap-4">
-      <div className="bg-bright-blue p-4 rounded-md">
-        <h1 className="text-white font-medium">Group Stage</h1>
-      </div>
+    <div className="flex flex-col gap-6">
+      <h1 className="text-48-bold">Group Stage Matches</h1>
 
-      <ul className="grid grid-cols-4 gap-4">
-        {groups.map((group) => (
-          <li
-            key={group.id}
-            className="flex flex-col flex-1 gap-4 p-4 bg-white rounded-md"
-          >
-            <span className="font-medium text-maroon text-center">
-              Group {group.name}
-            </span>
+      {Object.entries(groupedUserMatches).map(([key, userMatches]) => {
+        return (
+          <Fragment key={key}>
+            <h2 className="text-24-medium">Group {key} Matches</h2>
 
-            <ul className="flex flex-col gap-4">
-              {group.teams.map((team, index) => {
-                const backgroundColor =
-                  index <= 1 ? "bg-orange" : "bg-amber-200";
-                return (
-                  <li
-                    key={index}
-                    className={`flex gap-4 justify-between ${backgroundColor} px-4 py-3 rounded-md`}
-                  >
-                    <div className="flex gap-4">
-                      <span>{index + 1}</span>
-                      <span>{team.name}</span>
-                    </div>
+            <div className="grid grid-cols-matches gap-4">
+              {userMatches.map(
+                ({ match, goalScorer, homeTeamScore, awayTeamScore }) => {
+                  const { id, group, homeTeam, awayTeam } = match;
 
-                    <div className="flex gap-4">
-                      <span>{team.points ?? "-"}</span>
-                      <span>{team.goalDifference ?? "-"}</span>
-                    </div>
-                  </li>
-                );
-              })}
-            </ul>
+                  const toMatch = `/game/group-stage/${group?.id}/match-${id}`;
 
-            <div className="flex justify-center">
-              <Link
-                to={`/game/group-stage/${group.id}`}
-                prefetch="intent"
-                className="bg-orange p-2 rounded-md border-b-4 border-solid border-maroon font-bold text-maroon"
-              >
-                Bet Group
-              </Link>
+                  return (
+                    <MatchCard
+                      key={id}
+                      toMatch={toMatch}
+                      match={match}
+                      homeTeam={{
+                        name: homeTeam?.name,
+                        score: homeTeamScore,
+                        flag: homeTeam?.flag,
+                      }}
+                      awayTeam={{
+                        name: awayTeam?.name,
+                        score: awayTeamScore,
+                        flag: awayTeam?.flag,
+                      }}
+                      goalScorerName={goalScorer?.name}
+                    />
+                  );
+                }
+              )}
             </div>
-          </li>
-        ))}
-      </ul>
+          </Fragment>
+        );
+      })}
     </div>
   );
 }
