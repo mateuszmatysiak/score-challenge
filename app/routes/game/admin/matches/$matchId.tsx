@@ -307,21 +307,13 @@ export default function AdminMatchRoute() {
     useLoaderData<LoaderData>();
 
   const { match } = tournamentMatch;
-  const { group, playoff, stage, stadium, startDate } = match;
 
   return (
     <div className="flex flex-col gap-6">
       <h1 className="text-48-bold">Tournament Match Setting</h1>
 
       <div className="flex flex-col bg-white rounded-md p-6 gap-6">
-        <MatchCardDetails
-          groupName={group?.name}
-          playoffName={playoff?.name}
-          stageId={group?.id ?? playoff?.id}
-          stageTypeId={stage.id}
-          stadiumName={stadium.name}
-          startDate={startDate}
-        />
+        <MatchCardDetails match={match} />
 
         <Form method="post" className="flex flex-col gap-6">
           <div className="grid grid-cols-match-form-card items-center gap-4">
@@ -393,33 +385,42 @@ export default function AdminMatchRoute() {
                 {tournamentMatch.match.homeTeam?.name} Team Players
               </li>
 
-              {homeTeamPlayers?.map((player, index) => (
-                <Fragment key={player.id}>
-                  <label
-                    htmlFor={`goalScorerId[${player.id}]`}
-                    className="flex justify-between cursor-pointer"
-                  >
-                    <div className="flex items-center gap-2">
-                      <PersonIcon />
-                      <div>{player.name}</div>
-                    </div>
+              {homeTeamPlayers?.map((player, index) => {
+                const isPlayerChecked =
+                  player.id === player.tournamentMatches[0]?.goalScorerId;
+                return (
+                  <Fragment key={player.id}>
+                    <label
+                      htmlFor={`goalScorerId[${player.id}]`}
+                      className="flex justify-between cursor-pointer"
+                    >
+                      <div className="flex items-center gap-2">
+                        <PersonIcon
+                          fill={isPlayerChecked ? "var(--bright-purple)" : null}
+                        />
+                        <div
+                          className={`${
+                            isPlayerChecked ? "text-bright-purple" : ""
+                          }`}
+                        >
+                          {player.name}
+                        </div>
+                      </div>
 
-                    <input
-                      id={`goalScorerId[${player.id}]`}
-                      type="radio"
-                      name="goalScorerId"
-                      defaultValue={player.id}
-                      defaultChecked={
-                        player.id ===
-                        player.tournamentMatches[index]?.goalScorerId
-                      }
-                      className="cursor-pointer"
-                    />
-                  </label>
+                      <input
+                        id={`goalScorerId[${player.id}]`}
+                        type="radio"
+                        name="goalScorerId"
+                        defaultValue={player.id}
+                        defaultChecked={isPlayerChecked}
+                        className="cursor-pointer"
+                      />
+                    </label>
 
-                  {index !== homeTeamPlayers.length - 1 ? <hr /> : null}
-                </Fragment>
-              ))}
+                    {index !== homeTeamPlayers.length - 1 ? <hr /> : null}
+                  </Fragment>
+                );
+              })}
             </ul>
 
             <ul className="flex flex-col flex-1 gap-1">
@@ -427,32 +428,42 @@ export default function AdminMatchRoute() {
                 {tournamentMatch.match.awayTeam?.name} Team Players
               </li>
 
-              {awayTeamPlayers.map((player, index) => (
-                <Fragment key={player.id}>
-                  <label
-                    htmlFor={`goalScorerId[${player.id}]`}
-                    className="flex justify-between cursor-pointer"
-                  >
-                    <div className="flex items-center gap-2">
-                      <PersonIcon />
-                      <div>{player.name}</div>
-                    </div>
+              {awayTeamPlayers.map((player, index) => {
+                const isPlayerChecked =
+                  player.id === player.tournamentMatches[0]?.goalScorerId;
+                return (
+                  <Fragment key={player.id}>
+                    <label
+                      htmlFor={`goalScorerId[${player.id}]`}
+                      className="flex justify-between cursor-pointer"
+                    >
+                      <div className="flex items-center gap-2">
+                        <PersonIcon
+                          fill={isPlayerChecked ? "var(--bright-purple)" : null}
+                        />
+                        <div
+                          className={`${
+                            isPlayerChecked ? "text-bright-purple" : ""
+                          }`}
+                        >
+                          {player.name}
+                        </div>
+                      </div>
 
-                    <input
-                      id={`goalScorerId[${player.id}]`}
-                      type="radio"
-                      name="goalScorerId"
-                      defaultValue={player.id}
-                      defaultChecked={
-                        player.id === player.tournamentMatches[0]?.goalScorerId
-                      }
-                      className="cursor-pointer"
-                    />
-                  </label>
+                      <input
+                        id={`goalScorerId[${player.id}]`}
+                        type="radio"
+                        name="goalScorerId"
+                        defaultValue={player.id}
+                        defaultChecked={isPlayerChecked}
+                        className="cursor-pointer"
+                      />
+                    </label>
 
-                  {index !== awayTeamPlayers.length - 1 ? <hr /> : null}
-                </Fragment>
-              ))}
+                    {index !== awayTeamPlayers.length - 1 ? <hr /> : null}
+                  </Fragment>
+                );
+              })}
             </ul>
           </div>
 
