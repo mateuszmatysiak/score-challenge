@@ -37,8 +37,6 @@ export function MatchCard({
   awayTeam,
   goalScorerName,
 }: MatchCardProps) {
-  const isResultExists = Boolean(homeTeam.score) && Boolean(awayTeam.score);
-
   return (
     <div className="flex flex-col bg-white p-4 rounded-md gap-4">
       <MatchCardDetails match={match} />
@@ -58,15 +56,9 @@ export function MatchCard({
           prefetch="intent"
           className="text-24-bold text-bright-purple text-center"
         >
-          {isResultExists ? (
-            <>
-              <span>{homeTeam.score}</span>
-              <span> - </span>
-              <span>{awayTeam.score}</span>
-            </>
-          ) : (
-            <span>TBA</span>
-          )}
+          <span>{homeTeam.score ?? "?"}</span>
+          <span> - </span>
+          <span>{awayTeam.score ?? "?"}</span>
         </Link>
 
         <div className="flex items-center justify-start gap-2">

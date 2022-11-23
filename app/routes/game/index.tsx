@@ -78,7 +78,7 @@ export default function GameRoute() {
 
   return (
     <div className="relative flex flex-col gap-6">
-      {Object.entries(groupedMatches).map(([key, userMatches], index) => {
+      {Object.entries(groupedMatches).map(([key, value], index) => {
         return (
           <Fragment key={key}>
             <h1 className="text-48-bold">
@@ -86,11 +86,14 @@ export default function GameRoute() {
             </h1>
 
             <div className="grid grid-cols-matches gap-4">
-              {userMatches.map((match) => {
+              {value.map((match) => {
                 const { id, homeTeam, awayTeam, userMatches } = match;
                 const stageTypeId = match.group?.id ?? match.playoff?.id;
 
-                const userMatch = userMatches.find((um) => um.id === match.id);
+                const { homeTeamScore, awayTeamScore, goalScorer } =
+                  userMatches.find(
+                    (userMatch) => userMatch.matchId === match.id
+                  ) ?? {};
 
                 const toMatch = `/game/${match.stage.id}-stage/${stageTypeId}/match-${match.id}`;
 
@@ -101,15 +104,15 @@ export default function GameRoute() {
                     match={match}
                     homeTeam={{
                       name: homeTeam?.name,
-                      score: userMatch?.homeTeamScore,
+                      score: homeTeamScore,
                       flag: homeTeam?.flag,
                     }}
                     awayTeam={{
                       name: awayTeam?.name,
-                      score: userMatch?.awayTeamScore,
+                      score: awayTeamScore,
                       flag: awayTeam?.flag,
                     }}
-                    goalScorerName={userMatch?.goalScorer?.name}
+                    goalScorerName={goalScorer?.name}
                   />
                 );
               })}

@@ -160,7 +160,9 @@ export const action: ActionFunction = async ({ request, params }) => {
   const matchDateMs = Date.parse(matchStartDate);
 
   if (currentDateMs > matchDateMs) {
-    return badRequest({ formError: "Match has started, cannot change bets." });
+    return badRequest({
+      formError: "Match started or ended, cannot change bets.",
+    });
   }
 
   if (!homeTeamId || !awayTeamId) {
