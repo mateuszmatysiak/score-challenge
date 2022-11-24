@@ -15,19 +15,18 @@ import { MatchCardTeamFlag } from "./match-team-flag";
 
 type GetGoalScorerTextColorProps = {
   goalScorer: Player | null;
-  tournamentGoalScorerId?: number | null;
-  startDate: string;
+  tournamentMatch?: TournamentMatch;
 };
 
 const getGoalScorerTextColor = ({
   goalScorer,
-  tournamentGoalScorerId,
-  startDate,
+  tournamentMatch,
 }: GetGoalScorerTextColorProps) => {
-  const currentDateMs = Date.now();
-  const matchStartDateMs = Date.parse(startDate);
+  const tournamentGoalScorerId = tournamentMatch?.goalScorerId;
+  const isTournamentScoreExists =
+    typeof tournamentMatch?.homeTeamScore === "number";
 
-  if (goalScorer?.id && currentDateMs > matchStartDateMs) {
+  if (goalScorer?.id && isTournamentScoreExists) {
     if (goalScorer.id !== tournamentGoalScorerId) return "text-red-600";
 
     if (goalScorer.id === tournamentGoalScorerId) return "text-green-600";
@@ -93,8 +92,7 @@ export function MatchCard({ values, toMatch }: MatchCardProps) {
 
   const goalScorerTextColor = getGoalScorerTextColor({
     goalScorer,
-    tournamentGoalScorerId: match.tournamentMatches?.[0]?.goalScorerId,
-    startDate: match.startDate,
+    tournamentMatch: match.tournamentMatches?.[0],
   });
 
   const scoreTextColor = getResultTextColor({
