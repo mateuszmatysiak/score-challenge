@@ -1,6 +1,18 @@
 import type { Group, Playoff, Stadium, Stage, Team } from "@prisma/client";
 import { Link } from "@remix-run/react";
-import { getStageName } from "~/utils/match-card";
+
+type GetStageNameProps = {
+  groupName?: string;
+  playoffName?: string;
+};
+
+export const getStageName = ({ groupName, playoffName }: GetStageNameProps) => {
+  if (groupName) return `Group ${groupName}`;
+
+  if (playoffName) return playoffName;
+
+  return "Stage Name";
+};
 
 export interface MatchCardDetailsProps {
   match: {
@@ -21,6 +33,7 @@ export function MatchCardDetails({ match }: MatchCardDetailsProps) {
   const playoffName = playoff?.name;
 
   const stageName = getStageName({ groupName, playoffName });
+  const toStageMatch = `/game/${stage.id}-stage/${group?.id ?? playoff?.id}`;
 
   const matchStartDate = new Date(startDate);
   const startDateIntl = new Intl.DateTimeFormat("en-EN", {
@@ -33,10 +46,7 @@ export function MatchCardDetails({ match }: MatchCardDetailsProps) {
     <div className="text-center">
       <div className="text-14-regular">{startDateIntl}</div>
       <div className="text-14-regular">{stadium.name}</div>
-      <Link
-        to={`/game/${stage.id}-stage/${group?.id ?? playoff?.id}`}
-        className="text-14-medium text-bright-purple"
-      >
+      <Link to={toStageMatch} className="text-14-medium text-bright-purple">
         {stageName}
       </Link>
     </div>

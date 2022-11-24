@@ -23,6 +23,7 @@ type TournamentMatches = Prisma.TournamentMatchGetPayload<{
         stadium: true;
         stage: true;
         startDate: true;
+        tournamentMatches: true;
       };
     };
   };
@@ -54,6 +55,7 @@ export const loader: LoaderFunction = async ({ request }) => {
           stadium: true,
           stage: true,
           startDate: true,
+          tournamentMatches: true,
         },
       },
     },
@@ -71,7 +73,11 @@ export default function AdminMatchesRoute() {
 
       <div className="grid grid-cols-matches gap-4">
         {tournamentMatches.map(({ id, ...tournamentMatch }) => (
-          <MatchCard key={id} {...tournamentMatch} />
+          <MatchCard
+            key={id}
+            values={tournamentMatch}
+            toMatch={`/game/admin/matches/match-${tournamentMatch.match.id}`}
+          />
         ))}
       </div>
     </div>

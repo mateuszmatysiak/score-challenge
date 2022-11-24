@@ -4,6 +4,7 @@ import { json, redirect } from "@remix-run/node";
 import { Form, useActionData, useLoaderData } from "@remix-run/react";
 import { Fragment } from "react";
 import { ErrorCard } from "~/components/error-card";
+import { PersonIcon } from "~/components/icons/person-icon";
 import { TeamPlayer } from "~/components/match-card-form/team-player";
 import { MatchCardDetails } from "~/components/match-card/match-details";
 import { MatchCardTeamFlag } from "~/components/match-card/match-team-flag";
@@ -46,6 +47,7 @@ type UserMatch = Prisma.UserMatchGetPayload<{
     id: true;
     homeTeamScore: true;
     awayTeamScore: true;
+    goalScorerId: true;
     match: {
       select: {
         id: true;
@@ -99,6 +101,7 @@ export const loader: LoaderFunction = async ({ request, params }) => {
       id: true,
       homeTeamScore: true,
       awayTeamScore: true,
+      goalScorerId: true,
       match: {
         select: {
           id: true,
@@ -174,16 +177,12 @@ export const action: ActionFunction = async ({ request, params }) => {
     return badRequest({ formError: "No result selected." });
   }
 
-  if (!goalScorerId) {
-    return badRequest({ formError: "No player selected." });
-  }
-
   /* Aktualizacja meczu użytkownika */
 
   await db.userMatch.update({
     where: { id: userMatchId },
     data: {
-      goalScorerId: Number(goalScorerId),
+      goalScorerId: Number(goalScorerId) !== 0 ? Number(goalScorerId) : null,
       homeTeamScore: Number(homeTeamScore),
       awayTeamScore: Number(awayTeamScore),
     },
@@ -197,7 +196,7 @@ export default function PlayoffMatchRoute() {
   const { userMatch, homeTeamPlayers, awayTeamPlayers } =
     useLoaderData<LoaderData>();
 
-  const { match } = userMatch;
+  const { match, goalScorerId } = userMatch;
   const { homeTeam, awayTeam } = match;
 
   return (
@@ -264,6 +263,25 @@ export default function PlayoffMatchRoute() {
           </div>
 
           <hr />
+
+          <label
+            htmlFor={`goalScorerId[0]`}
+            className="flex justify-between cursor-pointer"
+          >
+            <div className="flex items-center gap-2">
+              <PersonIcon fill="var(--dark-blue)" />
+              <div>No goal scorer</div>
+            </div>
+
+            <input
+              id={`goalScorerId[0]`}
+              type="radio"
+              name="goalScorerId"
+              defaultValue={0}
+              defaultChecked={goalScorerId === null}
+              className="cursor-pointer"
+            />
+          </label>
 
           <div className="flex gap-4">
             <ul className="flex flex-col flex-1 gap-1">

@@ -23,6 +23,7 @@ type UserMatch = Prisma.UserMatchGetPayload<{
         stadium: true;
         stage: true;
         startDate: true;
+        tournamentMatches: true;
       };
     };
   };
@@ -38,8 +39,6 @@ export const loader: LoaderFunction = async ({ request, params }) => {
   if (!userId) {
     throw new Response("Unauthorized", { status: 401 });
   }
-
-  /* Pobieranie meczów użytkownika */
 
   const userMatches = await db.userMatch.findMany({
     where: { userId, match: { playoffId: params.playoffId } },
@@ -59,6 +58,7 @@ export const loader: LoaderFunction = async ({ request, params }) => {
           stadium: true,
           stage: true,
           startDate: true,
+          tournamentMatches: true,
         },
       },
     },
@@ -81,7 +81,7 @@ export default function PlayoffMatchesRoute() {
 
       <div className="grid grid-cols-matches gap-4">
         {userMatches.map(({ id, ...userMatch }) => (
-          <MatchCard key={id} {...userMatch} />
+          <MatchCard key={id} values={userMatch} />
         ))}
       </div>
     </div>

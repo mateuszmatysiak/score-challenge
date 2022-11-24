@@ -25,6 +25,7 @@ type UserMatch = Prisma.UserMatchGetPayload<{
         stadium: true;
         stage: true;
         startDate: true;
+        tournamentMatches: true;
       };
     };
   };
@@ -59,6 +60,7 @@ export const loader: LoaderFunction = async ({ request }) => {
           stadium: true,
           stage: true,
           startDate: true,
+          tournamentMatches: true,
         },
       },
     },
@@ -79,11 +81,11 @@ export default function GroupStageRoute() {
       {Object.entries(groupedUserMatches).map(([key, userMatches]) => {
         return (
           <Fragment key={key}>
-            <h2 className="text-24-medium">Group {key} Matches</h2>
+            <p className="text-24-medium">Group {key} Matches</p>
 
             <div className="grid grid-cols-matches gap-4">
               {userMatches.map(({ id, ...userMatch }) => (
-                <MatchCard key={id} {...userMatch} />
+                <MatchCard key={id} values={userMatch} />
               ))}
             </div>
           </Fragment>

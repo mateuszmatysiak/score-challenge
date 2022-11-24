@@ -23,6 +23,7 @@ type UserMatch = Prisma.UserMatchGetPayload<{
         stadium: true;
         stage: true;
         startDate: true;
+        tournamentMatches: true;
       };
     };
   };
@@ -58,6 +59,7 @@ export const loader: LoaderFunction = async ({ request, params }) => {
           stadium: true,
           stage: true,
           startDate: true,
+          tournamentMatches: true,
         },
       },
     },
@@ -80,7 +82,7 @@ export default function GroupMatchesRoute() {
 
       <div className="grid grid-cols-matches gap-4">
         {userMatches.map(({ id, ...userMatch }) => (
-          <MatchCard key={id} {...userMatch} />
+          <MatchCard key={id} values={userMatch} />
         ))}
       </div>
     </div>

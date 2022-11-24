@@ -4,6 +4,7 @@ import { json, redirect } from "@remix-run/node";
 import { Form, useActionData, useLoaderData } from "@remix-run/react";
 import { Fragment } from "react";
 import { ErrorCard } from "~/components/error-card";
+import { PersonIcon } from "~/components/icons/person-icon";
 import { TeamPlayer } from "~/components/match-card-form/team-player";
 import { MatchCardDetails } from "~/components/match-card/match-details";
 
@@ -61,7 +62,10 @@ function getRankingPoints(
   if (!isScoreEqual && tournamentMatchResultType === userMatchResultType)
     rankingPoints += 1;
 
-  if (tournamentMatch?.goalScorerId === userMatch.goalScorerId)
+  if (
+    typeof tournamentMatch?.goalScorerId === "number" &&
+    tournamentMatch?.goalScorerId === userMatch.goalScorerId
+  )
     rankingPoints += 1;
 
   return rankingPoints;
@@ -226,16 +230,12 @@ export const action: ActionFunction = async ({ request, params }) => {
     return badRequest({ formError: "No result selected." });
   }
 
-  if (!goalScorerId) {
-    return badRequest({ formError: "No player selected." });
-  }
-
   /* Aktualizacja meczu "realnego" */
 
   await db.tournamentMatch.updateMany({
     where: { matchId },
     data: {
-      goalScorerId: Number(goalScorerId),
+      goalScorerId: Number(goalScorerId) !== 0 ? Number(goalScorerId) : null,
       homeTeamScore: Number(homeTeamScore),
       awayTeamScore: Number(awayTeamScore),
     },
@@ -307,7 +307,7 @@ export default function AdminMatchRoute() {
   const { tournamentMatch, homeTeamPlayers, awayTeamPlayers } =
     useLoaderData<LoaderData>();
 
-  const { match } = tournamentMatch;
+  const { match, goalScorerId } = tournamentMatch;
 
   return (
     <div className="flex flex-col gap-6">
@@ -379,6 +379,25 @@ export default function AdminMatchRoute() {
           </div>
 
           <hr />
+
+          <label
+            htmlFor={`goalScorerId[0]`}
+            className="flex justify-between cursor-pointer"
+          >
+            <div className="flex items-center gap-2">
+              <PersonIcon fill="var(--dark-blue)" />
+              <div>No goal scorer</div>
+            </div>
+
+            <input
+              id={`goalScorerId[0]`}
+              type="radio"
+              name="goalScorerId"
+              defaultValue={0}
+              defaultChecked={goalScorerId === null}
+              className="cursor-pointer"
+            />
+          </label>
 
           <div className="flex gap-4">
             <ul className="flex flex-col flex-1 gap-1">

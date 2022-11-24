@@ -25,6 +25,7 @@ type UserMatch = Prisma.UserMatchGetPayload<{
         stadium: true;
         stage: true;
         startDate: true;
+        tournamentMatches: true;
       };
     };
   };
@@ -65,6 +66,7 @@ export const loader: LoaderFunction = async ({ request }) => {
           stadium: true,
           stage: true,
           startDate: true,
+          tournamentMatches: true,
         },
       },
     },
@@ -93,13 +95,13 @@ export default function GameRoute() {
       {Object.entries(groupedUserMatches).map(([key, userMatches], index) => {
         return (
           <Fragment key={key}>
-            <h2 className="text-24-medium">
+            <p className="text-48-bold">
               {index === 0 ? "Today" : "Tomorrow"} Matches
-            </h2>
+            </p>
 
             <div className="grid grid-cols-matches gap-4">
               {userMatches.map(({ id, ...userMatch }) => (
-                <MatchCard key={id} {...userMatch} />
+                <MatchCard key={id} values={userMatch} />
               ))}
             </div>
           </Fragment>
