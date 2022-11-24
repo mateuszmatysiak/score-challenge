@@ -4,8 +4,8 @@ import { json, redirect } from "@remix-run/node";
 import { Form, useActionData, useLoaderData } from "@remix-run/react";
 import { Fragment } from "react";
 import { ErrorCard } from "~/components/error-card";
-import { PersonIcon } from "~/components/icons/person-icon";
-import { TeamPlayer } from "~/components/match-card-form/team-player";
+import { GoalScorer } from "~/components/match-card-form/goal-scorer";
+import { NoGoalScorer } from "~/components/match-card-form/no-goal-scorer";
 import { MatchCardDetails } from "~/components/match-card/match-details";
 import { MatchCardTeamFlag } from "~/components/match-card/match-team-flag";
 
@@ -256,24 +256,7 @@ export default function GroupMatchRoute() {
 
           <hr />
 
-          <label
-            htmlFor={`goalScorerId[0]`}
-            className="flex justify-between cursor-pointer"
-          >
-            <div className="flex items-center gap-2">
-              <PersonIcon fill="var(--dark-blue)" />
-              <div>No goal scorer</div>
-            </div>
-
-            <input
-              id={`goalScorerId[0]`}
-              type="radio"
-              name="goalScorerId"
-              defaultValue={0}
-              defaultChecked={goalScorerId === null}
-              className="cursor-pointer"
-            />
-          </label>
+          <NoGoalScorer goalScorerId={goalScorerId} />
 
           <div className="flex gap-4">
             <ul className="flex flex-col flex-1 gap-1">
@@ -283,7 +266,7 @@ export default function GroupMatchRoute() {
 
               {homeTeamPlayers?.map((player, index) => (
                 <Fragment key={player.id}>
-                  <TeamPlayer {...player} />
+                  <GoalScorer {...player} />
 
                   {index !== homeTeamPlayers.length - 1 ? <hr /> : null}
                 </Fragment>
@@ -297,7 +280,7 @@ export default function GroupMatchRoute() {
 
               {awayTeamPlayers.map((player, index) => (
                 <Fragment key={player.id}>
-                  <TeamPlayer {...player} />
+                  <GoalScorer {...player} />
 
                   {index !== awayTeamPlayers.length - 1 ? <hr /> : null}
                 </Fragment>
