@@ -72,7 +72,7 @@ export default function PlayoffMatchesRoute() {
   const { userMatches } = useLoaderData<LoaderData>();
 
   const playoffName = userMatches.find(
-    (um) => um.match.playoff?.id === playoffId
+    (userMatch) => userMatch.match.playoff?.id === playoffId
   )?.match.playoff?.name;
 
   return (
@@ -80,32 +80,9 @@ export default function PlayoffMatchesRoute() {
       <h1 className="text-48-bold">{playoffName} Matches</h1>
 
       <div className="grid grid-cols-matches gap-4">
-        {userMatches.map(
-          ({ match, goalScorer, homeTeamScore, awayTeamScore }) => {
-            const { id, homeTeam, awayTeam } = match;
-
-            const toMatch = `/game/playoff-stage/${playoffId}/match-${match.id}`;
-
-            return (
-              <MatchCard
-                key={id}
-                toMatch={toMatch}
-                match={match}
-                homeTeam={{
-                  name: homeTeam?.name,
-                  score: homeTeamScore,
-                  flag: homeTeam?.flag,
-                }}
-                awayTeam={{
-                  name: awayTeam?.name,
-                  score: awayTeamScore,
-                  flag: awayTeam?.flag,
-                }}
-                goalScorerName={goalScorer?.name}
-              />
-            );
-          }
-        )}
+        {userMatches.map(({ id, ...userMatch }) => (
+          <MatchCard key={id} {...userMatch} />
+        ))}
       </div>
     </div>
   );

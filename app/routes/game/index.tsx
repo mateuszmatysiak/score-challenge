@@ -9,24 +9,29 @@ import { MatchCard } from "~/components/match-card/match-card";
 import { db } from "~/utils/db.server";
 import { getUserId } from "~/utils/session.server";
 
-type MatchWithUserMatches = Prisma.MatchGetPayload<{
+type UserMatch = Prisma.UserMatchGetPayload<{
   select: {
     id: true;
-    homeTeam: true;
-    awayTeam: true;
-    stage: true;
-    group: true;
-    playoff: true;
-    stadium: true;
-    startDate: true;
-    userMatches: {
-      include: { goalScorer: true };
+    homeTeamScore: true;
+    awayTeamScore: true;
+    goalScorer: true;
+    match: {
+      select: {
+        id: true;
+        playoff: true;
+        group: true;
+        homeTeam: true;
+        awayTeam: true;
+        stadium: true;
+        stage: true;
+        startDate: true;
+      };
     };
   };
 }>;
 
 type LoaderData = {
-  matches: MatchWithUserMatches[];
+  userMatches: UserMatch[];
 };
 
 const todayDate = new Date(new Date().setHours(0, 0, 0, 0)); // Today
@@ -39,83 +44,63 @@ export const loader: LoaderFunction = async ({ request }) => {
     throw new Response("Unauthorized", { status: 401 });
   }
 
-  const matches = await db.match.findMany({
+  const userMatches = await db.userMatch.findMany({
     where: {
-      startDate: {
-        lt: twoDaysLater,
-        gt: todayDate,
-      },
+      userId,
+      match: { startDate: { lt: twoDaysLater, gt: todayDate } },
     },
-    orderBy: { startDate: "asc" },
+    orderBy: [{ match: { startDate: "asc" } }],
     select: {
       id: true,
-      homeTeam: true,
-      awayTeam: true,
-      stage: true,
-      group: true,
-      playoff: true,
-      stadium: true,
-      startDate: true,
-      userMatches: {
-        where: { userId },
-        include: { goalScorer: true },
+      homeTeamScore: true,
+      awayTeamScore: true,
+      goalScorer: true,
+      match: {
+        select: {
+          id: true,
+          playoff: true,
+          group: true,
+          homeTeam: true,
+          awayTeam: true,
+          stadium: true,
+          stage: true,
+          startDate: true,
+        },
       },
     },
   });
 
-  return json({ matches });
+  return json({ userMatches });
 };
 
 export default function GameRoute() {
-  const { matches } = useLoaderData<LoaderData>();
+  const { userMatches } = useLoaderData<LoaderData>();
 
-  const formattedMatches = matches.map((match) => ({
-    ...match,
-    groupByKey: new Date(match.startDate).toDateString(),
-  }));
+  const formattedMatches = userMatches.map((userMatch) => {
+    const todayDate = new Date().toLocaleDateString();
+    const matchDate = new Date(userMatch.match.startDate).toLocaleDateString();
 
-  const groupedMatches = groupBy(formattedMatches, "groupByKey");
+    return {
+      ...userMatch,
+      groupedByKey: todayDate === matchDate ? "today" : "tomorrow",
+    };
+  });
+
+  const groupedUserMatches = groupBy(formattedMatches, "groupedByKey");
 
   return (
     <div className="relative flex flex-col gap-6">
-      {Object.entries(groupedMatches).map(([key, value], index) => {
+      {Object.entries(groupedUserMatches).map(([key, userMatches], index) => {
         return (
           <Fragment key={key}>
-            <h1 className="text-48-bold">
+            <h2 className="text-24-medium">
               {index === 0 ? "Today" : "Tomorrow"} Matches
-            </h1>
+            </h2>
 
             <div className="grid grid-cols-matches gap-4">
-              {value.map((match) => {
-                const { id, homeTeam, awayTeam, userMatches } = match;
-                const stageTypeId = match.group?.id ?? match.playoff?.id;
-
-                const { homeTeamScore, awayTeamScore, goalScorer } =
-                  userMatches.find(
-                    (userMatch) => userMatch.matchId === match.id
-                  ) ?? {};
-
-                const toMatch = `/game/${match.stage.id}-stage/${stageTypeId}/match-${match.id}`;
-
-                return (
-                  <MatchCard
-                    key={id}
-                    toMatch={toMatch}
-                    match={match}
-                    homeTeam={{
-                      name: homeTeam?.name,
-                      score: homeTeamScore,
-                      flag: homeTeam?.flag,
-                    }}
-                    awayTeam={{
-                      name: awayTeam?.name,
-                      score: awayTeamScore,
-                      flag: awayTeam?.flag,
-                    }}
-                    goalScorerName={goalScorer?.name}
-                  />
-                );
-              })}
+              {userMatches.map(({ id, ...userMatch }) => (
+                <MatchCard key={id} {...userMatch} />
+              ))}
             </div>
           </Fragment>
         );

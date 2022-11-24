@@ -82,32 +82,9 @@ export default function GroupStageRoute() {
             <h2 className="text-24-medium">{key} Matches</h2>
 
             <div className="grid grid-cols-matches gap-4">
-              {userMatches.map(
-                ({ match, goalScorer, homeTeamScore, awayTeamScore }) => {
-                  const { id, playoff, homeTeam, awayTeam } = match;
-
-                  const toMatch = `/game/playoff-stage/${playoff?.id}/match-${id}`;
-
-                  return (
-                    <MatchCard
-                      key={id}
-                      toMatch={toMatch}
-                      match={match}
-                      homeTeam={{
-                        name: homeTeam?.name,
-                        score: homeTeamScore,
-                        flag: homeTeam?.flag,
-                      }}
-                      awayTeam={{
-                        name: awayTeam?.name,
-                        score: awayTeamScore,
-                        flag: awayTeam?.flag,
-                      }}
-                      goalScorerName={goalScorer?.name}
-                    />
-                  );
-                }
-              )}
+              {userMatches.map(({ id, ...userMatch }) => (
+                <MatchCard key={id} {...userMatch} />
+              ))}
             </div>
           </Fragment>
         );

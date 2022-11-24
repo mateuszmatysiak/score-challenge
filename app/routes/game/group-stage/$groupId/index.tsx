@@ -70,39 +70,18 @@ export default function GroupMatchesRoute() {
   const { groupId } = useParams();
   const { userMatches } = useLoaderData<LoaderData>();
 
-  const groupName = groupId?.split("-")[1].toUpperCase();
+  const groupName = userMatches.find(
+    (userMatch) => userMatch.match.group?.id === groupId
+  )?.match.group?.name;
 
   return (
     <div className="flex flex-col gap-6">
       <h1 className="text-48-bold">Group {groupName} Matches</h1>
 
       <div className="grid grid-cols-matches gap-4">
-        {userMatches.map(
-          ({ match, goalScorer, homeTeamScore, awayTeamScore }) => {
-            const { id, group, homeTeam, awayTeam } = match;
-
-            const toMatch = `/game/group-stage/${group?.id}/match-${id}`;
-
-            return (
-              <MatchCard
-                key={id}
-                toMatch={toMatch}
-                match={match}
-                homeTeam={{
-                  name: homeTeam?.name,
-                  score: homeTeamScore,
-                  flag: homeTeam?.flag,
-                }}
-                awayTeam={{
-                  name: awayTeam?.name,
-                  score: awayTeamScore,
-                  flag: awayTeam?.flag,
-                }}
-                goalScorerName={goalScorer?.name}
-              />
-            );
-          }
-        )}
+        {userMatches.map(({ id, ...userMatch }) => (
+          <MatchCard key={id} {...userMatch} />
+        ))}
       </div>
     </div>
   );

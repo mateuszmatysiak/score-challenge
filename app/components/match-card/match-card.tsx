@@ -1,12 +1,20 @@
-import type { Group, Playoff, Stadium, Stage, Team } from "@prisma/client";
+import type {
+  Group,
+  Player,
+  Playoff,
+  Stadium,
+  Stage,
+  Team,
+} from "@prisma/client";
 import { Link } from "@remix-run/react";
-import type { To } from "history";
 import { SoccerIcon } from "../icons/soccer-icon";
 import { MatchCardDetails } from "./match-details";
 import { MatchCardTeamFlag } from "./match-team-flag";
 
 export interface MatchCardProps {
-  toMatch: To;
+  homeTeamScore: number | null;
+  awayTeamScore: number | null;
+  goalScorer: Player | null;
   match: {
     id: number;
     homeTeam: Team | null;
@@ -17,37 +25,32 @@ export interface MatchCardProps {
     startDate: string;
     stadium: Stadium;
   };
-  homeTeam: {
-    name?: string;
-    score?: number | null;
-    flag?: string | null;
-  };
-  awayTeam: {
-    name?: string;
-    score?: number | null;
-    flag?: string | null;
-  };
-  goalScorerName?: string;
 }
 
 export function MatchCard({
-  toMatch,
   match,
-  homeTeam,
-  awayTeam,
-  goalScorerName,
+  goalScorer,
+  homeTeamScore,
+  awayTeamScore,
 }: MatchCardProps) {
+  const stageId = match.group?.id ?? match.playoff?.id;
+  const stageTypeId = match.stage.id;
+
+  const toMatch = `/game/${stageTypeId}-stage/${stageId}/match-${match.id}`;
+
   return (
     <div className="flex flex-col bg-white p-4 rounded-md gap-4">
       <MatchCardDetails match={match} />
 
       <div className="grid grid-cols-match-card items-center gap-4">
         <div className="flex items-center justify-end gap-2">
-          <div className="text-16-medium">{homeTeam.name ?? "Team A"}</div>
+          <div className="text-16-medium">
+            {match.homeTeam?.name ?? "Team A"}
+          </div>
           <MatchCardTeamFlag
             size="small"
-            src={homeTeam?.flag}
-            alt={homeTeam?.name}
+            src={match.homeTeam?.flag}
+            alt={match.homeTeam?.name}
           />
         </div>
 
@@ -56,18 +59,20 @@ export function MatchCard({
           prefetch="intent"
           className="text-24-bold text-bright-purple text-center"
         >
-          <span>{homeTeam.score ?? "?"}</span>
+          <span>{homeTeamScore ?? "?"}</span>
           <span> - </span>
-          <span>{awayTeam.score ?? "?"}</span>
+          <span>{awayTeamScore ?? "?"}</span>
         </Link>
 
         <div className="flex items-center justify-start gap-2">
           <MatchCardTeamFlag
             size="small"
-            src={awayTeam?.flag}
-            alt={awayTeam?.name}
+            src={match.awayTeam?.flag}
+            alt={match.awayTeam?.name}
           />
-          <div className="text-16-medium">{awayTeam.name ?? "Team B"}</div>
+          <div className="text-16-medium">
+            {match.awayTeam?.name ?? "Team B"}
+          </div>
         </div>
       </div>
 
@@ -75,7 +80,7 @@ export function MatchCard({
         <SoccerIcon width="20px" height="20px" fill="var(--dark-blue)" />
 
         <span className="text-16-bold">
-          {goalScorerName ? goalScorerName : "TBA"}
+          {goalScorer?.name ? goalScorer.name : "TBA"}
         </span>
       </div>
     </div>

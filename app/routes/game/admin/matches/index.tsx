@@ -70,32 +70,9 @@ export default function AdminMatchesRoute() {
       <h1 className="text-48-bold">Tournament Matches</h1>
 
       <div className="grid grid-cols-matches gap-4">
-        {tournamentMatches.map(
-          ({ match, goalScorer, homeTeamScore, awayTeamScore }) => {
-            const { id, homeTeam, awayTeam } = match;
-
-            const toMatch = `/game/admin/matches/match-${match.id}`;
-
-            return (
-              <MatchCard
-                key={id}
-                toMatch={toMatch}
-                match={match}
-                homeTeam={{
-                  name: homeTeam?.name,
-                  score: homeTeamScore,
-                  flag: homeTeam?.flag,
-                }}
-                awayTeam={{
-                  name: awayTeam?.name,
-                  score: awayTeamScore,
-                  flag: awayTeam?.flag,
-                }}
-                goalScorerName={goalScorer?.name}
-              />
-            );
-          }
-        )}
+        {tournamentMatches.map(({ id, ...tournamentMatch }) => (
+          <MatchCard key={id} {...tournamentMatch} />
+        ))}
       </div>
     </div>
   );
