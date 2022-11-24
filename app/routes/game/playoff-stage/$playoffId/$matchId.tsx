@@ -3,9 +3,10 @@ import type { ActionFunction, LoaderFunction } from "@remix-run/node";
 import { json, redirect } from "@remix-run/node";
 import { Form, useActionData, useLoaderData } from "@remix-run/react";
 import { Fragment } from "react";
-import { PersonIcon } from "~/components/icons/person-icon";
-import { MatchCardDetails } from "~/components/match-card-details";
-import { MatchCardTeamFlag } from "~/components/match-card-team-flag";
+import { ErrorCard } from "~/components/error-card";
+import { TeamPlayer } from "~/components/match-card-form/team-player";
+import { MatchCardDetails } from "~/components/match-card/match-details";
+import { MatchCardTeamFlag } from "~/components/match-card/match-team-flag";
 
 import { db } from "~/utils/db.server";
 import { getUserId } from "~/utils/session.server";
@@ -270,42 +271,13 @@ export default function PlayoffMatchRoute() {
                 {userMatch.match.homeTeam?.name} Team Players
               </li>
 
-              {homeTeamPlayers?.map((player, index) => {
-                const isPlayerChecked =
-                  player.id === player.userMatches[0]?.goalScorerId;
-                return (
-                  <Fragment key={player.id}>
-                    <label
-                      htmlFor={`goalScorerId[${player.id}]`}
-                      className="flex justify-between cursor-pointer"
-                    >
-                      <div className="flex items-center gap-2">
-                        <PersonIcon
-                          fill={isPlayerChecked ? "var(--bright-purple)" : null}
-                        />
-                        <div
-                          className={`${
-                            isPlayerChecked ? "text-bright-purple" : ""
-                          }`}
-                        >
-                          {player.name}
-                        </div>
-                      </div>
+              {homeTeamPlayers?.map((player, index) => (
+                <Fragment key={player.id}>
+                  <TeamPlayer {...player} />
 
-                      <input
-                        id={`goalScorerId[${player.id}]`}
-                        type="radio"
-                        name="goalScorerId"
-                        defaultValue={player.id}
-                        defaultChecked={isPlayerChecked}
-                        className="cursor-pointer"
-                      />
-                    </label>
-
-                    {index !== homeTeamPlayers.length - 1 ? <hr /> : null}
-                  </Fragment>
-                );
-              })}
+                  {index !== homeTeamPlayers.length - 1 ? <hr /> : null}
+                </Fragment>
+              ))}
             </ul>
 
             <ul className="flex flex-col flex-1 gap-1">
@@ -313,55 +285,18 @@ export default function PlayoffMatchRoute() {
                 {userMatch.match.awayTeam?.name} Team Players
               </li>
 
-              {awayTeamPlayers.map((player, index) => {
-                const isPlayerChecked =
-                  player.id === player.userMatches[0]?.goalScorerId;
-                return (
-                  <Fragment key={player.id}>
-                    <label
-                      htmlFor={`goalScorerId[${player.id}]`}
-                      className="flex justify-between cursor-pointer"
-                    >
-                      <div className="flex items-center gap-2">
-                        <PersonIcon
-                          fill={isPlayerChecked ? "var(--bright-purple)" : null}
-                        />
-                        <div
-                          className={`${
-                            isPlayerChecked ? "text-bright-purple" : ""
-                          }`}
-                        >
-                          {player.name}
-                        </div>
-                      </div>
+              {awayTeamPlayers.map((player, index) => (
+                <Fragment key={player.id}>
+                  <TeamPlayer {...player} />
 
-                      <input
-                        id={`goalScorerId[${player.id}]`}
-                        type="radio"
-                        name="goalScorerId"
-                        defaultValue={player.id}
-                        defaultChecked={isPlayerChecked}
-                        className="cursor-pointer"
-                      />
-                    </label>
-
-                    {index !== awayTeamPlayers.length - 1 ? <hr /> : null}
-                  </Fragment>
-                );
-              })}
+                  {index !== awayTeamPlayers.length - 1 ? <hr /> : null}
+                </Fragment>
+              ))}
             </ul>
           </div>
 
           {actionData?.formError ? (
-            <div
-              id="form-error-message"
-              className="p-4 border border-red-600 rounded-md"
-            >
-              <p className="text-red-600 font-medium">Error</p>
-              <p role="alert" className="text-16-medium">
-                {actionData.formError}
-              </p>
-            </div>
+            <ErrorCard>{actionData.formError}</ErrorCard>
           ) : null}
 
           <div className="flex justify-end">

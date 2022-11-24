@@ -1,9 +1,9 @@
 import type { Group, Playoff, Stadium, Stage, Team } from "@prisma/client";
 import { Link } from "@remix-run/react";
 import type { To } from "history";
-import { SoccerIcon } from "./icons/soccer-icon";
-import { MatchCardDetails } from "./match-card-details";
-import { MatchCardTeamFlag } from "./match-card-team-flag";
+import { SoccerIcon } from "../icons/soccer-icon";
+import { MatchCardDetails } from "./match-details";
+import { MatchCardTeamFlag } from "./match-team-flag";
 
 export interface MatchCardProps {
   toMatch: To;

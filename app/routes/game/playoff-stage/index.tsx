@@ -4,7 +4,7 @@ import { json } from "@remix-run/node";
 import { useLoaderData } from "@remix-run/react";
 import { groupBy } from "lodash";
 import { Fragment } from "react";
-import { MatchCard } from "~/components/match-card";
+import { MatchCard } from "~/components/match-card/match-card";
 
 import { db } from "~/utils/db.server";
 import { getUserId } from "~/utils/session.server";
