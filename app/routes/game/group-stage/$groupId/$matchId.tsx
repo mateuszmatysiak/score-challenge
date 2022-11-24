@@ -158,9 +158,9 @@ export const action: ActionFunction = async ({ request, params }) => {
   const goalScorerId = form.get("goalScorerId");
 
   const currentDateMs = Date.now();
-  const matchDateMs = Date.parse(String(matchStartDate));
+  const matchStartDateMs = Date.parse(matchStartDate);
 
-  if (currentDateMs > matchDateMs) {
+  if (currentDateMs > matchStartDateMs) {
     return badRequest({
       formError: "Match started or ended, cannot change bets.",
     });
