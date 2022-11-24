@@ -1,13 +1,7 @@
-import type { Match, User } from "@prisma/client";
+import type { Match } from "@prisma/client";
 import { PrismaClient } from "@prisma/client";
 
 const db = new PrismaClient();
-
-const seedRanking = {
-  groupPoints: 0,
-  playoffPoints: 0,
-  totalPoints: 0,
-};
 
 const seedStadiums = [
   {
@@ -1612,39 +1606,6 @@ const seedPlayoffMatches = [
   },
 ];
 
-const seedUserMatches = ({
-  users,
-  matches,
-}: {
-  users: User[];
-  matches: Match[];
-}) => {
-  const userMatches: { userId: string; matchId: number }[] = [];
-
-  for (const user of users) {
-    for (const match of matches) {
-      userMatches.push({ userId: user.id, matchId: match.id });
-    }
-  }
-
-  return userMatches;
-};
-
-const seedUserRanking = ({ users }: { users: User[] }) => {
-  const userRanking: {
-    userId: string;
-    groupPoints: number;
-    playoffPoints: number;
-    totalPoints: number;
-  }[] = [];
-
-  for (const user of users) {
-    userRanking.push({ userId: user.id, ...seedRanking });
-  }
-
-  return userRanking;
-};
-
 const seedTournamentMatches = ({ matches }: { matches: Match[] }) => {
   const tournamentMatches: { matchId: number }[] = [];
 
@@ -1673,19 +1634,10 @@ async function seed() {
     data: [...seedGroupMatches, ...seedPlayoffMatches],
   });
 
-  /* Pobranie użytkowników, meczów, drużyn */
-  const users = await db.user.findMany();
+  /* Pobranie meczów */
   const matches = await db.match.findMany();
 
-  /* Utworzenie rankingów dla użytkowników */
-  const userRanking = await Promise.all(seedUserRanking({ users }));
-  await db.userRanking.createMany({ data: userRanking });
-
-  /* Utworzenie meczów dla użytkowników */
-  const userMatches = await Promise.all(seedUserMatches({ users, matches }));
-  await db.userMatch.createMany({ data: userMatches });
-
-  /* Utworzenie wyników spotkań dla turnieju */
+  /* Utworzenie spotkań dla turnieju */
   const tournamentMatches = await Promise.all(
     seedTournamentMatches({ matches })
   );
