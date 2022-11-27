@@ -7,7 +7,7 @@ import { Fragment } from "react";
 import { MatchCard } from "~/components/match-card/match-card";
 
 import { db } from "~/utils/db.server";
-import { getUserId } from "~/utils/session.server";
+import { requireUser } from "~/utils/session.server";
 
 type UserMatch = Prisma.UserMatchGetPayload<{
   select: {
@@ -36,14 +36,10 @@ type LoaderData = {
 };
 
 export const loader: LoaderFunction = async ({ request }) => {
-  const userId = await getUserId(request);
-
-  if (!userId) {
-    throw new Response("Unauthorized", { status: 401 });
-  }
+  const loggedInUser = await requireUser(request);
 
   const userMatches = await db.userMatch.findMany({
-    where: { userId, match: { stageId: "group" } },
+    where: { userId: loggedInUser.id, match: { stageId: "group" } },
     orderBy: [{ match: { startDate: "asc" } }],
     select: {
       id: true,

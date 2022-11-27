@@ -13,6 +13,8 @@ export interface NavListProps {
 export function NavList({ user }: NavListProps) {
   const [isOpen, setIsOpen] = React.useState(false);
 
+  const isAdmin = user?.role === "ADMIN";
+
   return (
     <nav>
       <ul className="flex gap-12">
@@ -66,6 +68,16 @@ export function NavList({ user }: NavListProps) {
             Ranking
           </NavLinkItem>
         </li>
+        {isAdmin ? (
+          <li>
+            <NavLinkItem
+              to="/game/admin/matches"
+              icon={<PersonIcon fill="var(--bright-purple)" />}
+            >
+              Admin
+            </NavLinkItem>
+          </li>
+        ) : null}
 
         <li className="relative -mr-4">
           <button
@@ -90,7 +102,7 @@ export function NavList({ user }: NavListProps) {
             >
               <div className="py-1" role="none">
                 <div className="w-full px-4 py-2">
-                  <p className="text-12-regular text-dark-blue">Username</p>
+                  <p className="text-12-regular text-dark-blue">Account Name</p>
                   <p className="text-dark-blue whitespace-nowrap text-ellipsis overflow-hidden">
                     {user?.username}
                   </p>

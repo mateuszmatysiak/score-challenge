@@ -6,7 +6,7 @@ import { NavList } from "~/components/navigation/nav-list";
 import { UserRankingItem } from "~/components/user-ranking";
 
 import { db } from "~/utils/db.server";
-import { getUserId } from "~/utils/session.server";
+import { requireUser } from "~/utils/session.server";
 
 type RankingWithRank = UserRanking & {
   rank: number;
@@ -21,33 +21,29 @@ type User = Prisma.UserGetPayload<{
 }>;
 
 type LoaderData = {
-  user?: UserWithRanking;
+  userWithRanking?: UserWithRanking;
 };
 
 export const loader: LoaderFunction = async ({ request }) => {
-  const userId = await getUserId(request);
-
-  if (!userId) {
-    throw new Response("Unauthorized", { status: 401 });
-  }
+  const loggedInUser = await requireUser(request);
 
   const users = await db.user.findMany({
     orderBy: { ranking: { totalPoints: "desc" } },
     select: { id: true, username: true, ranking: true, role: true },
   });
 
-  const user = users
+  const userWithRanking = users
     .map((user, index) => ({
       ...user,
       ranking: { rank: index + 1, ...user.ranking },
     }))
-    .find((user) => user.id === userId);
+    .find((user) => user.id === loggedInUser.id);
 
-  return json({ user });
+  return json({ userWithRanking });
 };
 
 export default function GameRoute() {
-  const { user } = useLoaderData<LoaderData>();
+  const { userWithRanking } = useLoaderData<LoaderData>();
 
   return (
     <>
@@ -60,13 +56,13 @@ export default function GameRoute() {
             <span hidden>Homepage</span>
           </Link>
 
-          <NavList user={user} />
+          <NavList user={userWithRanking} />
         </div>
 
         <div className="flex flex-1 justify-between items-center bg-white px-12">
           <span className="text-16-medium">Your ranking</span>
 
-          <UserRankingItem userRanking={user?.ranking} />
+          <UserRankingItem userRanking={userWithRanking?.ranking} />
         </div>
       </header>
 

@@ -16,7 +16,7 @@ import { MatchCardDetails } from "~/components/match-card/match-details";
 import { MatchCardTeamFlag } from "~/components/match-card/match-team-flag";
 
 import { db } from "~/utils/db.server";
-import { getUserId } from "~/utils/session.server";
+import { requireUser } from "~/utils/session.server";
 
 /* Funkcja walidująca request */
 
@@ -90,18 +90,14 @@ interface LoaderData {
 }
 
 export const loader: LoaderFunction = async ({ request, params }) => {
-  const userId = await getUserId(request);
-
-  if (!userId) {
-    throw new Response("Unauthorized", { status: 401 });
-  }
+  const loggedInUser = await requireUser(request);
 
   const matchId = Number(params.matchId?.split("-")[1]);
 
   /* Pobieranie meczu użytkownika */
 
   const userMatch = await db.userMatch.findFirst({
-    where: { userId, match: { id: matchId } },
+    where: { userId: loggedInUser.id, match: { id: matchId } },
     orderBy: [{ match: { startDate: "asc" } }],
     select: {
       id: true,
@@ -141,7 +137,7 @@ export const loader: LoaderFunction = async ({ request, params }) => {
       teamId: true,
       userMatches: {
         select: { goalScorerId: true },
-        where: { userId, matchId },
+        where: { userId: loggedInUser.id, matchId },
       },
     },
   });
@@ -153,11 +149,7 @@ export const loader: LoaderFunction = async ({ request, params }) => {
 };
 
 export const action: ActionFunction = async ({ request, params }) => {
-  const userId = await getUserId(request);
-
-  if (!userId) {
-    throw new Response("Unauthorized", { status: 401 });
-  }
+  await requireUser(request);
 
   const form = await request.formData();
 

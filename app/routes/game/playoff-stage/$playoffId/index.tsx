@@ -5,7 +5,7 @@ import { useLoaderData, useParams } from "@remix-run/react";
 import { MatchCard } from "~/components/match-card/match-card";
 
 import { db } from "~/utils/db.server";
-import { getUserId } from "~/utils/session.server";
+import { requireUser } from "~/utils/session.server";
 
 type UserMatch = Prisma.UserMatchGetPayload<{
   select: {
@@ -34,14 +34,10 @@ interface LoaderData {
 }
 
 export const loader: LoaderFunction = async ({ request, params }) => {
-  const userId = await getUserId(request);
-
-  if (!userId) {
-    throw new Response("Unauthorized", { status: 401 });
-  }
+  const loggedInUser = await requireUser(request);
 
   const userMatches = await db.userMatch.findMany({
-    where: { userId, match: { playoffId: params.playoffId } },
+    where: { userId: loggedInUser.id, match: { playoffId: params.playoffId } },
     orderBy: [{ match: { startDate: "asc" } }],
     select: {
       id: true,

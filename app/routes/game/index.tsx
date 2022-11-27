@@ -7,7 +7,7 @@ import { Fragment } from "react";
 
 import { MatchCard } from "~/components/match-card/match-card";
 import { db } from "~/utils/db.server";
-import { getUserId } from "~/utils/session.server";
+import { requireUser } from "~/utils/session.server";
 
 type UserMatch = Prisma.UserMatchGetPayload<{
   select: {
@@ -39,15 +39,11 @@ const todayDate = new Date(new Date().setHours(0, 0, 0, 0)); // Today
 const twoDaysLater = new Date(new Date().setHours(48, 59, 59, 999)); // 2 days after
 
 export const loader: LoaderFunction = async ({ request }) => {
-  const userId = await getUserId(request);
-
-  if (!userId) {
-    throw new Response("Unauthorized", { status: 401 });
-  }
+  const loggedInUser = await requireUser(request);
 
   const userMatches = await db.userMatch.findMany({
     where: {
-      userId,
+      userId: loggedInUser.id,
       match: { startDate: { lt: twoDaysLater, gt: todayDate } },
     },
     orderBy: [{ match: { startDate: "asc" } }],
