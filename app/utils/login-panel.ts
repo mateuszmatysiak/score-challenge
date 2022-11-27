@@ -2,9 +2,9 @@ export function validateUsername(username: unknown) {
   if (
     typeof username !== "string" ||
     username.length < 3 ||
-    username.length >= 12
+    username.length >= 25
   ) {
-    return `Usernames must be at least 3 and max. 12 characters long`;
+    return `Usernames must be at least 3 and max. 25 characters long`;
   }
 }
 
