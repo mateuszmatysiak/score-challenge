@@ -87,3 +87,10 @@ export default function PlayoffMatchesRoute() {
     </div>
   );
 }
+
+export function ErrorBoundary() {
+  const { playoffId } = useParams();
+  return (
+    <p className="text-20-medium">{`There was an error loading playoff matches by id ${playoffId}. Sorry.`}</p>
+  );
+}

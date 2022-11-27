@@ -123,3 +123,9 @@ export function CatchBoundary() {
     );
   }
 }
+
+export function ErrorBoundary() {
+  return (
+    <p className="text-20-medium">{`There was an error loading today's and tomorrow's matches. Sorry.`}</p>
+  );
+}

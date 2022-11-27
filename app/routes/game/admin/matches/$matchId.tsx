@@ -1,7 +1,13 @@
 import type { Prisma, UserMatch } from "@prisma/client";
 import type { ActionFunction, LoaderFunction } from "@remix-run/node";
 import { json, redirect } from "@remix-run/node";
-import { Form, useActionData, useLoaderData } from "@remix-run/react";
+import {
+  Form,
+  useActionData,
+  useCatch,
+  useLoaderData,
+  useParams,
+} from "@remix-run/react";
 import { Fragment } from "react";
 import { ErrorCard } from "~/components/error-card";
 import { GoalScorer } from "~/components/match-card-form/goal-scorer";
@@ -424,5 +430,26 @@ export default function AdminMatchRoute() {
         </Form>
       </div>
     </div>
+  );
+}
+
+export function CatchBoundary() {
+  const caught = useCatch();
+  const params = useParams();
+
+  if (caught.status === 404) {
+    return (
+      <p className="text-20-medium mb-4">
+        Match with id "{params.matchId}" not found.
+      </p>
+    );
+  }
+  throw new Error(`Unhandled error: ${caught.status}`);
+}
+
+export function ErrorBoundary() {
+  const { matchId } = useParams();
+  return (
+    <p className="text-20-medium">{`There was an error loading match by the id ${matchId}. Sorry.`}</p>
   );
 }

@@ -65,3 +65,9 @@ export default function RankingRoute() {
     </div>
   );
 }
+
+export function ErrorBoundary() {
+  return (
+    <p className="text-20-medium">{`There was an error loading users ranking. Sorry.`}</p>
+  );
+}

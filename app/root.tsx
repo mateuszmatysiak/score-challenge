@@ -5,6 +5,7 @@ import {
   Meta,
   Outlet,
   Scripts,
+  ScrollRestoration,
   useCatch,
 } from "@remix-run/react";
 import styles from "./styles/app.css";
@@ -38,6 +39,7 @@ function Document({
       </head>
       <body>
         {children}
+        <ScrollRestoration />
         <Scripts />
         <LiveReload />
       </body>
@@ -58,8 +60,8 @@ export function CatchBoundary() {
 
   return (
     <Document title={`${caught.status} ${caught.statusText}`}>
-      <div>
-        <h1>
+      <div className="bg-grey h-screen p-12">
+        <h1 className="text-24-bold">
           {caught.status} {caught.statusText}
         </h1>
       </div>
@@ -70,8 +72,8 @@ export function CatchBoundary() {
 export function ErrorBoundary({ error }: { error: Error }) {
   return (
     <Document title="Error">
-      <div>
-        <h1>App Error</h1>
+      <div className="bg-grey h-screen p-12">
+        <h1 className="text-24-bold text-red-600">App Error</h1>
         <pre>{error.message}</pre>
       </div>
     </Document>

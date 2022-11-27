@@ -83,3 +83,9 @@ export default function AdminMatchesRoute() {
     </div>
   );
 }
+
+export function ErrorBoundary() {
+  return (
+    <p className="text-20-medium">{`There was an error loading tournament matches. Sorry.`}</p>
+  );
+}

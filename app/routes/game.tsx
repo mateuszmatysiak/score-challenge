@@ -12,7 +12,7 @@ type RankingWithRank = UserRanking & {
   rank: number;
 };
 
-type UserWithRanking = Omit<User, "ranking"> & {
+export type UserWithRanking = Omit<User, "ranking"> & {
   ranking: RankingWithRank | null;
 };
 
@@ -60,7 +60,7 @@ export default function GameRoute() {
             <span hidden>Homepage</span>
           </Link>
 
-          <NavList />
+          <NavList user={user} />
         </div>
 
         <div className="flex flex-1 justify-between items-center bg-white px-12">
@@ -82,9 +82,13 @@ export function CatchBoundary() {
 
   if (caught.status === 401) {
     return (
-      <div>
-        <p>You must be logged in to play a game.</p>
-        <Link to="/login">Login</Link>
+      <div className="bg-grey h-screen p-12">
+        <p className="text-20-medium mb-4">
+          You must be logged in to play a game.
+        </p>
+        <Link to="/login" className="action-button">
+          Login
+        </Link>
       </div>
     );
   }

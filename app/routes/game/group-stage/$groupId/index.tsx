@@ -88,3 +88,10 @@ export default function GroupMatchesRoute() {
     </div>
   );
 }
+
+export function ErrorBoundary() {
+  const { groupId } = useParams();
+  return (
+    <p className="text-20-medium">{`There was an error loading group matches by id ${groupId}. Sorry.`}</p>
+  );
+}

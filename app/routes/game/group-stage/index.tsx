@@ -94,3 +94,9 @@ export default function GroupStageRoute() {
     </div>
   );
 }
+
+export function ErrorBoundary() {
+  return (
+    <p className="text-20-medium">{`There was an error loading all group matches. Sorry.`}</p>
+  );
+}
