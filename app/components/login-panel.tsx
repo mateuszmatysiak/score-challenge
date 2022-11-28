@@ -1,4 +1,10 @@
-import { Form, Link, useActionData, useSearchParams } from "@remix-run/react";
+import {
+  Form,
+  Link,
+  useActionData,
+  useSearchParams,
+  useTransition,
+} from "@remix-run/react";
 import type { ActionData } from "~/types/login-panel";
 
 export interface LoginPanelProps {
@@ -8,7 +14,11 @@ export interface LoginPanelProps {
 const panelProperties = {
   login: {
     panelLabel: "Sign in to Your Account",
-    submitLabel: "Sign In",
+    buttonLabel: {
+      text: "Sign In",
+      submitting: "Logging in...",
+      redirect: "Logging in...",
+    },
     switchProperties: {
       label: "Need an account?",
       to: "/register",
@@ -16,7 +26,11 @@ const panelProperties = {
   },
   register: {
     panelLabel: "Sign up for an Account",
-    submitLabel: "Create account",
+    buttonLabel: {
+      text: "Create account",
+      submitting: "Creating...",
+      redirect: "Logging in...",
+    },
     switchProperties: {
       label: "Have an account?",
       to: "/login",
@@ -27,15 +41,21 @@ const panelProperties = {
 export function LoginPanel({ type }: LoginPanelProps) {
   const actionData = useActionData<ActionData>();
   const [searchParams] = useSearchParams();
+  const transition = useTransition();
 
-  const { panelLabel, submitLabel, switchProperties } = panelProperties[type];
+  const { panelLabel, buttonLabel, switchProperties } = panelProperties[type];
+
+  const text =
+    transition.state === "submitting"
+      ? buttonLabel.submitting
+      : transition.type === "actionRedirect"
+      ? buttonLabel.redirect
+      : buttonLabel.text;
 
   return (
-    <main className="h-screen bg-[url(public/assets/images/background.jpg)] bg-cover bg-bottom">
-      <div className="relative flex justify-center items-center bg-white-85-opacity w-[55%] h-full">
-        <div className="absolute top-10 left-10 w-16 h-16 bg-[url(public/assets/images/logo.svg)]" />
-
-        <div className="w-full max-w-[425px] bg-white p-10 rounded-lg">
+    <main className="h-screen bg-cover bg-bottom">
+      <div className="relative flex justify-center items-center bg-gray-50 w-full h-full">
+        <div className="w-full max-w-[425px] bg-white p-10 rounded-lg shadow-lg ring-1 ring-black ring-opacity-5">
           <h1 className="text-24-medium mb-9">{panelLabel}</h1>
 
           <Form method="post" className="flex flex-col gap-5">
@@ -125,7 +145,7 @@ export function LoginPanel({ type }: LoginPanelProps) {
             ) : null}
 
             <button type="submit" className="action-button w-full">
-              {submitLabel}
+              {text}
             </button>
           </Form>
         </div>
