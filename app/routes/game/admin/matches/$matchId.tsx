@@ -13,19 +13,24 @@ import { ErrorCard } from "~/components/error-card";
 import { GoalScorer } from "~/components/match-card-form/goal-scorer";
 import { NoGoalScorer } from "~/components/match-card-form/no-goal-scorer";
 import { MatchCardDetails } from "~/components/match-card/match-details";
+import { SubmitButton } from "~/components/submit-button";
 
 import { db } from "~/utils/db.server";
 import { requireAdminUser } from "~/utils/session.server";
 
 /* Funkcje pomocnicze */
 
-interface Utility {
+interface CompareMatchArgs {
   userMatch: UserMatch;
   tournamentMatches: TournamentMatchesWithMatch[];
   stageId: "group" | "playoff";
 }
 
-const compareMatch = ({ userMatch, tournamentMatches, stageId }: Utility) =>
+const compareMatch = ({
+  userMatch,
+  tournamentMatches,
+  stageId,
+}: CompareMatchArgs) =>
   tournamentMatches.find(
     (tournamentMatch) =>
       tournamentMatch.match.id === userMatch.matchId &&
@@ -423,9 +428,7 @@ export default function AdminMatchRoute() {
           ) : null}
 
           <div className="flex justify-end">
-            <button type="submit" className="action-button">
-              Save
-            </button>
+            <SubmitButton />
           </div>
         </Form>
       </div>

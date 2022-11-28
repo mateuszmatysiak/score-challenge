@@ -14,6 +14,7 @@ import { GoalScorer } from "~/components/match-card-form/goal-scorer";
 import { NoGoalScorer } from "~/components/match-card-form/no-goal-scorer";
 import { MatchCardDetails } from "~/components/match-card/match-details";
 import { MatchCardTeamFlag } from "~/components/match-card/match-team-flag";
+import { SubmitButton } from "~/components/submit-button";
 
 import { db } from "~/utils/db.server";
 import { requireUser } from "~/utils/session.server";
@@ -295,9 +296,7 @@ export default function GroupMatchRoute() {
           ) : null}
 
           <div className="flex justify-end">
-            <button type="submit" className="action-button">
-              Save
-            </button>
+            <SubmitButton />
           </div>
         </Form>
       </div>
