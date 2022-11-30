@@ -40,6 +40,8 @@ model UserMatch {
   awayTeamScore Int?
   goalScorer    Player? @relation(fields: [goalScorerId], references: [id], onDelete: Cascade)
   goalScorerId  Int?
+
+  @@index([userId, matchId])
 }
 
 model Group {
