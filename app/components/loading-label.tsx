@@ -17,7 +17,7 @@ export function LoadingLabel() {
 
   return (
     <div
-      className={`flex justify-center fixed ${bottom} left-0 right-0 mx-auto z-10 p-4 transition-all ease-out duration-700`}
+      className={`flex justify-center fixed ${bottom} left-0 right-0 mx-auto z-10 p-4 transition-all ease-out duration-200`}
     >
       <div className="flex gap-2 text-14-medium bg-white-85-opacity shadow-xl ring-1 ring-black ring-opacity-5 p-4 rounded-xl">
         <svg
