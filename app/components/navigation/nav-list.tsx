@@ -21,6 +21,7 @@ export function NavList({ user }: NavListProps) {
         <li>
           <NavLinkItem
             to="/game"
+            prefetch="intent"
             end
             icon={
               <SoccerIcon
@@ -36,6 +37,7 @@ export function NavList({ user }: NavListProps) {
         <li>
           <NavLinkItem
             to="/game/group-stage"
+            prefetch="intent"
             end
             icon={
               <SoccerIcon
@@ -51,6 +53,7 @@ export function NavList({ user }: NavListProps) {
         <li>
           <NavLinkItem
             to="/game/playoff-stage"
+            prefetch="intent"
             end
             icon={
               <SoccerIcon
@@ -64,7 +67,11 @@ export function NavList({ user }: NavListProps) {
           </NavLinkItem>
         </li>
         <li>
-          <NavLinkItem to="/game/ranking" icon={<PeopleIcon />}>
+          <NavLinkItem
+            to="/game/ranking"
+            prefetch="intent"
+            icon={<PeopleIcon />}
+          >
             Ranking
           </NavLinkItem>
         </li>
@@ -72,6 +79,7 @@ export function NavList({ user }: NavListProps) {
           <li>
             <NavLinkItem
               to="/game/admin/matches"
+              prefetch="intent"
               icon={<PersonIcon fill="var(--bright-purple)" />}
             >
               Admin

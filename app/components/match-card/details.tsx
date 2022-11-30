@@ -46,7 +46,11 @@ export function MatchCardDetails({ match }: MatchCardDetailsProps) {
     <div className="text-center">
       <div className="text-14-regular">{startDateIntl}</div>
       <div className="text-14-regular">{stadium.name}</div>
-      <Link to={toStageMatch} className="text-14-medium text-bright-purple">
+      <Link
+        to={toStageMatch}
+        prefetch="intent"
+        className="text-14-medium text-bright-purple"
+      >
         {stageName}
       </Link>
     </div>
