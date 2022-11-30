@@ -1,5 +1,5 @@
 import type { Prisma, UserRanking } from "@prisma/client";
-import type { LoaderFunction } from "@remix-run/node";
+import type { LoaderFunction, MetaFunction } from "@remix-run/node";
 import { json } from "@remix-run/node";
 import { useLoaderData } from "@remix-run/react";
 import { Fragment } from "react";
@@ -7,6 +7,13 @@ import { UserRankingItem } from "~/components/user-ranking";
 
 import { db } from "~/utils/db.server";
 import { getUser } from "~/utils/session.server";
+
+export const meta: MetaFunction = () => {
+  return {
+    title: "Ranking | FIFA World Cup Score Challenge",
+    description: "Look at your ranking in FIFA World Cup Score Challenge!",
+  };
+};
 
 type RankingWithRank = UserRanking & {
   rank: number;

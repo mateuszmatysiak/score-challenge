@@ -1,13 +1,30 @@
 import type { Prisma } from "@prisma/client";
-import type { LoaderFunction } from "@remix-run/node";
+import type { LoaderFunction, MetaFunction } from "@remix-run/node";
 import { json } from "@remix-run/node";
 import { Link, useCatch, useLoaderData } from "@remix-run/react";
 import { groupBy } from "lodash";
 import { Fragment } from "react";
 
-import { MatchCard } from "~/components/match-card/match-card";
+import { MatchCard } from "~/components/match-card";
 import { db } from "~/utils/db.server";
 import { requireUser } from "~/utils/session.server";
+
+export const meta: MetaFunction = ({
+  data,
+}: {
+  data: LoaderData | undefined;
+}) => {
+  if (!data) {
+    return {
+      title: "No matches",
+      description: "No matches found",
+    };
+  }
+  return {
+    title: "Today's and tomorrow's matches | FIFA World Cup Score Challenge",
+    description: "Submit your today's and tomorrow's matches",
+  };
+};
 
 type UserMatch = Prisma.UserMatchGetPayload<{
   select: {
@@ -92,7 +109,7 @@ export default function GameRoute() {
         return (
           <Fragment key={key}>
             <p className="text-48-bold">
-              {index === 0 ? "Today" : "Tomorrow"} Matches
+              {index === 0 ? "Today's" : "Tomorrow's"} Matches
             </p>
 
             <div className="grid grid-cols-matches gap-4">

@@ -10,8 +10,8 @@ import type {
 import { Link } from "@remix-run/react";
 import { OpenIcon } from "../icons/open-icon";
 import { SoccerIcon } from "../icons/soccer-icon";
-import { MatchCardDetails } from "./match-details";
-import { MatchCardTeamFlag } from "./match-team-flag";
+import { MatchCardDetails } from "./details";
+import { MatchCardTeamFlag } from "./flag";
 
 type GetGoalScorerTextColorProps = {
   goalScorer: Player | null;

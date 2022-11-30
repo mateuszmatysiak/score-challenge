@@ -2,7 +2,7 @@ import type { Prisma } from "@prisma/client";
 import type { LoaderFunction } from "@remix-run/node";
 import { json } from "@remix-run/node";
 import { useLoaderData } from "@remix-run/react";
-import { MatchCard } from "~/components/match-card/match-card";
+import { MatchCard } from "~/components/match-card";
 
 import { db } from "~/utils/db.server";
 import { requireAdminUser } from "~/utils/session.server";

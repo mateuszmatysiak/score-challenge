@@ -586,12 +586,6 @@ input[type="number"]::-webkit-inner-spin-button,
   line-height: 1.5rem;
 }
 
-.text-14-bold {
-  font-size: 0.875rem;
-  line-height: 1.25rem;
-  font-weight: 700;
-}
-
 .text-14-medium {
   font-size: 0.875rem;
   line-height: 1.25rem;
@@ -1087,6 +1081,10 @@ input[type="number"]::-webkit-inner-spin-button,
 
 .duration-700 {
   transition-duration: 700ms;
+}
+
+.duration-200 {
+  transition-duration: 200ms;
 }
 
 .ease-out {

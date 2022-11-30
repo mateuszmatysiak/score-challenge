@@ -1,5 +1,5 @@
 import { Form } from "@remix-run/react";
-import React from "react";
+import { useState } from "react";
 import { PeopleIcon } from "~/components/icons/people-icon";
 import { SoccerIcon } from "~/components/icons/soccer-icon";
 import type { UserWithRanking } from "~/routes/game";
@@ -11,7 +11,7 @@ export interface NavListProps {
 }
 
 export function NavList({ user }: NavListProps) {
-  const [isOpen, setIsOpen] = React.useState(false);
+  const [isOpen, setIsOpen] = useState(false);
 
   const isAdmin = user?.role === "ADMIN";
 

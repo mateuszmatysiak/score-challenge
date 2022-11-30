@@ -1,11 +1,28 @@
 import type { Prisma } from "@prisma/client";
-import type { LoaderFunction } from "@remix-run/node";
+import type { LoaderFunction, MetaFunction } from "@remix-run/node";
 import { json } from "@remix-run/node";
 import { useLoaderData, useParams } from "@remix-run/react";
-import { MatchCard } from "~/components/match-card/match-card";
+import { MatchCard } from "~/components/match-card";
 
 import { db } from "~/utils/db.server";
 import { requireUser } from "~/utils/session.server";
+
+export const meta: MetaFunction = ({
+  data,
+}: {
+  data: LoaderData | undefined;
+}) => {
+  if (!data) {
+    return {
+      title: "No group matches",
+      description: "No group matches found",
+    };
+  }
+  return {
+    title: "Group Matches | FIFA World Cup Score Challenge",
+    description: "Submit Group Matches in FIFA World Cup Score Challenge!",
+  };
+};
 
 type UserMatch = Prisma.UserMatchGetPayload<{
   select: {

@@ -1,26 +1,22 @@
-import type { Match } from "@prisma/client";
-import type { ActionFunction } from "@remix-run/node";
+import type { ActionFunction, MetaFunction } from "@remix-run/node";
+import { seedUserMatches } from "prisma/utils";
 import { LoginPanel } from "~/components/login-panel";
-import { badRequest } from "~/utils/bad-request";
+import { badRequest } from "~/utils/helpers/bad-request.server";
 
 import { db } from "~/utils/db.server";
 import {
   validatePassword,
   validateUrl,
   validateUsername,
-} from "~/utils/login-panel";
+} from "~/utils/helpers/login-panel";
 import { createUserSession, register } from "~/utils/session.server";
 
-type SeedUserMatchesArgs = { userId: string; matches: Match[] };
-
-const seedUserMatches = ({ userId, matches }: SeedUserMatchesArgs) => {
-  const userMatches: { userId: string; matchId: number }[] = [];
-
-  for (const match of matches) {
-    userMatches.push({ userId, matchId: match.id });
-  }
-
-  return userMatches;
+export const meta: MetaFunction = () => {
+  return {
+    title: "Register | FIFA World Cup Score Challenge",
+    description:
+      "Create account to submit your scores in FIFA World Cup Score Challenge!",
+  };
 };
 
 const userRankingPoints = { groupPoints: 0, playoffPoints: 0, totalPoints: 0 };

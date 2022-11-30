@@ -1,5 +1,9 @@
 import type { Prisma } from "@prisma/client";
-import type { ActionFunction, LoaderFunction } from "@remix-run/node";
+import type {
+  ActionFunction,
+  LoaderFunction,
+  MetaFunction,
+} from "@remix-run/node";
 import { json, redirect } from "@remix-run/node";
 import {
   Form,
@@ -10,14 +14,31 @@ import {
 } from "@remix-run/react";
 import { Fragment } from "react";
 import { ErrorCard } from "~/components/error-card";
-import { GoalScorer } from "~/components/match-card-form/goal-scorer";
-import { NoGoalScorer } from "~/components/match-card-form/no-goal-scorer";
-import { MatchCardDetails } from "~/components/match-card/match-details";
-import { MatchCardTeamFlag } from "~/components/match-card/match-team-flag";
+import { GoalScorer } from "~/components/match-card/form/goal-scorer";
+import { NoGoalScorer } from "~/components/match-card/form/no-goal-scorer";
+import { MatchCardDetails } from "~/components/match-card/details";
+import { MatchCardTeamFlag } from "~/components/match-card/flag";
 import { SubmitButton } from "~/components/submit-button";
 
 import { db } from "~/utils/db.server";
 import { requireUser } from "~/utils/session.server";
+
+export const meta: MetaFunction = ({
+  data,
+}: {
+  data: LoaderData | undefined;
+}) => {
+  if (!data) {
+    return {
+      title: "No match",
+      description: "No match found",
+    };
+  }
+  return {
+    title: "Match | FIFA World Cup Score Challenge",
+    description: "Submit Match in FIFA World Cup Score Challenge!",
+  };
+};
 
 /* Funkcja walidująca request */
 

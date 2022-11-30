@@ -10,9 +10,9 @@ import {
 } from "@remix-run/react";
 import { Fragment } from "react";
 import { ErrorCard } from "~/components/error-card";
-import { GoalScorer } from "~/components/match-card-form/goal-scorer";
-import { NoGoalScorer } from "~/components/match-card-form/no-goal-scorer";
-import { MatchCardDetails } from "~/components/match-card/match-details";
+import { GoalScorer } from "~/components/match-card/form/goal-scorer";
+import { NoGoalScorer } from "~/components/match-card/form/no-goal-scorer";
+import { MatchCardDetails } from "~/components/match-card/details";
 import { SubmitButton } from "~/components/submit-button";
 
 import { db } from "~/utils/db.server";

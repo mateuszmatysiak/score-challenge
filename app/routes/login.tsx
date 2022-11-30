@@ -1,13 +1,21 @@
-import type { ActionFunction } from "@remix-run/node";
+import type { ActionFunction, MetaFunction } from "@remix-run/node";
 import { LoginPanel } from "~/components/login-panel";
-import { badRequest } from "~/utils/bad-request";
+import { badRequest } from "~/utils/helpers/bad-request.server";
 import {
   validatePassword,
   validateUrl,
   validateUsername,
-} from "~/utils/login-panel";
+} from "~/utils/helpers/login-panel";
 
 import { createUserSession, login } from "~/utils/session.server";
+
+export const meta: MetaFunction = () => {
+  return {
+    title: "Login | FIFA World Cup Score Challenge",
+    description:
+      "Login to submit your scores in FIFA World Cup Score Challenge!",
+  };
+};
 
 export const action: ActionFunction = async ({ request }) => {
   const form = await request.formData();

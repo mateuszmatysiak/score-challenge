@@ -1,13 +1,21 @@
 import type { Prisma } from "@prisma/client";
-import type { LoaderFunction } from "@remix-run/node";
+import type { LoaderFunction, MetaFunction } from "@remix-run/node";
 import { json } from "@remix-run/node";
 import { useLoaderData } from "@remix-run/react";
 import { groupBy } from "lodash";
 import { Fragment } from "react";
-import { MatchCard } from "~/components/match-card/match-card";
+import { MatchCard } from "~/components/match-card";
 
 import { db } from "~/utils/db.server";
 import { requireUser } from "~/utils/session.server";
+
+export const meta: MetaFunction = () => {
+  return {
+    title: "Playoff Stage Matches | FIFA World Cup Score Challenge",
+    description:
+      "Submit Playoff Stage Matches in FIFA World Cup Score Challenge!",
+  };
+};
 
 type UserMatch = Prisma.UserMatchGetPayload<{
   select: {
