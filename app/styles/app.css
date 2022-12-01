@@ -711,6 +711,10 @@ input[type="number"]::-webkit-inner-spin-button,
   height: 40px;
 }
 
+.h-10 {
+  height: 2.5rem;
+}
+
 .min-h-screen {
   min-height: 100vh;
 }
@@ -733,6 +737,10 @@ input[type="number"]::-webkit-inner-spin-button,
 
 .w-\[40px\] {
   width: 40px;
+}
+
+.w-10 {
+  width: 2.5rem;
 }
 
 .max-w-\[425px\] {
