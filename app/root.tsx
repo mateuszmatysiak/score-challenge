@@ -20,6 +20,7 @@ export const meta: MetaFunction = () => {
     charset: "utf-8",
     description,
     keywords: "Remix,World Cup, Qatar 2022,Score challenge, Game",
+    viewport: "width=device-width,initial-scale=1",
   };
 };
 
