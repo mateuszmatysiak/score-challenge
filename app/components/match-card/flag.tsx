@@ -9,17 +9,19 @@ export function MatchCardTeamFlag({
   alt,
   type = "small",
 }: MatchCardTeamFlagProps) {
-  const size = type === "small" ? "10" : "24";
-
   return src ? (
     <img
       src={src}
       alt={`${alt} Flag`}
-      className={`w-10 h-10 rounded-full border-2 border-dark-blue object-cover`}
+      className={`${type === "small" ? "w-10" : "w-24"} ${
+        type === "small" ? "h-10" : "h-24"
+      } rounded-full border-2 border-dark-blue object-cover`}
     />
   ) : (
     <div
-      className={`w-10 h-10 rounded-full bg-grey border-2 border-dark-blue overflow-hidden`}
+      className={`${type === "small" ? "w-10" : "w-24"} ${
+        type === "small" ? "h-10" : "h-24"
+      } rounded-full bg-grey border-2 border-dark-blue overflow-hidden`}
     />
   );
 }
