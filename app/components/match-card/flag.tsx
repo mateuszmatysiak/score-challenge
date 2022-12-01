@@ -15,11 +15,11 @@ export function MatchCardTeamFlag({
     <img
       src={src}
       alt={`${alt} Flag`}
-      className={`w-10 h-10 rounded-full border-2 border-dark-blue object-cover`}
+      className={`w-${size} h-${size} rounded-full border-2 border-dark-blue object-cover`}
     />
   ) : (
     <div
-      className={`w-10 h-10 rounded-full bg-grey border-2 border-dark-blue overflow-hidden`}
+      className={`w-${size} h-${size} rounded-full bg-grey border-2 border-dark-blue overflow-hidden`}
     />
   );
 }

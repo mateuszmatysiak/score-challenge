@@ -346,7 +346,7 @@ export default function AdminMatchRoute() {
                 {tournamentMatch.match.homeTeam?.name ?? "Team A"}
               </label>
               <MatchCardTeamFlag
-                size="100px"
+                type="large"
                 src={tournamentMatch.match.homeTeam?.flag}
                 alt={tournamentMatch.match.homeTeam?.name}
               />
@@ -372,7 +372,7 @@ export default function AdminMatchRoute() {
             </div>
             <div className="flex items-center justify-start gap-4">
               <MatchCardTeamFlag
-                size="100px"
+                type="large"
                 src={tournamentMatch.match.awayTeam?.flag}
                 alt={tournamentMatch.match.awayTeam?.name}
               />
