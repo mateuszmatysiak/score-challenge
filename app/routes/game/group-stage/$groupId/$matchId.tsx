@@ -242,7 +242,7 @@ export default function GroupMatchRoute() {
               </label>
 
               <MatchCardTeamFlag
-                size="large"
+                type="large"
                 src={homeTeam?.flag}
                 alt={homeTeam?.name}
               />
@@ -268,7 +268,7 @@ export default function GroupMatchRoute() {
             </div>
             <div className="flex items-center justify-start gap-4">
               <MatchCardTeamFlag
-                size="large"
+                type="large"
                 src={awayTeam?.flag}
                 alt={awayTeam?.name}
               />

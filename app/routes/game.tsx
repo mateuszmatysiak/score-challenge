@@ -2,7 +2,6 @@ import type { Prisma, UserRanking } from "@prisma/client";
 import type { LoaderFunction } from "@remix-run/node";
 import { json } from "@remix-run/node";
 import { Link, Outlet, useCatch, useLoaderData } from "@remix-run/react";
-import { LoadingLabel } from "~/components/loading-label";
 import { NavList } from "~/components/navigation/nav-list";
 import { UserRankingItem } from "~/components/user-ranking";
 
@@ -67,9 +66,7 @@ export default function GameRoute() {
         </div>
       </header>
 
-      <main className="relative min-h-screen bg-grey pt-44 pb-12 px-12">
-        <LoadingLabel />
-
+      <main className="min-h-screen bg-grey pt-44 pb-12 px-12">
         <Outlet />
       </main>
     </>

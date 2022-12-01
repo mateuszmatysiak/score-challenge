@@ -17,6 +17,7 @@ import { SubmitButton } from "~/components/submit-button";
 
 import { db } from "~/utils/db.server";
 import { requireAdminUser } from "~/utils/session.server";
+import { MatchCardTeamFlag } from "~/components/match-card/flag";
 
 /* Funkcje pomocnicze */
 
@@ -344,15 +345,11 @@ export default function AdminMatchRoute() {
               <label htmlFor="homeTeamScore" className="text-48-bold">
                 {tournamentMatch.match.homeTeam?.name ?? "Team A"}
               </label>
-              {tournamentMatch.match.homeTeam?.flag ? (
-                <img
-                  src={tournamentMatch.match.homeTeam?.flag}
-                  alt={`${tournamentMatch.match.homeTeam.name} Flag`}
-                  className="w-[100px] h-[100px] rounded-full border-2 border-dark-blue object-cover"
-                />
-              ) : (
-                <div className="w-[100px] h-[100px] rounded-full bg-grey border-2 border-dark-blue overflow-hidden" />
-              )}
+              <MatchCardTeamFlag
+                type="large"
+                src={tournamentMatch.match.homeTeam?.flag}
+                alt={tournamentMatch.match.homeTeam?.name}
+              />
             </div>
             <div className="m-auto">
               <input
@@ -374,15 +371,11 @@ export default function AdminMatchRoute() {
               />
             </div>
             <div className="flex items-center justify-start gap-4">
-              {tournamentMatch.match.awayTeam?.flag ? (
-                <img
-                  src={tournamentMatch.match.awayTeam?.flag}
-                  alt={`${tournamentMatch.match.awayTeam.name} Flag`}
-                  className="w-[100px] h-[100px] rounded-full border-2 border-dark-blue object-cover"
-                />
-              ) : (
-                <div className="w-[100px] h-[100px] rounded-full bg-grey border-2 border-dark-blue overflow-hidden" />
-              )}
+              <MatchCardTeamFlag
+                type="large"
+                src={tournamentMatch.match.awayTeam?.flag}
+                alt={tournamentMatch.match.awayTeam?.name}
+              />
               <label htmlFor="awayTeamScore" className="text-48-bold">
                 {tournamentMatch.match.awayTeam?.name ?? "Team B"}
               </label>

@@ -120,7 +120,7 @@ export function MatchCard({ values, toMatch }: MatchCardProps) {
             {match.homeTeam?.name ?? "Team A"}
           </div>
           <MatchCardTeamFlag
-            size="small"
+            type="small"
             src={match.homeTeam?.flag}
             alt={match.homeTeam?.name}
           />
@@ -134,7 +134,7 @@ export function MatchCard({ values, toMatch }: MatchCardProps) {
 
         <div className="flex items-center justify-start gap-2">
           <MatchCardTeamFlag
-            size="small"
+            type="small"
             src={match.awayTeam?.flag}
             alt={match.awayTeam?.name}
           />
