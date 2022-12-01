@@ -707,8 +707,8 @@ input[type="number"]::-webkit-inner-spin-button,
   height: 3rem;
 }
 
-.h-10 {
-  height: 2.5rem;
+.h-\[40px\] {
+  height: 40px;
 }
 
 .min-h-screen {
@@ -731,8 +731,8 @@ input[type="number"]::-webkit-inner-spin-button,
   width: 80px;
 }
 
-.w-10 {
-  width: 2.5rem;
+.w-\[40px\] {
+  width: 40px;
 }
 
 .max-w-\[425px\] {
