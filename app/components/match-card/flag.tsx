@@ -1,23 +1,25 @@
 export interface MatchCardTeamFlagProps {
   src?: string | null;
   alt?: string;
-  size?: string;
+  type?: "small" | "large";
 }
 
 export function MatchCardTeamFlag({
   src,
   alt,
-  size = "40px",
+  type = "small",
 }: MatchCardTeamFlagProps) {
+  const size = type === "small" ? "10" : "24";
+
   return src ? (
     <img
       src={src}
       alt={`${alt} Flag`}
-      className={`w-[40px] h-[40px] rounded-full border-2 border-dark-blue object-cover`}
+      className={`w-10 h-10 rounded-full border-2 border-dark-blue object-cover`}
     />
   ) : (
     <div
-      className={`w-[40px] h-[40px] rounded-full bg-grey border-2 border-dark-blue overflow-hidden`}
+      className={`w-10 h-10 rounded-full bg-grey border-2 border-dark-blue overflow-hidden`}
     />
   );
 }
