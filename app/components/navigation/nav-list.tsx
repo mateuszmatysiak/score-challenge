@@ -130,12 +130,12 @@ export function NavList({ user, type }: NavListProps) {
               >
                 <div className="py-1" role="none">
                   <div className="w-full px-4 py-2">
-                    <span className="text-12-regular text-dark-blue">
+                    <div className="text-12-regular text-dark-blue">
                       Account Name
-                    </span>
-                    <span className="text-dark-blue whitespace-nowrap text-ellipsis overflow-hidden">
+                    </div>
+                    <div className="text-dark-blue whitespace-nowrap text-ellipsis overflow-hidden">
                       {user?.username}
-                    </span>
+                    </div>
                   </div>
 
                   <hr />
