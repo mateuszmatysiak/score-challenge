@@ -1,7 +1,16 @@
 import type { Prisma, UserRanking } from "@prisma/client";
 import type { LoaderFunction } from "@remix-run/node";
 import { json } from "@remix-run/node";
-import { Link, Outlet, useCatch, useLoaderData } from "@remix-run/react";
+import {
+  Link,
+  Outlet,
+  useCatch,
+  useLoaderData,
+  useLocation,
+} from "@remix-run/react";
+import { useEffect, useState } from "react";
+import { CloseIcon } from "~/components/icons/close-icon";
+import { MenuIcon } from "~/components/icons/menu-icon";
 import { NavList } from "~/components/navigation/nav-list";
 import { UserRankingItem } from "~/components/user-ranking";
 
@@ -43,30 +52,87 @@ export const loader: LoaderFunction = async ({ request }) => {
 };
 
 export default function GameRoute() {
+  const location = useLocation();
   const { userWithRanking } = useLoaderData<LoaderData>();
+
+  const [isOpenMobileNavi, setIsOpenMobileNavi] = useState(false);
+
+  useEffect(() => {
+    setIsOpenMobileNavi(false);
+  }, [location.key]);
 
   return (
     <>
       <header className="fixed top-0 left-0 h-32 w-full flex flex-col z-10">
-        <div className="flex justify-between items-center flex-1 bg-maroon text-white px-12">
+        <div className="flex justify-between items-center flex-1 bg-maroon text-white px-12 max-xl:px-8 max-sm:px-4">
           <Link
             to="/game"
-            className="w-12 h-12 bg-[url(public/assets/images/logo.svg)] bg-contain bg-no-repeat bg-center"
+            prefetch="intent"
+            className="min-w-[3rem] min-h-[3rem] bg-[url(public/assets/images/logo.svg)] bg-contain bg-no-repeat bg-center"
           >
             <span hidden>Homepage</span>
           </Link>
 
-          <NavList user={userWithRanking} />
+          <NavList type="desktop" user={userWithRanking} />
+
+          <button
+            className="hidden max-xl:block p-3 -mr-3"
+            onClick={() => setIsOpenMobileNavi(true)}
+          >
+            <MenuIcon />
+          </button>
+
+          {isOpenMobileNavi ? (
+            <div className="fixed inset-0">
+              <div className="w-full h-full bg-maroon">
+                <div className="flex justify-between items-center h-16 max-xl:px-8 max-sm:px-4">
+                  <div className="flex flex-col">
+                    <span className="text-12-regular">Account Name</span>
+                    <span className="whitespace-nowrap text-ellipsis overflow-hidden">
+                      {userWithRanking?.username}
+                    </span>
+                  </div>
+                  <button
+                    className="p-4 -mr-4"
+                    onClick={() => setIsOpenMobileNavi(false)}
+                  >
+                    <CloseIcon />
+                  </button>
+                </div>
+
+                <NavList type="mobile" user={userWithRanking} />
+              </div>
+            </div>
+          ) : null}
         </div>
 
-        <div className="flex flex-1 justify-between items-center bg-white px-12">
-          <span className="text-16-medium">Your ranking</span>
+        <div className="flex justify-between items-center flex-1 gap-2 bg-white px-12 max-xl:px-8 max-sm:px-4">
+          <span className="text-16-medium whitespace-nowrap">Your ranking</span>
 
-          <UserRankingItem userRanking={userWithRanking?.ranking} />
+          <div className="flex gap-8 text-center">
+            <UserRankingItem
+              title="Rank"
+              value={userWithRanking?.ranking?.rank}
+            />
+            <UserRankingItem
+              title="Group pts"
+              value={userWithRanking?.ranking?.groupPoints}
+              className="max-sm:hidden"
+            />
+            <UserRankingItem
+              title="Playoff pts"
+              value={userWithRanking?.ranking?.playoffPoints}
+              className="max-sm:hidden"
+            />
+            <UserRankingItem
+              title="Total pts"
+              value={userWithRanking?.ranking?.totalPoints}
+            />
+          </div>
         </div>
       </header>
 
-      <main className="min-h-screen bg-grey pt-44 pb-12 px-12">
+      <main className="min-h-screen bg-grey pt-44 pb-12 px-12 max-xl:px-8 max-sm:px-4 max-xl:pt-40 max-sm:pt-40 max-xl:pb-8 max-sm:pb-4">
         <Outlet />
       </main>
     </>

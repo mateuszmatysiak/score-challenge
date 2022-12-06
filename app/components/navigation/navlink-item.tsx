@@ -20,7 +20,7 @@ export function NavLinkItem({
       to={to}
       end={end}
       className={({ isActive }) =>
-        `flex items-center gap-2 p-4 hover:text-brighter-purple ${className} ${
+        `hover:text-brighter-purple ${className} ${
           isActive ? isActiveClassName : ""
         }`
       }

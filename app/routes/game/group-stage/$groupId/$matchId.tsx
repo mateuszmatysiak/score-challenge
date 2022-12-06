@@ -218,13 +218,13 @@ export default function GroupMatchRoute() {
 
   return (
     <div className="flex flex-col gap-6">
-      <h1 className="text-48-bold">Match Betting</h1>
+      <h1 className="text-48-bold max-sm:text-30-bold">Match Betting</h1>
 
       <div className="flex flex-col bg-white rounded-md p-6 gap-6">
         <MatchCardDetails match={match} />
 
         <Form method="post" className="flex flex-col gap-6">
-          <div className="grid grid-cols-match-form-card items-center gap-4">
+          <div className="grid grid-cols-match-form-card items-center gap-4 max-xl:flex max-xl:flex-col">
             {/* Hidden field */}
             <input
               hidden
@@ -236,8 +236,11 @@ export default function GroupMatchRoute() {
             />
             {/* Hidden field */}
 
-            <div className="flex items-center justify-end gap-4">
-              <label htmlFor="homeTeamScore" className="text-48-bold">
+            <div className="flex items-center justify-end gap-4 max-xl:gap-2">
+              <label
+                htmlFor="homeTeamScore"
+                className="text-48-bold max-sm:text-24-bold max-xl:order-1"
+              >
                 {userMatch.match.homeTeam?.name ?? "Team A"}
               </label>
 
@@ -254,7 +257,7 @@ export default function GroupMatchRoute() {
                 name="homeTeamScore"
                 defaultValue={userMatch.homeTeamScore ?? ""}
                 min="0"
-                className="w-[80px] border-b-2 border-dark-blue text-48-bold text-center"
+                className="w-[80px] border-b-2 border-dark-blue text-48-bold max-sm:text-30-bold text-center"
               />
               <span> - </span>
               <input
@@ -263,16 +266,19 @@ export default function GroupMatchRoute() {
                 name="awayTeamScore"
                 defaultValue={userMatch.awayTeamScore ?? ""}
                 min="0"
-                className="w-[80px] border-b-2 border-dark-blue text-48-bold text-center"
+                className="w-[80px] border-b-2 border-dark-blue text-48-bold max-sm:text-30-bold text-center"
               />
             </div>
-            <div className="flex items-center justify-start gap-4">
+            <div className="flex items-center justify-start gap-4 max-xl:gap-2">
               <MatchCardTeamFlag
                 type="large"
                 src={awayTeam?.flag}
                 alt={awayTeam?.name}
               />
-              <label htmlFor="awayTeamScore" className="text-48-bold">
+              <label
+                htmlFor="awayTeamScore"
+                className="text-48-bold max-sm:text-24-bold"
+              >
                 {userMatch.match.awayTeam?.name ?? "Team B"}
               </label>
             </div>
@@ -282,7 +288,7 @@ export default function GroupMatchRoute() {
 
           <NoGoalScorer goalScorerId={goalScorerId} />
 
-          <div className="flex gap-4">
+          <div className="flex gap-4 max-md:flex-col">
             <ul className="flex flex-col flex-1 gap-1">
               <li className="text-24-bold mb-2">
                 {userMatch.match.homeTeam?.name} Team Players

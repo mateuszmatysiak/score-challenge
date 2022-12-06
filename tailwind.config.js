@@ -20,7 +20,6 @@ module.exports = {
         "white-85-opacity": "var(--white-85-opacity)",
       },
       gridTemplateColumns: {
-        matches: "var(--grid-matches)",
         "match-card": "var(--grid-match-card)",
         "match-form-card": "var(--grid-match-form-card)",
       },

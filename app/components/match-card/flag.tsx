@@ -15,13 +15,13 @@ export function MatchCardTeamFlag({
       alt={`${alt} Flag`}
       className={`${type === "small" ? "w-10" : "w-24"} ${
         type === "small" ? "h-10" : "h-24"
-      } rounded-full border-2 border-dark-blue object-cover`}
+      } rounded-full border-2 border-dark-blue object-cover max-xl:w-10 max-xl:h-10 max-sm:w-6 max-sm:h-6`}
     />
   ) : (
     <div
       className={`${type === "small" ? "w-10" : "w-24"} ${
         type === "small" ? "h-10" : "h-24"
-      } rounded-full bg-grey border-2 border-dark-blue overflow-hidden`}
+      } rounded-full bg-grey border-2 border-dark-blue overflow-hidden max-xl:w-10 max-xl:h-10 max-sm:w-6 max-sm:h-6`}
     />
   );
 }

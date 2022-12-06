@@ -54,15 +54,31 @@ export default function RankingRoute() {
 
   return (
     <div className="flex flex-col gap-6">
-      <h1 className="text-48-bold">Ranking</h1>
+      <h1 className="text-48-bold max-sm:text-30-bold">Ranking</h1>
 
       <ul className="flex flex-col gap-2 bg-white p-6 rounded-md">
-        {users.map((user, index) => (
-          <Fragment key={user.id}>
+        {users.map(({ id, username, ranking }, index) => (
+          <Fragment key={id}>
             <li className="flex items-center justify-between">
-              <span className="text-20-regular">{user.username}</span>
+              <span className="text-20-regular text-ellipsis overflow-hidden whitespace-nowrap">
+                {username}
+              </span>
 
-              <UserRankingItem userRanking={user.ranking} />
+              <div className="flex gap-12 max-md:gap-1 max-md:flex-col">
+                <UserRankingItem title="Rank" value={ranking?.rank} />
+                <UserRankingItem
+                  title="Group pts"
+                  value={ranking?.groupPoints}
+                />
+                <UserRankingItem
+                  title="Playoff pts"
+                  value={ranking?.playoffPoints}
+                />
+                <UserRankingItem
+                  title="Total pts"
+                  value={ranking?.totalPoints}
+                />
+              </div>
             </li>
 
             {index !== users.length - 1 ? <hr /> : null}

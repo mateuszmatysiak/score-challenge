@@ -80,14 +80,16 @@ export default function GroupStageRoute() {
 
   return (
     <div className="flex flex-col gap-6">
-      <h1 className="text-48-bold">Playoff Stage Matches</h1>
+      <h1 className="text-48-bold max-sm:text-30-bold">
+        Playoff Stage Matches
+      </h1>
 
       {Object.entries(groupedUserMatches).map(([key, userMatches]) => {
         return (
           <Fragment key={key}>
             <p className="text-24-medium">{key} Matches</p>
 
-            <div className="grid grid-cols-matches gap-4">
+            <div className="flex flex-wrap gap-4">
               {userMatches.map(({ id, ...userMatch }) => (
                 <MatchCard key={id} values={userMatch} />
               ))}

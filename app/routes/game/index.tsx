@@ -108,11 +108,11 @@ export default function GameRoute() {
       {Object.entries(groupedUserMatches).map(([key, userMatches], index) => {
         return (
           <Fragment key={key}>
-            <p className="text-48-bold">
+            <span className="text-48-bold max-sm:text-30-bold">
               {index === 0 ? "Today's" : "Tomorrow's"} Matches
-            </p>
+            </span>
 
-            <div className="grid grid-cols-matches gap-4">
+            <div className="flex flex-wrap gap-4">
               {userMatches.map(({ id, ...userMatch }) => (
                 <MatchCard key={id} values={userMatch} />
               ))}

@@ -107,16 +107,16 @@ export function MatchCard({ values, toMatch }: MatchCardProps) {
     toMatch ?? `/game/${stageTypeId}-stage/${stageId}/match-${match.id}`;
 
   return (
-    <div className="relative flex flex-col bg-white p-4 rounded-md gap-4">
+    <div className="relative basis-[31.25rem] flex-1 flex flex-col bg-white p-4 rounded-md gap-4">
       <Link to={to} prefetch="intent" className="absolute top-2 right-2">
         <OpenIcon />
       </Link>
 
       <MatchCardDetails match={match} />
 
-      <div className="grid grid-cols-match-card items-center gap-4">
-        <div className="flex items-center justify-end gap-2">
-          <div className="text-16-medium">
+      <div className="grid grid-cols-match-card items-center gap-4 max-sm:gap-0">
+        <div className="flex items-center justify-end gap-2 max-sm:gap-1">
+          <div className="text-16-medium text-right">
             {match.homeTeam?.name ?? "Team A"}
           </div>
           <MatchCardTeamFlag
@@ -126,13 +126,15 @@ export function MatchCard({ values, toMatch }: MatchCardProps) {
           />
         </div>
 
-        <div className={`text-24-bold text-center ${scoreTextColor}`}>
+        <div
+          className={`text-24-bold max-sm:text-16-bold text-center ${scoreTextColor}`}
+        >
           <span>{homeTeamScore ?? "?"}</span>
           <span> - </span>
           <span>{awayTeamScore ?? "?"}</span>
         </div>
 
-        <div className="flex items-center justify-start gap-2">
+        <div className="flex items-center justify-start gap-2 max-sm:gap-1">
           <MatchCardTeamFlag
             type="small"
             src={match.awayTeam?.flag}

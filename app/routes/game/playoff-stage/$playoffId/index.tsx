@@ -90,9 +90,11 @@ export default function PlayoffMatchesRoute() {
 
   return (
     <div className="relative flex flex-col gap-6">
-      <h1 className="text-48-bold">{playoffName} Matches</h1>
+      <h1 className="text-48-bold max-sm:text-30-bold">
+        {playoffName} Matches
+      </h1>
 
-      <div className="grid grid-cols-matches gap-4">
+      <div className="flex flex-wrap gap-4">
         {userMatches.map(({ id, ...userMatch }) => (
           <MatchCard key={id} values={userMatch} />
         ))}

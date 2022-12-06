@@ -40,7 +40,6 @@
   --divider: rgb(203, 203, 203);
   --white-85-opacity: rgba(255, 255, 255, 85%);
 
-  --grid-matches: repeat(auto-fit, minmax(500px, 1fr));
   --grid-match-card: 1fr 60px 1fr;
   --grid-match-form-card: 1fr 300px 1fr;
 }
