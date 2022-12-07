@@ -109,7 +109,7 @@ export function MatchCard({ values, toMatch }: MatchCardProps) {
   return (
     <div className="relative basis-[31.25rem] flex-1 flex flex-col bg-white p-4 rounded-md gap-4">
       <Link to={to} prefetch="intent" className="absolute top-2 right-2">
-        <OpenIcon />
+        <OpenIcon size="20px" fill="var(--bright-purple)" />
       </Link>
 
       <MatchCardDetails match={match} />
