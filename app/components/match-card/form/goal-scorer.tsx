@@ -29,7 +29,10 @@ export function GoalScorer({
       className="flex justify-between cursor-pointer"
     >
       <div className="flex items-center gap-2">
-        <PersonIcon fill={isChecked ? "var(--bright-purple)" : null} />
+        <PersonIcon
+          size="20px"
+          fill={isChecked ? "var(--bright-purple)" : undefined}
+        />
         <div className={`${isChecked ? "text-bright-purple" : ""}`}>{name}</div>
       </div>
 

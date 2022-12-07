@@ -26,13 +26,7 @@ export function NavList({ user, type }: NavListProps) {
             prefetch="intent"
             end
             className="flex items-center gap-2 p-4"
-            icon={
-              <SoccerIcon
-                width="20px"
-                height="20px"
-                fill="var(--bright-purple)"
-              />
-            }
+            icon={<SoccerIcon size="20px" fill="var(--bright-purple)" />}
           >
             Matches
           </NavLinkItem>
@@ -43,13 +37,7 @@ export function NavList({ user, type }: NavListProps) {
             prefetch="intent"
             end
             className="flex items-center gap-2 p-4"
-            icon={
-              <SoccerIcon
-                width="20px"
-                height="20px"
-                fill="var(--bright-purple)"
-              />
-            }
+            icon={<SoccerIcon size="20px" fill="var(--bright-purple)" />}
           >
             Group Stage
           </NavLinkItem>
@@ -60,13 +48,7 @@ export function NavList({ user, type }: NavListProps) {
             prefetch="intent"
             end
             className="flex items-center gap-2 p-4"
-            icon={
-              <SoccerIcon
-                width="20px"
-                height="20px"
-                fill="var(--bright-purple)"
-              />
-            }
+            icon={<SoccerIcon size="20px" fill="var(--bright-purple)" />}
           >
             Playoff Stage
           </NavLinkItem>
@@ -76,7 +58,7 @@ export function NavList({ user, type }: NavListProps) {
             to="/game/ranking"
             prefetch="intent"
             className="flex items-center gap-2 p-4"
-            icon={<PeopleIcon />}
+            icon={<PeopleIcon size="20px" fill="var(--bright-purple)" />}
           >
             Ranking
           </NavLinkItem>
@@ -87,7 +69,7 @@ export function NavList({ user, type }: NavListProps) {
               to="/game/admin/matches"
               prefetch="intent"
               className="flex items-center gap-2 p-4"
-              icon={<PersonIcon fill="var(--bright-purple)" />}
+              icon={<PersonIcon size="20px" fill="var(--bright-purple)" />}
             >
               Admin
             </NavLinkItem>
@@ -116,7 +98,7 @@ export function NavList({ user, type }: NavListProps) {
               aria-haspopup="true"
               onClick={() => setIsOpenAccountPopup(!isOpenAccountPopup)}
             >
-              <PersonIcon fill="var(--bright-purple)" />
+              <PersonIcon size="20px" fill="var(--bright-purple)" />
               Account
             </button>
 

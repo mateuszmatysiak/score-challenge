@@ -11,7 +11,7 @@ export function NoGoalScorer({ goalScorerId }: NoGoalScorerProps) {
       className="flex justify-between cursor-pointer"
     >
       <div className="flex items-center gap-2">
-        <PersonIcon fill="var(--dark-blue)" />
+        <PersonIcon size="20px" fill="var(--dark-blue)" />
         <div>No goal scorer</div>
       </div>
 

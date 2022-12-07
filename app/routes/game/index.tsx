@@ -2,7 +2,7 @@ import type { Prisma } from "@prisma/client";
 import type { LoaderFunction, MetaFunction } from "@remix-run/node";
 import { json } from "@remix-run/node";
 import { Link, useCatch, useLoaderData } from "@remix-run/react";
-import { groupBy } from "lodash";
+import { groupBy, isEmpty } from "lodash";
 import { Fragment } from "react";
 
 import { MatchCard } from "~/components/match-card";
@@ -105,21 +105,27 @@ export default function GameRoute() {
 
   return (
     <div className="relative flex flex-col gap-6">
-      {Object.entries(groupedUserMatches).map(([key, userMatches], index) => {
-        return (
-          <Fragment key={key}>
-            <span className="text-48-bold max-sm:text-30-bold">
-              {index === 0 ? "Today's" : "Tomorrow's"} Matches
-            </span>
+      {isEmpty(groupedUserMatches) ? (
+        <div className="bg-white p-6 text-center rounded-md text-18-regular">
+          No matches to bet
+        </div>
+      ) : (
+        Object.entries(groupedUserMatches).map(([key, userMatches], index) => {
+          return (
+            <Fragment key={key}>
+              <span className="text-48-bold max-sm:text-30-bold">
+                {index === 0 ? "Today's" : "Tomorrow's"} Matches
+              </span>
 
-            <div className="flex flex-wrap gap-4">
-              {userMatches.map(({ id, ...userMatch }) => (
-                <MatchCard key={id} values={userMatch} />
-              ))}
-            </div>
-          </Fragment>
-        );
-      })}
+              <div className="flex flex-wrap gap-4">
+                {userMatches.map(({ id, ...userMatch }) => (
+                  <MatchCard key={id} values={userMatch} />
+                ))}
+              </div>
+            </Fragment>
+          );
+        })
+      )}
     </div>
   );
 }
