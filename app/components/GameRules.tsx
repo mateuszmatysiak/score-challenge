@@ -6,8 +6,8 @@ import { InfoIcon } from "./icons/InfoIcon";
 
 const RULES = [
   { label: "Predicting the result", value: 3 },
-  { label: "Predicting the winner", value: 3 },
-  { label: "Predicting the goal scorer", value: 3 },
+  { label: "Predicting the winner", value: 1 },
+  { label: "Predicting the goal scorer", value: 1 },
 ];
 
 export function GameRules() {
