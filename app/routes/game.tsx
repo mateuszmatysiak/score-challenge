@@ -1,3 +1,4 @@
+import { Dialog } from "@headlessui/react";
 import type { Prisma, UserRanking } from "@prisma/client";
 import type { LoaderFunction } from "@remix-run/node";
 import { json } from "@remix-run/node";
@@ -10,6 +11,7 @@ import {
 } from "@remix-run/react";
 import { useEffect, useState } from "react";
 import { CloseIcon } from "~/components/icons/close-icon";
+import { InfoIcon } from "~/components/icons/info-icon";
 import { MenuIcon } from "~/components/icons/menu-icon";
 import { NavList } from "~/components/navigation/nav-list";
 import { UserRankingItem } from "~/components/user-ranking";
@@ -56,6 +58,7 @@ export default function GameRoute() {
   const { userWithRanking } = useLoaderData<LoaderData>();
 
   const [isOpenMobileNavi, setIsOpenMobileNavi] = useState(false);
+  const [isOpenInfo, setIsOpenInfo] = useState(false);
 
   useEffect(() => {
     setIsOpenMobileNavi(false);
@@ -85,8 +88,8 @@ export default function GameRoute() {
 
           {isOpenMobileNavi ? (
             <div className="fixed inset-0">
-              <div className="w-full h-full bg-maroon">
-                <div className="flex justify-between items-center h-16 max-xl:px-8 max-sm:px-4">
+              <div className="w-full h-full bg-maroon overflow-auto">
+                <div className="flex justify-between items-center h-16 px-8 max-sm:px-4">
                   <div className="flex flex-col">
                     <span className="text-12-regular">Account Name</span>
                     <span className="whitespace-nowrap text-ellipsis overflow-hidden">
@@ -134,7 +137,55 @@ export default function GameRoute() {
         </div>
       </header>
 
-      <main className="min-h-screen bg-grey pt-44 pb-12 px-12 max-xl:px-8 max-sm:px-4 max-xl:pt-40 max-sm:pt-40 max-xl:pb-8 max-sm:pb-4">
+      <main className="relative min-h-screen bg-grey pt-44 pb-12 px-12 max-xl:px-8 max-sm:px-4 max-xl:pt-40 max-sm:pt-40 max-xl:pb-8 max-sm:pb-4">
+        <button
+          className="absolute top-32 right-0 p-1"
+          onClick={() => setIsOpenInfo(true)}
+        >
+          <span className="sr-only">Game Rules</span>
+          <InfoIcon fill="var(--bright-purple)" />
+        </button>
+
+        {isOpenInfo ? (
+          <Dialog
+            open={isOpenInfo}
+            onClose={() => setIsOpenInfo(false)}
+            className="relative z-50"
+          >
+            <div className="fixed inset-0 bg-black/30" aria-hidden="true" />
+
+            <div className="fixed inset-0 z-10 overflow-y-auto flex justify-center items-center">
+              <Dialog.Panel className="w-full max-w-xl bg-white shadow-xl">
+                <Dialog.Title className="relative flex justify-center items-center h-32 bg-purple text-30-medium text-white">
+                  How to score points
+                  <button
+                    onClick={() => setIsOpenInfo(false)}
+                    className="absolute top-0 right-0 p-3"
+                  >
+                    <span className="sr-only">Close game rules dialog</span>
+                    <CloseIcon />
+                  </button>
+                </Dialog.Title>
+
+                <ul className="p-8">
+                  <li className="flex justify-between">
+                    <span>Predicting the result</span>
+                    <span>3 pts</span>
+                  </li>
+                  <li className="flex justify-between">
+                    <span>Predicting the winner</span>
+                    <span>1 pts</span>
+                  </li>
+                  <li className="flex justify-between">
+                    <span>Predicting the goal scorer</span>
+                    <span>1 pts</span>
+                  </li>
+                </ul>
+              </Dialog.Panel>
+            </div>
+          </Dialog>
+        ) : null}
+
         <Outlet />
       </main>
     </>
