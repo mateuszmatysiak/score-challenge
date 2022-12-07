@@ -69,7 +69,7 @@ export function NavList({ type, username = "-" }: NavListProps) {
               type="submit"
               className="flex items-center gap-2 p-4 hover:text-brighter-purple"
             >
-              <PowerIcon />
+              <PowerIcon fill="var(--bright-purple)" />
               Logout
             </button>
           </Form>
