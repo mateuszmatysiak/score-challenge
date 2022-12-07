@@ -70,7 +70,7 @@ export default function GameRoute() {
             prefetch="intent"
             className="min-w-[3rem] min-h-[3rem] bg-[url(public/assets/images/logo.svg)] bg-contain bg-no-repeat bg-center"
           >
-            <span hidden>Homepage</span>
+            <span className="sr-only">Home Navigation</span>
           </Link>
 
           <NavList type="desktop" user={userWithRanking} />
@@ -79,6 +79,7 @@ export default function GameRoute() {
             className="hidden max-xl:block p-3 -mr-3"
             onClick={() => setIsOpenMobileNavi(true)}
           >
+            <span className="sr-only">Open mobile menu</span>
             <MenuIcon />
           </button>
 
@@ -96,6 +97,7 @@ export default function GameRoute() {
                     className="p-4 -mr-4"
                     onClick={() => setIsOpenMobileNavi(false)}
                   >
+                    <span className="sr-only">Close mobile menu</span>
                     <CloseIcon />
                   </button>
                 </div>

@@ -257,6 +257,7 @@ export default function GroupMatchRoute() {
                 name="homeTeamScore"
                 defaultValue={userMatch.homeTeamScore ?? ""}
                 min="0"
+                aria-label="Enter home team score"
                 className="w-[80px] border-b-2 border-dark-blue text-48-bold max-sm:text-30-bold text-center"
               />
               <span> - </span>
@@ -266,6 +267,7 @@ export default function GroupMatchRoute() {
                 name="awayTeamScore"
                 defaultValue={userMatch.awayTeamScore ?? ""}
                 min="0"
+                aria-label="Enter away team score"
                 className="w-[80px] border-b-2 border-dark-blue text-48-bold max-sm:text-30-bold text-center"
               />
             </div>

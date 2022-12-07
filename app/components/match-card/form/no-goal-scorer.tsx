@@ -21,6 +21,7 @@ export function NoGoalScorer({ goalScorerId }: NoGoalScorerProps) {
         name="goalScorerId"
         defaultValue={0}
         defaultChecked={goalScorerId === null}
+        aria-label="No goal scorer"
         className="cursor-pointer"
       />
     </label>

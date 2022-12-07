@@ -43,6 +43,7 @@ export function GoalScorer({
         defaultValue={id}
         defaultChecked={isChecked}
         className="cursor-pointer"
+        aria-label={`Goal scorer: ${name}`}
       />
     </label>
   );
