@@ -9,15 +9,15 @@ import {
   useParams,
 } from "@remix-run/react";
 import { Fragment } from "react";
-import { ErrorCard } from "~/components/error-card";
-import { GoalScorer } from "~/components/match-card/form/goal-scorer";
-import { NoGoalScorer } from "~/components/match-card/form/no-goal-scorer";
-import { MatchCardDetails } from "~/components/match-card/details";
-import { SubmitButton } from "~/components/submit-button";
+import { ErrorCard } from "~/components/ErrorCard";
+import { GoalScorer } from "~/components/GoalScorerInput";
+import { NoGoalScorer } from "~/components/NoGoalScorerInput";
+import { MatchDetails } from "~/components/MatchDetails";
+import { TeamFlag } from "~/components/TeamFlag";
+import { SubmitButton } from "~/components/SubmitButton";
 
 import { db } from "~/utils/db.server";
 import { requireAdminUser } from "~/utils/session.server";
-import { MatchCardTeamFlag } from "~/components/match-card/flag";
 
 /* Funkcje pomocnicze */
 
@@ -328,7 +328,7 @@ export default function AdminMatchRoute() {
       </h1>
 
       <div className="flex flex-col bg-white rounded-md p-6 gap-6">
-        <MatchCardDetails match={match} />
+        <MatchDetails match={match} />
 
         <Form method="post" className="flex flex-col gap-6">
           <div className="grid grid-cols-match-form-card items-center gap-4 max-xl:flex max-xl:flex-col">
@@ -350,7 +350,7 @@ export default function AdminMatchRoute() {
               >
                 {tournamentMatch.match.homeTeam?.name ?? "Team A"}
               </label>
-              <MatchCardTeamFlag
+              <TeamFlag
                 type="large"
                 src={tournamentMatch.match.homeTeam?.flag}
                 alt={tournamentMatch.match.homeTeam?.name}
@@ -378,7 +378,7 @@ export default function AdminMatchRoute() {
               />
             </div>
             <div className="flex items-center justify-start gap-4 max-xl:gap-2">
-              <MatchCardTeamFlag
+              <TeamFlag
                 type="large"
                 src={tournamentMatch.match.awayTeam?.flag}
                 alt={tournamentMatch.match.awayTeam?.name}

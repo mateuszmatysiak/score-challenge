@@ -1,6 +1,6 @@
 import type { ActionFunction, MetaFunction } from "@remix-run/node";
 import { seedUserMatches } from "prisma/utils";
-import { LoginPanel } from "~/components/login-panel";
+import { LoginPanel } from "~/components/LoginPanel";
 import { badRequest } from "~/utils/helpers/bad-request.server";
 
 import { db } from "~/utils/db.server";

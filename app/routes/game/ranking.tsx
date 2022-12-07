@@ -3,7 +3,7 @@ import type { LoaderFunction, MetaFunction } from "@remix-run/node";
 import { json } from "@remix-run/node";
 import { useLoaderData } from "@remix-run/react";
 import { Fragment } from "react";
-import { UserRankingItem } from "~/components/user-ranking";
+import { UserRankingItem } from "~/components/UserRankingItem";
 
 import { db } from "~/utils/db.server";
 import { getUser } from "~/utils/session.server";

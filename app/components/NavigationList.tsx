@@ -1,22 +1,20 @@
 import { Popover } from "@headlessui/react";
 import { Form } from "@remix-run/react";
-import { useState } from "react";
-import { PeopleIcon } from "~/components/icons/people-icon";
-import { SoccerIcon } from "~/components/icons/soccer-icon";
-import type { UserWithRanking } from "~/routes/game";
-import { PersonIcon } from "../icons/person-icon";
-import { PowerIcon } from "../icons/power-icon";
-import { NavLinkItem } from "./navlink-item";
+import { PeopleIcon } from "~/components/icons/PeopleIcon";
+import { SoccerIcon } from "~/components/icons/SoccerIcon";
+import { usePopupHandler } from "~/hooks/usePopupHandler";
+import { PersonIcon } from "./icons/PersonIcon";
+import { PowerIcon } from "./icons/PowerIcon";
+import { NavLinkItem } from "./NavigationLink";
 
+type NavType = "desktop" | "mobile";
 export interface NavListProps {
-  user?: UserWithRanking;
-  type: "desktop" | "mobile";
+  type: NavType;
+  username?: string;
 }
 
-export function NavList({ user, type }: NavListProps) {
-  const [isOpenAccountPopup, setIsOpenAccountPopup] = useState(false);
-
-  const isAdmin = user?.role === "ADMIN";
+export function NavList({ type, username = "-" }: NavListProps) {
+  const { toggle } = usePopupHandler();
 
   return (
     <nav className={`${type === "desktop" ? "max-xl:hidden" : ""}`}>
@@ -64,18 +62,6 @@ export function NavList({ user, type }: NavListProps) {
             Ranking
           </NavLinkItem>
         </li>
-        {isAdmin ? (
-          <li>
-            <NavLinkItem
-              to="/game/admin/matches"
-              prefetch="intent"
-              className="flex items-center gap-2 p-4"
-              icon={<PersonIcon size="20px" fill="var(--bright-purple)" />}
-            >
-              Admin
-            </NavLinkItem>
-          </li>
-        ) : null}
 
         {type === "mobile" ? (
           <Form action="/logout" method="post">
@@ -92,7 +78,7 @@ export function NavList({ user, type }: NavListProps) {
         {type === "desktop" ? (
           <Popover className="relative -mr-4">
             <Popover.Button
-              onClick={() => setIsOpenAccountPopup(!isOpenAccountPopup)}
+              onClick={toggle}
               className="flex items-center gap-2 p-4 w-full justify-center hover:text-brighter-purple"
             >
               <PersonIcon size="20px" fill="var(--bright-purple)" />
@@ -105,7 +91,7 @@ export function NavList({ user, type }: NavListProps) {
                   Account Name
                 </div>
                 <div className="text-dark-blue whitespace-nowrap text-ellipsis overflow-hidden">
-                  {user?.username}
+                  {username}
                 </div>
               </div>
 

@@ -8,10 +8,10 @@ import type {
   TournamentMatch,
 } from "@prisma/client";
 import { Link } from "@remix-run/react";
-import { OpenIcon } from "../icons/open-icon";
-import { SoccerIcon } from "../icons/soccer-icon";
-import { MatchCardDetails } from "./details";
-import { MatchCardTeamFlag } from "./flag";
+import { OpenIcon } from "./icons/OpenIcon";
+import { SoccerIcon } from "./icons/SoccerIcon";
+import { MatchDetails } from "./MatchDetails";
+import { TeamFlag } from "./TeamFlag";
 
 type GetGoalScorerTextColorProps = {
   goalScorer: Player | null;
@@ -113,14 +113,14 @@ export function MatchCard({ values, toMatch }: MatchCardProps) {
         <OpenIcon size="20px" fill="var(--bright-purple)" />
       </Link>
 
-      <MatchCardDetails match={match} />
+      <MatchDetails match={match} />
 
       <div className="grid grid-cols-match-card items-center gap-4 max-sm:gap-0">
         <div className="flex items-center justify-end gap-2 max-sm:gap-1">
           <div className="text-16-medium text-right">
             {match.homeTeam?.name ?? "Team A"}
           </div>
-          <MatchCardTeamFlag
+          <TeamFlag
             type="small"
             src={match.homeTeam?.flag}
             alt={match.homeTeam?.name}
@@ -136,7 +136,7 @@ export function MatchCard({ values, toMatch }: MatchCardProps) {
         </div>
 
         <div className="flex items-center justify-start gap-2 max-sm:gap-1">
-          <MatchCardTeamFlag
+          <TeamFlag
             type="small"
             src={match.awayTeam?.flag}
             alt={match.awayTeam?.name}

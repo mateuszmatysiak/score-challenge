@@ -1,5 +1,5 @@
 import type { ActionFunction, MetaFunction } from "@remix-run/node";
-import { LoginPanel } from "~/components/login-panel";
+import { LoginPanel } from "~/components/LoginPanel";
 import { badRequest } from "~/utils/helpers/bad-request.server";
 import {
   validatePassword,

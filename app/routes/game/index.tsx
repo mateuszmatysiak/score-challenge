@@ -1,11 +1,11 @@
 import type { Prisma } from "@prisma/client";
 import type { LoaderFunction, MetaFunction } from "@remix-run/node";
 import { json } from "@remix-run/node";
-import { Link, useCatch, useLoaderData } from "@remix-run/react";
+import { useLoaderData } from "@remix-run/react";
 import { groupBy, isEmpty } from "lodash";
 import { Fragment } from "react";
+import { MatchCard } from "~/components/MatchCard";
 
-import { MatchCard } from "~/components/match-card";
 import { db } from "~/utils/db.server";
 import { requireUser } from "~/utils/session.server";
 
@@ -128,19 +128,6 @@ export default function GameRoute() {
       )}
     </div>
   );
-}
-
-export function CatchBoundary() {
-  const caught = useCatch();
-
-  if (caught.status === 401) {
-    return (
-      <div>
-        <p>You must be logged in to play a game.</p>
-        <Link to="/login">Login</Link>
-      </div>
-    );
-  }
 }
 
 export function ErrorBoundary() {

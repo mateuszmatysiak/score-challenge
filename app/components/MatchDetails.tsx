@@ -14,7 +14,7 @@ export const getStageName = ({ groupName, playoffName }: GetStageNameProps) => {
   return "Stage Name";
 };
 
-export interface MatchCardDetailsProps {
+export interface MatchDetailsProps {
   match: {
     id: number;
     homeTeam: Team | null;
@@ -27,7 +27,7 @@ export interface MatchCardDetailsProps {
   };
 }
 
-export function MatchCardDetails({ match }: MatchCardDetailsProps) {
+export function MatchDetails({ match }: MatchDetailsProps) {
   const { stage, group, playoff, startDate, stadium } = match;
   const groupName = group?.name;
   const playoffName = playoff?.name;

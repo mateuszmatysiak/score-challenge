@@ -1,4 +1,4 @@
-import { PersonIcon } from "../../icons/person-icon";
+import { PersonIcon } from "./icons/PersonIcon";
 
 export interface NoGoalScorerProps {
   goalScorerId: number | null;
