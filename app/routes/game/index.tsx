@@ -113,8 +113,8 @@ export default function GameRoute() {
         Object.entries(groupedUserMatches).map(([key, userMatches], index) => {
           return (
             <Fragment key={key}>
-              <span className="text-48-bold max-sm:text-30-bold">
-                {index === 0 ? "Today's" : "Tomorrow's"} Matches
+              <span className="text-48-bold max-sm:text-30-bold capitalize">
+                {key}'s Matches
               </span>
 
               <div className="flex flex-wrap gap-4">
