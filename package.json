@@ -8,7 +8,8 @@
     "build": "npm run build:css && remix build",
     "build:css": "tailwindcss -i ./styles/app.css -o app/styles/app.css -m",
     "dev": "concurrently \"npm run dev:css\" \"remix dev\"",
-    "dev:css": "tailwindcss -i ./styles/app.css -o app/styles/app.css -w"
+    "dev:css": "tailwindcss -i ./styles/app.css -o app/styles/app.css -w",
+    "test": "vitest"
   },
   "dependencies": {
     "@headlessui/react": "^1.7.4",
@@ -40,7 +41,8 @@
     "prettier": "2.8.0",
     "prisma": "^4.6.0",
     "tailwindcss": "^3.2.2",
-    "typescript": "^4.7.4"
+    "typescript": "^4.7.4",
+    "vitest": "^0.25.8"
   },
   "engines": {
     "node": ">=14"
