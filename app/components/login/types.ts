@@ -1,3 +1,5 @@
+export type LoginPanelType = "login" | "register";
+
 export type ActionData = {
   formError?: string;
   fieldErrors?: {

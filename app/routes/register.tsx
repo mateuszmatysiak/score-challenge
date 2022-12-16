@@ -1,6 +1,6 @@
 import type { ActionFunction, MetaFunction } from "@remix-run/node";
 import { seedUserMatches } from "prisma/utils";
-import { LoginPanel } from "~/components/LoginPanel";
+import { LoginPanel } from "~/components/login/login";
 import { badRequest } from "~/utils/helpers/bad-request.server";
 
 import { db } from "~/utils/db.server";
@@ -8,7 +8,7 @@ import {
   validatePassword,
   validateUrl,
   validateUsername,
-} from "~/utils/helpers/login-panel";
+} from "~/components/login/utils";
 import { createUserSession, register } from "~/utils/session.server";
 
 export const meta: MetaFunction = () => {

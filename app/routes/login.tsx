@@ -1,11 +1,11 @@
 import type { ActionFunction, MetaFunction } from "@remix-run/node";
-import { LoginPanel } from "~/components/LoginPanel";
+import { LoginPanel } from "~/components/login/login";
 import { badRequest } from "~/utils/helpers/bad-request.server";
 import {
   validatePassword,
   validateUrl,
   validateUsername,
-} from "~/utils/helpers/login-panel";
+} from "~/components/login/utils";
 
 import { createUserSession, login } from "~/utils/session.server";
 

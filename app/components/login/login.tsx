@@ -5,52 +5,21 @@ import {
   useSearchParams,
   useTransition,
 } from "@remix-run/react";
-import type { ActionData } from "~/types/login-panel";
+import type { ActionData, LoginPanelType } from "./types";
+import { getButtonLabel, panelProperties } from "./utils";
 
 export interface LoginPanelProps {
-  type: "login" | "register";
+  type: LoginPanelType;
 }
-
-const panelProperties = {
-  login: {
-    panelLabel: "Sign in to Your Account",
-    buttonLabel: {
-      text: "Sign In",
-      submitting: "Logging in...",
-      redirect: "Logging in...",
-    },
-    switchProperties: {
-      label: "Need an account?",
-      to: "/register",
-    },
-  },
-  register: {
-    panelLabel: "Sign up for an Account",
-    buttonLabel: {
-      text: "Create account",
-      submitting: "Creating...",
-      redirect: "Logging in...",
-    },
-    switchProperties: {
-      label: "Have an account?",
-      to: "/login",
-    },
-  },
-};
 
 export function LoginPanel({ type }: LoginPanelProps) {
   const actionData = useActionData<ActionData>();
   const [searchParams] = useSearchParams();
   const transition = useTransition();
 
-  const { panelLabel, buttonLabel, switchProperties } = panelProperties[type];
+  const { panelLabel, switchProperties } = panelProperties[type];
 
-  const text =
-    transition.state === "submitting"
-      ? buttonLabel.submitting
-      : transition.type === "actionRedirect"
-      ? buttonLabel.redirect
-      : buttonLabel.text;
+  const buttonLabel = getButtonLabel({ transition, type });
 
   return (
     <main className="h-screen bg-cover bg-bottom">
@@ -145,7 +114,7 @@ export function LoginPanel({ type }: LoginPanelProps) {
             ) : null}
 
             <button type="submit" className="action-button w-full">
-              {text}
+              {buttonLabel}
             </button>
           </Form>
         </div>
