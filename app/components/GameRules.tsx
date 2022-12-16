@@ -1,8 +1,7 @@
 import { Dialog } from "@headlessui/react";
+import { InformationCircleIcon, XMarkIcon } from "@heroicons/react/24/outline";
 import { usePopupHandler } from "~/hooks/usePopupHandler";
 import { IconButton } from "./IconButton";
-import { CloseIcon } from "./icons/CloseIcon";
-import { InfoIcon } from "./icons/InfoIcon";
 
 const RULES = [
   { label: "Predicting the result", value: 3 },
@@ -20,7 +19,10 @@ export function GameRules() {
         className="fixed bottom-4 right-4 p-3 bg-purple rounded-full shadow-lg z-10"
         onClick={open}
       >
-        <InfoIcon fill="white" />
+        <InformationCircleIcon
+          className="w-6 text-white"
+          title="Information icon"
+        />
       </IconButton>
 
       {isOpen ? (
@@ -36,7 +38,7 @@ export function GameRules() {
                   className="absolute top-0 right-0 p-3"
                   onClick={close}
                 >
-                  <CloseIcon fill="white" />
+                  <XMarkIcon className="w-6" title="Close icon" />
                 </IconButton>
               </Dialog.Title>
 

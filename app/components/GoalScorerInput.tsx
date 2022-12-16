@@ -1,5 +1,5 @@
+import { UserIcon } from "@heroicons/react/24/outline";
 import type { Team } from "@prisma/client";
-import { PersonIcon } from "./icons/PersonIcon";
 
 export interface GoalScorerProps {
   id: number;
@@ -29,9 +29,8 @@ export function GoalScorer({
       className="flex justify-between cursor-pointer"
     >
       <div className="flex items-center gap-2">
-        <PersonIcon
-          size="20px"
-          fill={isChecked ? "var(--bright-purple)" : undefined}
+        <UserIcon
+          className={`w-5 ${isChecked ? "var(--bright-purple)" : ""}`}
         />
         <div className={`${isChecked ? "text-bright-purple" : ""}`}>{name}</div>
       </div>

@@ -1,4 +1,4 @@
-import { PersonIcon } from "./icons/PersonIcon";
+import { UserIcon } from "@heroicons/react/24/outline";
 
 export interface NoGoalScorerProps {
   goalScorerId: number | null;
@@ -11,7 +11,7 @@ export function NoGoalScorer({ goalScorerId }: NoGoalScorerProps) {
       className="flex justify-between cursor-pointer"
     >
       <div className="flex items-center gap-2">
-        <PersonIcon size="20px" fill="var(--dark-blue)" />
+        <UserIcon className="w-5 text-dark-blue" />
         <div>No goal scorer</div>
       </div>
 

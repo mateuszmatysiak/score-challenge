@@ -1,5 +1,5 @@
 import { Link } from "@remix-run/react";
-import { LogoIcon } from "./icons/LogoIcon";
+import { LogoIcon } from "./icons/logo";
 
 export function LogoLink() {
   return (

@@ -1,9 +1,8 @@
+import { Bars3Icon, XMarkIcon } from "@heroicons/react/24/outline";
 import { useLocation } from "@remix-run/react";
 import { useEffect } from "react";
 import { usePopupHandler } from "~/hooks/usePopupHandler";
 import { IconButton } from "./IconButton";
-import { CloseIcon } from "./icons/CloseIcon";
-import { MenuIcon } from "./icons/MenuIcon";
 import { NavList } from "./NavigationList";
 
 export interface MobileMenuProps {
@@ -22,10 +21,10 @@ export function MobileMenu({ username = "-" }: MobileMenuProps) {
     <>
       <IconButton
         ariaLabel="Open mobile menu"
-        className="hidden max-xl:block p-3 -mr-3"
+        className="hidden max-lg:block p-3 -mr-3"
         onClick={open}
       >
-        <MenuIcon />
+        <Bars3Icon className="w-6" title="Menu icon" />
       </IconButton>
 
       {isOpen ? (
@@ -44,7 +43,7 @@ export function MobileMenu({ username = "-" }: MobileMenuProps) {
                 className="p-4 -mr-4"
                 onClick={close}
               >
-                <CloseIcon />
+                <XMarkIcon className="w-6" title="Close icon" />
               </IconButton>
             </div>
 

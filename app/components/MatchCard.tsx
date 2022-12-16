@@ -1,3 +1,4 @@
+import { ArrowTopRightOnSquareIcon } from "@heroicons/react/24/outline";
 import type {
   Group,
   Player,
@@ -8,10 +9,9 @@ import type {
   TournamentMatch,
 } from "@prisma/client";
 import { Link } from "@remix-run/react";
-import { OpenIcon } from "./icons/OpenIcon";
-import { SoccerIcon } from "./icons/SoccerIcon";
 import { MatchDetails } from "./MatchDetails";
 import { TeamFlag } from "./TeamFlag";
+import { UserIcon } from "@heroicons/react/24/outline";
 
 type GetGoalScorerTextColorProps = {
   goalScorer: Player | null;
@@ -110,7 +110,7 @@ export function MatchCard({ values, toMatch }: MatchCardProps) {
     <div className="relative basis-[31.25rem] flex-1 flex flex-col bg-white p-4 rounded-md gap-4">
       <Link to={to} prefetch="intent" className="absolute top-2 right-2">
         <span className="sr-only">Open match betting</span>
-        <OpenIcon size="20px" fill="var(--bright-purple)" />
+        <ArrowTopRightOnSquareIcon className="w-5 text-bright-purple" />
       </Link>
 
       <MatchDetails match={match} />
@@ -148,7 +148,7 @@ export function MatchCard({ values, toMatch }: MatchCardProps) {
       </div>
 
       <div className="flex justify-center items-center gap-2">
-        <SoccerIcon size="20px" fill="var(--dark-blue)" />
+        <UserIcon className="w-5 text-dark-blue" />
 
         <span className={`text-16-bold ${goalScorerTextColor}`}>
           {goalScorer?.name ? goalScorer.name : "No Goal Scorer"}

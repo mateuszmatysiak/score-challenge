@@ -1,10 +1,13 @@
 import { Popover } from "@headlessui/react";
+import {
+  ArrowLeftOnRectangleIcon,
+  FlagIcon,
+  HomeIcon,
+  TrophyIcon,
+  UserIcon,
+} from "@heroicons/react/24/outline";
 import { Form } from "@remix-run/react";
-import { PeopleIcon } from "~/components/icons/PeopleIcon";
-import { SoccerIcon } from "~/components/icons/SoccerIcon";
 import { usePopupHandler } from "~/hooks/usePopupHandler";
-import { PersonIcon } from "./icons/PersonIcon";
-import { PowerIcon } from "./icons/PowerIcon";
 import { NavLinkItem } from "./NavigationLink";
 
 type NavType = "desktop" | "mobile";
@@ -17,15 +20,19 @@ export function NavList({ type, username = "-" }: NavListProps) {
   const { toggle } = usePopupHandler();
 
   return (
-    <nav className={`${type === "desktop" ? "max-xl:hidden" : ""}`}>
-      <ul className={`flex ${type === "desktop" ? "gap-12" : "flex-col"}`}>
+    <nav className={`${type === "desktop" ? "max-lg:hidden" : ""}`}>
+      <ul
+        className={`flex ${
+          type === "desktop" ? "gap-12 max-xl:gap-4" : "flex-col"
+        }`}
+      >
         <li>
           <NavLinkItem
             to="/game"
             prefetch="intent"
             end
             className="flex items-center gap-2 p-4"
-            icon={<SoccerIcon size="20px" fill="var(--bright-purple)" />}
+            icon={<HomeIcon className="w-5 text-bright-purple" />}
           >
             Matches
           </NavLinkItem>
@@ -36,7 +43,7 @@ export function NavList({ type, username = "-" }: NavListProps) {
             prefetch="intent"
             end
             className="flex items-center gap-2 p-4"
-            icon={<SoccerIcon size="20px" fill="var(--bright-purple)" />}
+            icon={<FlagIcon className="w-5 text-bright-purple" />}
           >
             Group Stage
           </NavLinkItem>
@@ -47,7 +54,7 @@ export function NavList({ type, username = "-" }: NavListProps) {
             prefetch="intent"
             end
             className="flex items-center gap-2 p-4"
-            icon={<SoccerIcon size="20px" fill="var(--bright-purple)" />}
+            icon={<FlagIcon className="w-5 text-bright-purple" />}
           >
             Playoff Stage
           </NavLinkItem>
@@ -57,57 +64,59 @@ export function NavList({ type, username = "-" }: NavListProps) {
             to="/game/ranking"
             prefetch="intent"
             className="flex items-center gap-2 p-4"
-            icon={<PeopleIcon size="20px" fill="var(--bright-purple)" />}
+            icon={<TrophyIcon className="w-5 text-bright-purple" />}
           >
             Ranking
           </NavLinkItem>
         </li>
 
-        {type === "mobile" ? (
-          <Form action="/logout" method="post">
-            <button
-              type="submit"
-              className="flex items-center gap-2 p-4 hover:text-brighter-purple"
-            >
-              <PowerIcon fill="var(--bright-purple)" />
-              Logout
-            </button>
-          </Form>
-        ) : null}
+        <li>
+          {type === "mobile" ? (
+            <Form action="/logout" method="post">
+              <button
+                type="submit"
+                className="flex items-center gap-2 p-4 hover:text-brighter-purple"
+              >
+                <ArrowLeftOnRectangleIcon className="w-5 text-bright-purple" />
+                Logout
+              </button>
+            </Form>
+          ) : null}
 
-        {type === "desktop" ? (
-          <Popover className="relative -mr-4">
-            <Popover.Button
-              onClick={toggle}
-              className="flex items-center gap-2 p-4 w-full justify-center hover:text-brighter-purple"
-            >
-              <PersonIcon size="20px" fill="var(--bright-purple)" />
-              Account
-            </Popover.Button>
+          {type === "desktop" ? (
+            <Popover className="relative -mr-4">
+              <Popover.Button
+                onClick={toggle}
+                className="flex items-center gap-2 p-4 w-full justify-center hover:text-brighter-purple"
+              >
+                <UserIcon className="w-5 text-bright-purple" />
+                Account
+              </Popover.Button>
 
-            <Popover.Panel className="absolute top-full right-0 z-10 w-56 py-1 origin-top-right rounded-md bg-white shadow-lg ring-1 ring-black ring-opacity-5">
-              <div className="w-full px-4 py-2">
-                <div className="text-12-regular text-dark-blue">
-                  Account Name
+              <Popover.Panel className="absolute top-full right-0 z-10 w-56 py-1 origin-top-right rounded-md bg-white shadow-lg ring-1 ring-black ring-opacity-5">
+                <div className="w-full px-4 py-2">
+                  <div className="text-12-regular text-dark-blue">
+                    Account Name
+                  </div>
+                  <div className="text-dark-blue whitespace-nowrap text-ellipsis overflow-hidden">
+                    {username}
+                  </div>
                 </div>
-                <div className="text-dark-blue whitespace-nowrap text-ellipsis overflow-hidden">
-                  {username}
-                </div>
-              </div>
 
-              <hr />
+                <hr />
 
-              <Form action="/logout" method="post">
-                <button
-                  type="submit"
-                  className="px-4 py-2 w-full text-left text-bright-purple hover:text-brighter-purple"
-                >
-                  Logout
-                </button>
-              </Form>
-            </Popover.Panel>
-          </Popover>
-        ) : null}
+                <Form action="/logout" method="post">
+                  <button
+                    type="submit"
+                    className="px-4 py-2 w-full text-left text-bright-purple hover:text-brighter-purple"
+                  >
+                    Logout
+                  </button>
+                </Form>
+              </Popover.Panel>
+            </Popover>
+          ) : null}
+        </li>
       </ul>
     </nav>
   );
