@@ -1,0 +1,10 @@
+node_modules
+
+/public/build
+preferences.arc
+sam.json
+sam.yaml
+.env
+/api
+
+/app/styles/app.css
