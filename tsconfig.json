@@ -12,8 +12,9 @@
     "allowJs": true,
     "forceConsistentCasingInFileNames": true,
     "baseUrl": ".",
+    "skipLibCheck": true,
     "paths": {
-      "~/*": ["./app/*", "types/*.d.ts"],
+      "~/*": ["./app/*", "types/*.d.ts"]
     },
 
     // Remix takes care of building everything in `remix build`.
