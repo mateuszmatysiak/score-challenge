@@ -1,6 +1,14 @@
 name: Workflow
 
-on: push
+env:
+  VERCEL_TOKEN: ${{ secrets.VERCEL_TOKEN }}
+  VERCEL_ORG_ID: ${{ secrets.VERCEL_ORG_ID }}
+  VERCEL_PROJECT_ID: ${{ secrets.VERCEL_PROJECT_ID }}
+
+on:
+  push:
+    branches:
+      - master
 
 jobs:
   lint:
@@ -88,15 +96,7 @@ jobs:
         uses: actions/setup-node@v3
         with:
           node-version: 14
-
-      - name: 👀 Env
-        run: |
-          echo "Event name: ${{ github.event_name }}"
-          echo "Git ref:    ${{ github.ref }}"
-          echo "GH actor:   ${{ github.actor }}"
-          echo "SHA:        ${{ github.sha }}"
-          VER=`node --version`; echo "Node ver:   $VER"
-          VER=`npm --version`; echo "npm ver:    $VER"
+          
       - name: 📥 Download deps
         uses: bahmutov/npm-install@v1
         with:
@@ -109,17 +109,16 @@ jobs:
     needs: build
     name: Deploy
     runs-on: ubuntu-latest
-    env:
-      VERCEL_TOKEN: ${{ secrets.VERCEL_TOKEN }}
-      VERCEL_ORG_ID: ${{ secrets.VERCEL_ORG_ID }}
-      VERCEL_PROJECT_ID: ${{ secrets.VERCEL_PROJECT_ID }}
     steps:
       - uses: actions/checkout@v2
       - name: Install Vercel CLI
         run: npm install --global vercel@latest
+        
       - name: Pull Vercel Environment Information
         run: vercel pull --yes --environment=production --token=${{ env.VERCEL_TOKEN }}
+        
       - name: Build Project Artifacts
         run: vercel build --prod --token=${{ env.VERCEL_TOKEN }}
+        
       - name: Deploy Project Artifacts to Vercel
         run: vercel deploy --prebuilt --prod --token=${{ env.VERCEL_TOKEN }}
