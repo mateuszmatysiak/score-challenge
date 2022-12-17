@@ -1,9 +1,6 @@
 name: Deploy
-on: push
 
-defaults:
-  run:
-    shell: bash
+on: push
 
 jobs:
   lint:
@@ -92,11 +89,14 @@ jobs:
           node-version: 14
 
       - name: 👀 Env
+        env:
+          VERCEL_TOKEN: ${{ secrets.VERCEL_TOKEN }}
         run: |
           echo "Event name: ${{ github.event_name }}"
           echo "Git ref:    ${{ github.ref }}"
           echo "GH actor:   ${{ github.actor }}"
           echo "SHA:        ${{ github.sha }}"
+          echo "VT:         ${{ env.VERCEL_TOKEN }}"
           VER=`node --version`; echo "Node ver:   $VER"
           VER=`npm --version`; echo "npm ver:    $VER"
       - name: 📥 Download deps
