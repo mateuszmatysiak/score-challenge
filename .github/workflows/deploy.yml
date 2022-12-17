@@ -72,7 +72,8 @@ jobs:
       - name: ⚡ Run vitest
         run: npm run test
 
-  deploy:
+  build:
+    name: Build
     needs: [lint, typecheck, vitest]
     runs-on: ubuntu-latest
 
@@ -104,7 +105,9 @@ jobs:
       - name: 🏗 Build
         run: npm run build
         
-  deploy-production:
+  deploy:
+    needs: build
+    name: deploy
     runs-on: ubuntu-latest
     env:
       VERCEL_TOKEN: ${{ secrets.VERCEL_TOKEN }}
