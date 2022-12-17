@@ -1,4 +1,4 @@
-name: Deploy
+name: Workflow
 
 on: push
 
@@ -107,7 +107,7 @@ jobs:
         
   deploy:
     needs: build
-    name: deploy
+    name: Deploy
     runs-on: ubuntu-latest
     env:
       VERCEL_TOKEN: ${{ secrets.VERCEL_TOKEN }}
