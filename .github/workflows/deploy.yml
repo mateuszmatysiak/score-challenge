@@ -1,10 +1,6 @@
 name: Deploy
 on: push
 
-permissions:
-  actions: write
-  contents: read
-
 defaults:
   run:
     shell: bash
@@ -106,6 +102,7 @@ jobs:
           echo "Git ref:    ${{ github.ref }}"
           echo "GH actor:   ${{ github.actor }}"
           echo "SHA:        ${{ github.sha }}"
+          echo "test:       ${{ secrets.TEST }}"
           VER=`node --version`; echo "Node ver:   $VER"
           VER=`npm --version`; echo "npm ver:    $VER"
       - name: 📥 Download deps
